@@ -1,8 +1,13 @@
-import React from "react";
-import Login from "@/components/screens/Login/Login";
+import React, { useEffect } from "react";
+import { Redirect, router } from "expo-router";
+import { View } from "react-native";
 
 const index = () => {
-  return <Login />;
+  return (
+    <View style={{ flex: 1 }}>
+      <Redirect href="/onBoarding" />
+    </View>
+  );
 };
 
 export default index;

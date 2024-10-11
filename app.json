@@ -2,12 +2,12 @@
   "expo": {
     "name": "dealive-mobile",
     "slug": "dealive-mobile",
+    "scheme": "dealive-scheme",
     "version": "1.0.0",
     "jsEngine": "hermes",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "dealive-scheme",
     "ios": {
       "supportsTablet": true
     },
@@ -20,6 +20,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-router", ["expo-font", {}]]
+    "plugins": ["expo-router", ["expo-font", {}]],
+    "extra": {
+      "eas": {
+        "projectId": "2a4f1120-aec1-46ab-9a43-f965b3d49e86"
+      }
+    }
   }
 }

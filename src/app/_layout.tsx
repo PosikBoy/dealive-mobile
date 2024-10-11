@@ -1,33 +1,42 @@
 import React, { useEffect, useState } from "react";
-import { useFonts } from "expo-font";
+import * as Font from "expo-font";
 import { fonts } from "@/constants/fonts";
 import { Slot, SplashScreen } from "expo-router";
 import ConnectionCheck from "@/components/other/ConnectionCheck";
-import { StyleSheet, View } from "react-native";
-import Login from "@/components/screens/Login/Login";
+import { Dimensions, Linking, StyleSheet, View } from "react-native";
+import { useDeviceOrientation } from "@react-native-community/hooks";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 SplashScreen.preventAutoHideAsync();
 
 const index = () => {
   const [isAppReady, setIsAppReady] = useState(false);
-  const [fontsLoaded] = useFonts(fonts);
+
+  const disableOrientationChange = () => {
+    Dimensions.set({
+      width: Dimensions.get("window").width,
+      height: Dimensions.get("window").height,
+    });
+  };
 
   useEffect(() => {
-    if (fontsLoaded) {
+    const loadFonts = async () => {
+      await Font.loadAsync(fonts);
       setIsAppReady(true);
-    }
-  }, [fontsLoaded]);
+    };
+    Linking.addEventListener("url", disableOrientationChange);
+    loadFonts();
+  }, []);
 
   if (isAppReady) {
-    SplashScreen.hideAsync();
+    setTimeout(() => {
+      SplashScreen.hideAsync();
+    }, 500);
   }
-
   return (
-    <View style={styles.container}>
-      <ConnectionCheck>
-        <Slot />
-      </ConnectionCheck>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <ConnectionCheck>{isAppReady && <Slot />}</ConnectionCheck>
+    </SafeAreaView>
   );
 };
 
@@ -37,8 +46,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    paddingLeft: 20,
-    paddingRight: 20,
   },
 });
 
