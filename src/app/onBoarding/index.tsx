@@ -12,7 +12,6 @@ import money from "@/../assets/icons/moneyPurple.png";
 import time from "@/../assets/icons/time.png";
 import cup from "@/../assets/icons/cup.png";
 import Paginator from "./components/Paginator";
-import { colors } from "@/constants/colors";
 import MyButton from "@/components/ui/Button/Button";
 import { router } from "expo-router";
 
@@ -59,6 +58,7 @@ const onBoarding = () => {
   const navigateToLogin = () => {
     router.push("/(auth)/main");
   };
+
   return (
     <View style={styles.container}>
       <TouchableHighlight
@@ -139,7 +139,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginRight: 20,
-    // padding: ,
   },
   skipText: {
     fontFamily: "Montserrat-SemiBold",

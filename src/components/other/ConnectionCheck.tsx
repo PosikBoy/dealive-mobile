@@ -17,5 +17,11 @@ export default function ConnectionCheck({ children }) {
     return <Redirect href="/offline" />;
   }
 
-  return <View>{children}</View>;
+  return <View style={styles.container}>{children}</View>;
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

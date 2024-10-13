@@ -40,14 +40,14 @@ const styles = StyleSheet.create({
   buttonPurple: {
     backgroundColor: colors.purple,
     borderRadius: 100,
-    padding: 20,
+    padding: 15,
     flexDirection: "row",
     justifyContent: "center",
   },
   buttonRed: {
     backgroundColor: colors.red,
     borderRadius: 100,
-    padding: 20,
+    padding: 15,
     flexDirection: "row",
     justifyContent: "center",
   },
