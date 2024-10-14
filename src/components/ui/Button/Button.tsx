@@ -9,13 +9,13 @@ import {
 
 interface IProps extends TouchableHighlightProps {
   buttonText: string;
-  handlePress: () => void;
+  onPress: () => void;
   color?: "purple" | "red";
 }
 
 const MyButton: React.FC<IProps> = ({
   buttonText,
-  handlePress,
+  onPress,
   color = "purple",
   ...props
 }) => {
@@ -27,7 +27,7 @@ const MyButton: React.FC<IProps> = ({
   return (
     <TouchableHighlight
       style={buttonStyles}
-      onPress={handlePress}
+      onPress={onPress}
       underlayColor={buttonActive}
       {...props}
     >

@@ -7,13 +7,18 @@ import PhoneInputField from "@/components/ui/PhoneInputField/PhoneInputField";
 import { Link } from "expo-router";
 import MyButton from "@/components/ui/Button/Button";
 
+interface IPhoneNumberPassword {
+  phoneNumber: String;
+  password: String;
+}
+
 const index = (props) => {
   const {
     control,
     formState: { errors },
     register,
     handleSubmit,
-  } = useForm();
+  } = useForm<IPhoneNumberPassword>();
   const onSubmit = (data) => {
     console.log(data);
   };
@@ -25,7 +30,7 @@ const index = (props) => {
         <PhoneInputField
           control={control}
           name="phoneNumber"
-          placeholder="Введите номер телефона"
+          placeholder="Номер телефона"
         />
       </View>
       {errors.phoneNumber && (
@@ -33,23 +38,10 @@ const index = (props) => {
       )}
       <View style={styles.passwordInputContainer}>
         <InputField
-          placeholder="Введите пароль"
+          control={control}
+          name="password"
+          placeholder="Пароль"
           type="password"
-          {...register("password", {
-            required: "Пароль обязателен",
-            minLength: {
-              value: 6,
-              message: "Минимальная длина пароля 6 символов",
-            },
-            maxLength: {
-              value: 20,
-              message: "Максимальная длина пароля 20 символов",
-            },
-            pattern: {
-              value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,20}$/,
-              message: "Пароль должен содержать буквы и цифры",
-            },
-          })}
         />
       </View>
       {errors.password && (
@@ -60,7 +52,7 @@ const index = (props) => {
         <Text>Забыли пароль?</Text>
       </Link>
       <View style={styles.buttonContainer}>
-        <MyButton buttonText="Войти" handlePress={handleSubmit(onSubmit)} />
+        <MyButton buttonText="Войти" onPress={handleSubmit(onSubmit)} />
       </View>
       <Link href={"/(auth)/register"} style={styles.registerLabel}>
         <Text>Регистрация</Text>

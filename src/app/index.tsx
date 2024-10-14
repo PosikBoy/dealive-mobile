@@ -5,7 +5,7 @@ import { Text, View } from "react-native";
 const index = () => {
   return (
     <View>
-      <Redirect href="/(auth)" />
+      <Redirect href="/(auth)/register" />
     </View>
   );
 };

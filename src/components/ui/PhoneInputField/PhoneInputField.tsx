@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Control, Controller } from "react-hook-form";
+import { Control, Controller, useController } from "react-hook-form";
 import {
   View,
   TextInput,
@@ -38,37 +38,24 @@ interface IControllerField {
 }
 const PhoneInputField: FC<IControllerField> = (props) => {
   const { name, control, error, placeholder } = props;
-  return (
-    <Controller
-      name={name}
-      control={control}
-      defaultValue=""
-      rules={{
-        required: "Введите номер телефона",
-        pattern: {
-          value: /^(?:\+7|\b8)\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/,
-          message: "Введите номер телефона",
-        },
-      }}
-      render={({ field }) => (
-        <PhoneInput
-          onChange={field.onChange}
-          value={field.value}
-          error={error}
-          placeholder={placeholder}
-        />
-      )}
-    />
-  );
-};
+  const rules = {
+    required: "Введите номер телефона",
+    pattern: {
+      value: /^(?:\+7|\b8)\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/,
+      message: "Введите номер телефона",
+    },
+  };
 
-const PhoneInput = forwardRef<PhoneInputFieldRef, IField>((props, ref) => {
-  const { placeholder, error, onChange, value, ...rest } = props;
+  const { field } = useController({
+    control,
+    name,
+    rules,
+  });
   const phoneChangeHandler = (newValue) => {
     const regex = /[0-9]|\+/;
-
-    if (value.length - newValue.length == 1) {
-      onChange(newValue);
+    const oldValue = field.value ? field.value : "";
+    if (oldValue.length - newValue.length == 1) {
+      field.onChange(newValue);
       return;
     }
     if (regex.test(newValue[newValue.length - 1]) && newValue.length < 19) {
@@ -89,7 +76,7 @@ const PhoneInput = forwardRef<PhoneInputFieldRef, IField>((props, ref) => {
           (newValue[8] ? newValue[8] + "-" : "") +
           (newValue[9] ? newValue[9] : "") +
           (newValue[10] ? newValue[10] : "");
-        onChange(newValue);
+        field.onChange(newValue);
         return;
       } else if (newValue[0] == "8") {
         newValue =
@@ -104,7 +91,7 @@ const PhoneInput = forwardRef<PhoneInputFieldRef, IField>((props, ref) => {
           (newValue[8] ? newValue[8] + "-" : "") +
           (newValue[9] ? newValue[9] : "") +
           (newValue[10] ? newValue[10] : "");
-        onChange(newValue);
+        field.onChange(newValue);
         return;
       }
     }
@@ -145,7 +132,7 @@ const PhoneInput = forwardRef<PhoneInputFieldRef, IField>((props, ref) => {
   });
 
   const handleBlur = () => {
-    if (value === "") {
+    if (!field.value) {
       downPlaceholder();
     }
     makeInputColorUnfocused();
@@ -157,7 +144,8 @@ const PhoneInput = forwardRef<PhoneInputFieldRef, IField>((props, ref) => {
   };
 
   const inputRef = useRef<TextInput>(null);
-  useImperativeHandle(ref, () => {
+
+  useImperativeHandle(field.ref, () => {
     return {
       focus: () => {
         inputRef.current.focus();
@@ -176,8 +164,7 @@ const PhoneInput = forwardRef<PhoneInputFieldRef, IField>((props, ref) => {
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChangeText={phoneChangeHandler}
-          value={value}
-          {...rest}
+          value={field.value}
         />
       </Animated.View>
 
@@ -193,7 +180,11 @@ const PhoneInput = forwardRef<PhoneInputFieldRef, IField>((props, ref) => {
       {error && <Text style={{ color: colors.red }}>{error?.message}</Text>}
     </View>
   );
-});
+};
+
+const PhoneInput = (props, ref) => {
+  const { placeholder, error, onChange, value, ...rest } = props;
+};
 
 export default PhoneInputField;
 

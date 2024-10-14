@@ -27,7 +27,7 @@ const main = () => {
         <Image style={styles.image} source={box} resizeMode="contain" />
       </View>
       <View style={styles.buttonContainer}>
-        <MyButton buttonText="Войти" handlePress={handleLogin} />
+        <MyButton buttonText="Войти" onPress={handleLogin} />
         <TouchableHighlight
           style={styles.registerButton}
           onPress={handleRegister}

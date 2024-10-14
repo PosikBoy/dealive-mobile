@@ -1,23 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import RegisterScreen from "@/components/screens/Register/Register";
 
-type Props = {};
-
-const index = (props: Props) => {
-  return (
-    <View style={styles.container}>
-      <Text>asdc</Text>
-    </View>
-  );
+const register = () => {
+  return <RegisterScreen />;
 };
 
-export default index;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#000",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+export default register;
