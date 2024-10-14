@@ -2,71 +2,68 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { FC, useEffect, useState } from "react";
 import InputField from "@/components/ui/InputField/InputField";
 import { useForm } from "react-hook-form";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import MyButton from "@/components/ui/Button/Button";
 import arrow from "assets/icons/arrow.png";
 import { colors } from "@/constants/colors";
 import DataInputField from "@/components/ui/DataInputField/DataInputField";
-import { useTypedSelector } from "@/hooks/redux.hooks";
+import ImagePicker from "@/components/ui/ImagePicker/ImagePicker";
+import InputFieldWithHandler from "@/components/ui/InputFieldWithHandler/InputFieldWIthHandler";
 
 interface IProps {
   nextPage: () => void;
   previousPage: () => void;
 }
+
 interface IFormField {
-  secondName: string;
-  firstName: string;
-  thirdName: string;
-  birthDate: string;
+  passportNumber: string;
+  issueDate: string;
+  selfieWithPassportImage: Image;
+  passportPhotoImage: Image;
 }
 
-const Register2: FC<IProps> = (props) => {
+const Register3: FC<IProps> = (props) => {
   const { nextPage, previousPage } = props;
   const state = useTypedSelector((state) => state.auth);
+
   const {
     control,
     formState: { errors },
     handleSubmit,
-    setError,
+    getValues,
   } = useForm<IFormField>({
     mode: "onChange",
     defaultValues: {
-      secondName: state.secondName,
-      firstName: state.firstName,
-      thirdName: state.thirdName,
-      birthDate: state.birthDay,
+      passportNumber: state.passportNumber,
+      issueDate: state.issueDate,
+      selfieWithPassportImage: state.selfieWithPassportImage,
+      passportPhotoImage: state.passportPhotoImage,
     },
   });
-  const onSubmit = (data) => {
-    if (isValidDate(data.birthDate)) {
-      nextPage();
-    } else {
-      setError("birthDate", {
-        type: "manual",
-        message: "Некорректная дата",
-      });
+  const onSubmit = (data: IFormField) => {};
+  const passportNumberHandler = (newValue: string) => {
+    const regex = /[0-9]/;
+    const oldValue = getValues("passportNumber") || "";
+    if (oldValue.length - newValue.length == 1) {
+      return newValue;
     }
+    if (regex.test(newValue[newValue.length - 1]) && newValue.length < 12) {
+      newValue = newValue.replaceAll(/\D/g, "");
+      newValue =
+        (newValue[0] ? newValue[0] : "") +
+        (newValue[1] ? newValue[1] : "") +
+        (newValue[2] ? newValue[2] : "") +
+        (newValue[3] ? newValue[3] + " " : "") +
+        (newValue[4] ? newValue[4] : "") +
+        (newValue[5] ? newValue[5] : "") +
+        (newValue[6] ? newValue[6] : "") +
+        (newValue[7] ? newValue[7] : "") +
+        (newValue[8] ? newValue[8] : "") +
+        (newValue[9] ? newValue[9] : "");
+      return newValue;
+    }
+    return oldValue;
   };
-
-  function isValidDate(dateString) {
-    const regex = /^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.(19|20)\d\d$/;
-    if (!regex.test(dateString)) {
-      return false;
-    }
-
-    const [day, month, year] = dateString.split(".").map(Number);
-
-    const date = new Date(year, month - 1, day);
-    const currentDate = new Date();
-
-    const isDataCorrect =
-      date < currentDate &&
-      date.getFullYear() === year &&
-      date.getMonth() === month - 1 &&
-      date.getDate() === day;
-    return isDataCorrect;
-  }
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -88,68 +85,70 @@ const Register2: FC<IProps> = (props) => {
         <View style={{ width: 20 }}></View>
       </View>
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите фамилию</Text>
+        <Text style={styles.fieldLabel}>Введите серию и номер паспорта</Text>
         <View style={[styles.inputField, styles.phoneNumberField]}>
-          <InputField
+          <InputFieldWithHandler
             control={control}
-            name="secondName"
-            placeholder="Фамилия"
-            rules={{ required: "Фамилия обязательна" }}
+            name="passportNumber"
+            placeholder="1234 567890"
+            keyboardType="number-pad"
+            rules={{
+              required: "Введите серию и номер паспорта",
+              pattern: {
+                value: /^[0-9]{4} [0-9]{6}$/,
+                message: "Некорректная серия и номер паспорта",
+              },
+            }}
+            handler={passportNumberHandler}
           />
         </View>
-        {errors?.secondName?.message && (
-          <Text style={styles.errorText}>{errors?.secondName?.message}</Text>
+        {errors?.passportNumber?.message && (
+          <Text style={styles.errorText}>
+            {errors?.passportNumber?.message}
+          </Text>
         )}
       </View>
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите имя</Text>
-        <View style={styles.inputField}>
-          <InputField
-            control={control}
-            name="firstName"
-            placeholder="Имя"
-            rules={{ required: "Имя обязательно" }}
-          />
-        </View>
-        {errors?.firstName?.message && (
-          <Text style={styles.errorText}>{errors?.firstName?.message}</Text>
-        )}
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите отчество</Text>
-        <View style={styles.inputField}>
-          <InputField
-            control={control}
-            name="thirdName"
-            placeholder="Отчество"
-            rules={{ required: "Отчество обязательно" }}
-          />
-        </View>
-        {errors?.thirdName?.message && (
-          <Text style={styles.errorText}>{errors?.thirdName?.message}</Text>
-        )}
-      </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите дату рождения</Text>
+        <Text style={styles.fieldLabel}>Введите дату выдачи паспорта</Text>
         <View style={styles.inputField}>
           <DataInputField
             control={control}
-            name="birthDate"
+            name="issueDate"
             placeholder="ДД.ММ.ГГГГ"
           />
         </View>
-        {errors?.birthDate?.message && (
-          <Text style={styles.errorText}>{errors?.birthDate?.message}</Text>
+        {errors?.issueDate?.message && (
+          <Text style={styles.errorText}>{errors?.issueDate?.message}</Text>
         )}
       </View>
+      <View style={styles.fieldContainer}>
+        <ImagePicker
+          title="Загрузите селфи с паспортом"
+          linkSuggestion="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC3n_U6LYAo7YKJf3_jdNfJQNQvV6D2vx0uA&s"
+          control={control}
+          name="selfieWithPassportImage"
+        />
+      </View>
+      <View style={styles.fieldContainer}>
+        <ImagePicker
+          title="Загрузите фото паспорта"
+          linkSuggestion="https://s3.cms.mts.ru/cms-files/%D1%86%D1%83%D0%B0%D1%86%D1%83%D0%B0%D1%86%D1%83%D0%B0_66ec26dd47fe2c1ddf3d2d04.png"
+          control={control}
+          name="passportPhotoImage"
+        />
+      </View>
+
       <View style={styles.buttonContainer}>
-        <MyButton buttonText="Далее" onPress={handleSubmit(onSubmit)} />
+        <MyButton
+          buttonText="Создать аккаунт"
+          onPress={handleSubmit(onSubmit)}
+        />
       </View>
     </View>
   );
 };
 
-export default Register2;
+export default Register3;
 
 const styles = StyleSheet.create({
   container: {

@@ -47,16 +47,18 @@ const onBoarding = () => {
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
   const nextButtonClick = () => {
+    console.log("aksndc");
     if (currentPage == data.length - 1) {
-      router.push("/(auth)/main");
+      router.push("/(auth)");
     }
     if (currentPage < data.length - 1) {
+      setCurrentPage((currentPage) => currentPage + 1);
       slidesRef.current.scrollToIndex({ index: currentPage + 1 });
     }
   };
 
   const navigateToLogin = () => {
-    router.push("/(auth)/main");
+    router.push("/(auth)");
   };
 
   return (
@@ -98,7 +100,7 @@ const onBoarding = () => {
         <View style={styles.buttonNextContainer}>
           <MyButton
             buttonText="Далее"
-            handlePress={() => {
+            onPress={() => {
               nextButtonClick();
             }}
           />

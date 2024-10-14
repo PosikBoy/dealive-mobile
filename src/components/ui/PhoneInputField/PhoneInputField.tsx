@@ -182,10 +182,6 @@ const PhoneInputField: FC<IControllerField> = (props) => {
   );
 };
 
-const PhoneInput = (props, ref) => {
-  const { placeholder, error, onChange, value, ...rest } = props;
-};
-
 export default PhoneInputField;
 
 const styles = StyleSheet.create({

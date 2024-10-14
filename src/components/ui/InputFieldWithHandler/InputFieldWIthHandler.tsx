@@ -1,6 +1,6 @@
 import { colors } from "@/constants/colors";
 import React, { FC, useImperativeHandle, useRef } from "react";
-import { Control, InputValidationRules, useController } from "react-hook-form";
+import { Control, useController } from "react-hook-form";
 import {
   View,
   TextInput,
@@ -11,27 +11,37 @@ import {
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
   withTiming,
 } from "react-native-reanimated";
 
 interface IField {
-  type?: "default" | "password";
+  onChange: (value: string) => void;
   placeholder: string;
+  value: string;
   error?: any;
+}
+export interface DataInputFieldRef {
+  focus: () => void;
+}
+
+interface IControllerField {
   name: string;
   control: Control<any>;
-  rules?: any;
+  error?: any;
+  placeholder: string;
   keyboardType?: string;
+  handler: (value: string) => void;
+  rules?: any;
 }
-const InputField: FC<IField> = (props, ref) => {
+const InputFieldWithHandler: FC<IControllerField> = (props) => {
   const {
-    type = "default",
-    placeholder,
     name,
     control,
-    rules = {},
+    error,
+    placeholder,
     keyboardType = "default",
+    handler,
+    rules = {},
   } = props;
 
   const { field } = useController({
@@ -39,41 +49,60 @@ const InputField: FC<IField> = (props, ref) => {
     name,
     rules,
   });
+
+  const changeHandler = (value: string) => {
+    const newValue = handler(value);
+    field.onChange(newValue);
+  };
+
   const placeholderTop = useSharedValue(11);
   const inputColor = useSharedValue(colors.inputGray);
   const raisePlaceholder = () => {
     placeholderTop.value = withTiming(-9);
   };
+
   const downPlaceholder = () => {
     placeholderTop.value = withTiming(11);
   };
+
   const makeInputColorFocused = () => {
-    inputColor.value = withSpring(colors.purple);
+    inputColor.value = withTiming(colors.purple);
   };
-  const makeInputColorUnFocused = () => {
-    inputColor.value = withSpring(colors.gray);
+
+  const makeInputColorUnfocused = () => {
+    inputColor.value = withTiming(colors.gray);
   };
   const animatedBorderColor = useAnimatedStyle(() => {
     return {
       borderColor: inputColor.value,
     };
   });
+
   const animatedPlaceholderColor = useAnimatedStyle(() => {
     return {
       color: inputColor.value,
     };
   });
+
+  const animatedPlaceholderPosition = useAnimatedStyle(() => {
+    return {
+      top: placeholderTop.value,
+    };
+  });
+
   const handleBlur = () => {
     if (!field.value) {
       downPlaceholder();
     }
-    makeInputColorUnFocused();
+    makeInputColorUnfocused();
   };
 
   const handleFocus = () => {
     raisePlaceholder();
     makeInputColorFocused();
   };
+
+  const inputRef = useRef<TextInput>(null);
 
   useImperativeHandle(field.ref, () => {
     return {
@@ -83,46 +112,36 @@ const InputField: FC<IField> = (props, ref) => {
     };
   });
 
-  const inputRef = useRef<TextInput>(null);
-
-  const handleChange = (e) => {
-    field.onChange(e);
-  };
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.inputContainer, animatedBorderColor]}>
         <TextInput
           placeholder=""
           ref={inputRef}
-          secureTextEntry={type === "password"}
           style={styles.input}
           keyboardType={keyboardType}
           onFocus={handleFocus}
-          onChangeText={handleChange}
           onBlur={handleBlur}
+          onChangeText={changeHandler}
+          value={field.value}
         />
       </Animated.View>
 
       <Animated.View
-        style={{
-          position: "absolute",
-          top: placeholderTop,
-          left: 12,
-          backgroundColor: colors.white,
-          paddingHorizontal: 5,
-        }}
+        style={[styles.placeholderContainer, animatedPlaceholderPosition]}
       >
         <TouchableWithoutFeedback onPress={() => inputRef.current.focus()}>
           <Animated.Text style={[styles.placeholder, animatedPlaceholderColor]}>
-            {placeholder}
+            {placeholder + "*"}
           </Animated.Text>
         </TouchableWithoutFeedback>
       </Animated.View>
+      {error && <Text style={{ color: colors.red }}>{error?.message}</Text>}
     </View>
   );
 };
 
-export default InputField;
+export default InputFieldWithHandler;
 
 const styles = StyleSheet.create({
   container: {
@@ -141,13 +160,20 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     height: "100%",
-    fontFamily: "Montserrat-Regular",
-    paddingLeft: 12,
-    paddingVertical: 11,
-  },
-  placeholder: {
+    color: colors.black,
     fontSize: 14,
     fontFamily: "Montserrat-Regular",
-    color: colors.inputGray,
+    paddingLeft: 15,
+    paddingVertical: 11,
+  },
+  placeholderContainer: {
+    position: "absolute",
+    left: 12,
+    backgroundColor: colors.white,
+    paddingHorizontal: 5,
+  },
+  placeholder: {
+    fontFamily: "Montserrat-Medium",
+    fontSize: 14,
   },
 });

@@ -5,7 +5,7 @@ import { Slot, SplashScreen } from "expo-router";
 import ConnectionCheck from "@/components/other/ConnectionCheck";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import { StoreProvider } from "@/components/ui/ReduxProvider";
 SplashScreen.preventAutoHideAsync();
 
 const index = () => {
@@ -31,7 +31,9 @@ const index = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ConnectionCheck>
-        <Slot />
+        <StoreProvider>
+          <Slot />
+        </StoreProvider>
       </ConnectionCheck>
     </SafeAreaView>
   );

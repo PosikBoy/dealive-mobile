@@ -3,12 +3,12 @@ import { Gender, IInitialState } from "./signupForm.types";
 
 const initialState: IInitialState = {
   phoneNumber: "",
+  password: "",
   isRulesAccepted: false,
   firstName: "",
   secondName: "",
   thirdName: "",
   birthDay: "",
-  gender: Gender.male,
   passportNumber: "",
   issueDate: "",
   passportPhotoImage: null,
@@ -19,15 +19,24 @@ export const signupFormSlice = createSlice({
   name: "signupForm",
   initialState,
   reducers: {
-    addData(state, action) {
-      Object.entries(action.payload).forEach(([key, value]) => {
-        state[key] = value;
-      });
-      // Если не сработает, то можно попробовать перечислить все поля, типа такого
-      // state.pickupAddress = action.payload.pickupAddress;
-      // state.destinationAddress = action.payload.destinationAddress;
+    addFirstPageData(state, action) {
+      state.phoneNumber = action.payload.phoneNumber;
+      state.password = action.payload.password;
+    },
+    addSecondPageData(state, action) {
+      state.firstName = action.payload.firstName;
+      state.secondName = action.payload.secondName;
+      state.thirdName = action.payload.thirdName;
+      state.birthDay = action.payload.birthDay;
+    },
+    addThirdPageData(state, action) {
+      state.passportNumber = action.payload.passportNumber;
+      state.issueDate = action.payload.issueDate;
+      state.selfieWithPassportImage = action.payload.selfieWithPassportImage;
+      state.passportPhotoImage = action.payload.passportPhotoImage;
     },
   },
 });
 
-export const { addData } = signupFormSlice.actions;
+export const { addFirstPageData, addSecondPageData, addThirdPageData } =
+  signupFormSlice.actions;

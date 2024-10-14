@@ -3,13 +3,16 @@ import React, { FC, useEffect, useState } from "react";
 import InputField from "@/components/ui/InputField/InputField";
 import { useForm } from "react-hook-form";
 import PhoneInputField from "@/components/ui/PhoneInputField/PhoneInputField";
-import { Link, router } from "expo-router";
 import MyButton from "@/components/ui/Button/Button";
 import arrow from "assets/icons/arrow.png";
 import { colors } from "@/constants/colors";
+import { useTypedSelector } from "@/hooks/redux.hooks";
+import { useTypedDispatch } from "@/hooks/redux.hooks";
+import { addFirstPageData } from "@/store/signupForm/signupForm.slice";
 
 interface IProps {
   nextPage: () => void;
+  previousPage: () => void;
 }
 
 interface IFormField {
@@ -21,24 +24,27 @@ interface IFormField {
 }
 
 const Register1: FC<IProps> = (props) => {
-  const { nextPage } = props;
+  const { nextPage, previousPage } = props;
   const [isCodeSent, setIsCodeSent] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
   const [isActive, setIsActive] = useState(false);
 
+  const state = useTypedSelector((state) => state.auth);
+  const dispatch = useTypedDispatch();
+
   useEffect(() => {
-    // Если таймер активен и время не закончено
-    if (isActive && timeLeft > 0) {
-      const intervalId = setInterval(() => {
-        setTimeLeft((prevTime) => {
-            if (prevTime === 1) {
-              setIsActive(false); // Останавливаем таймер
-            }
-            return prevTime - 1; // Уменьшаем на 1 каждую секунду
-          });
-      return () => clearInterval(intervalId); // Очистка таймера при размонтировании или изменении состояния
+    if (isActive) {
+      const interval = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000);
+      if (timeLeft === 0) {
+        setIsActive(false);
+        setTimeLeft(60);
+      }
+      return () => clearInterval(interval);
     }
-  }, [isActive, timeLeft]);
+  }, [timeLeft, isActive]);
+
   const {
     control,
     formState: { errors },
@@ -48,12 +54,19 @@ const Register1: FC<IProps> = (props) => {
   } = useForm<IFormField>({
     mode: "onChange",
     defaultValues: {
-      phoneNumber: "",
+      phoneNumber: state.phoneNumber,
+      password: state.password,
+      repeatPassword: state.password,
     },
   });
-
   const onSubmit = (data) => {
     if (data.password === data.repeatPassword) {
+      dispatch(
+        addFirstPageData({
+          phoneNumber: data.phoneNumber,
+          password: data.password,
+        })
+      );
       nextPage();
     } else {
       setError("repeatPassword", {
@@ -82,7 +95,7 @@ const Register1: FC<IProps> = (props) => {
         <TouchableOpacity
           style={styles.arrowButton}
           onPress={() => {
-            router.push("(auth)");
+            previousPage();
           }}
         >
           <Image
@@ -252,9 +265,10 @@ const styles = StyleSheet.create({
   },
   sendCodeButton: {
     paddingVertical: 5,
+    paddingHorizontal: 5,
     alignItems: "center",
     justifyContent: "center",
-    width: 100,
+    width: 120,
     borderRadius: 20,
     backgroundColor: colors.purple,
   },

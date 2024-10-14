@@ -42,9 +42,12 @@ const index = (props) => {
           name="password"
           placeholder="Пароль"
           type="password"
+          rules={{
+            required: "Пароль обязателен!",
+          }}
         />
       </View>
-      {errors.password && (
+      {errors?.password && (
         <Text style={styles.errorText}>{errors?.password?.message}</Text>
       )}
       {/* НАДО СДЕЛАТЬ СТРАНИЦУ ВОССТАНОВЛЕНИЯ ПАРОЛЯ */}
