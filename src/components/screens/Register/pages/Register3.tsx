@@ -9,7 +9,8 @@ import { colors } from "@/constants/colors";
 import DataInputField from "@/components/ui/DataInputField/DataInputField";
 import ImagePicker from "@/components/ui/ImagePicker/ImagePicker";
 import InputFieldWithHandler from "@/components/ui/InputFieldWithHandler/InputFieldWIthHandler";
-
+import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
+import { addThirdPageData } from "@/store/signupForm/signupForm.slice";
 interface IProps {
   nextPage: () => void;
   previousPage: () => void;
@@ -25,7 +26,7 @@ interface IFormField {
 const Register3: FC<IProps> = (props) => {
   const { nextPage, previousPage } = props;
   const state = useTypedSelector((state) => state.auth);
-
+  const dispatch = useTypedDispatch();
   const {
     control,
     formState: { errors },
@@ -40,7 +41,11 @@ const Register3: FC<IProps> = (props) => {
       passportPhotoImage: state.passportPhotoImage,
     },
   });
-  const onSubmit = (data: IFormField) => {};
+  const onSubmit = (data: IFormField) => {
+    dispatch(addThirdPageData(data));
+
+    nextPage();
+  };
   const passportNumberHandler = (newValue: string) => {
     const regex = /[0-9]/;
     const oldValue = getValues("passportNumber") || "";
@@ -86,7 +91,7 @@ const Register3: FC<IProps> = (props) => {
       </View>
       <View style={styles.fieldContainer}>
         <Text style={styles.fieldLabel}>Введите серию и номер паспорта</Text>
-        <View style={[styles.inputField, styles.phoneNumberField]}>
+        <View style={styles.inputField}>
           <InputFieldWithHandler
             control={control}
             name="passportNumber"
@@ -121,21 +126,34 @@ const Register3: FC<IProps> = (props) => {
           <Text style={styles.errorText}>{errors?.issueDate?.message}</Text>
         )}
       </View>
-      <View style={styles.fieldContainer}>
+      <View style={styles.imagePickerContainer}>
         <ImagePicker
           title="Загрузите селфи с паспортом"
           linkSuggestion="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC3n_U6LYAo7YKJf3_jdNfJQNQvV6D2vx0uA&s"
           control={control}
           name="selfieWithPassportImage"
+          rules={{ required: "Загрузите селфи с паспортом" }}
         />
+        {errors?.selfieWithPassportImage?.message && (
+          <Text style={styles.errorText}>
+            {errors?.selfieWithPassportImage?.message}
+          </Text>
+        )}
       </View>
-      <View style={styles.fieldContainer}>
+
+      <View style={styles.imagePickerContainer}>
         <ImagePicker
           title="Загрузите фото паспорта"
           linkSuggestion="https://s3.cms.mts.ru/cms-files/%D1%86%D1%83%D0%B0%D1%86%D1%83%D0%B0%D1%86%D1%83%D0%B0_66ec26dd47fe2c1ddf3d2d04.png"
           control={control}
           name="passportPhotoImage"
+          rules={{ required: "Загрузите фото паспорта" }}
         />
+        {errors?.passportPhotoImage?.message && (
+          <Text style={styles.errorText}>
+            {errors?.passportPhotoImage?.message}
+          </Text>
+        )}
       </View>
 
       <View style={styles.buttonContainer}>
@@ -194,42 +212,19 @@ const styles = StyleSheet.create({
     height: 40,
     width: "100%",
   },
-  phoneNumberField: {
-    position: "relative",
-  },
-  sendCodeButtonContainer: {
-    position: "absolute",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    right: 5,
-  },
-  sendCodeButton: {
-    paddingVertical: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    width: 100,
-    borderRadius: 20,
-    backgroundColor: colors.purple,
-  },
-  sendCodeButtonText: {
-    color: "white",
-    fontFamily: "Montserrat-Bold",
-    fontSize: 14,
-  },
-  codeSentText: {
-    color: "green",
-    fontFamily: "Montserrat-Bold",
-    fontSize: 12,
-  },
+
   errorText: {
     color: "red",
     fontFamily: "Montserrat-Bold",
     fontSize: 12,
   },
-  repeat: {},
   buttonContainer: {
     marginTop: 10,
     width: "100%",
+  },
+  imagePickerContainer: {
+    height: 100,
+    width: "100%",
+    marginTop: 10,
   },
 });

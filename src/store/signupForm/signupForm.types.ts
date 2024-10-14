@@ -12,11 +12,12 @@ export enum Gender {
 export type IInitialState = {
   phoneNumber: string;
   password: string;
+  code: string;
   isRulesAccepted: boolean;
   firstName: string;
   secondName: string;
   thirdName: string;
-  birthDay: string;
+  birthDate: string;
   passportNumber: string;
   issueDate: string;
   passportPhotoImage?: Image;

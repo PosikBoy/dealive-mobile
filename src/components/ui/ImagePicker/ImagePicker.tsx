@@ -8,14 +8,22 @@ interface IProps {
   suggestion?: string;
   control: Control<any>;
   name: string;
+  rules?: any;
 }
 import * as ExpoImagePicker from "expo-image-picker";
 import { Control, useController } from "react-hook-form";
 
 const ImagePicker = (props: IProps) => {
-  const { title, linkSuggestion, suggestion, control, name } = props;
+  const {
+    title,
+    linkSuggestion,
+    suggestion,
+    control,
+    name,
+    rules = {},
+  } = props;
 
-  const { field } = useController({ control, name });
+  const { field } = useController({ control, name, rules });
 
   const selectImage = async () => {
     // Запрашиваем разрешение на доступ к галерее
@@ -33,7 +41,6 @@ const ImagePicker = (props: IProps) => {
     const result = await ExpoImagePicker.launchImageLibraryAsync({
       mediaTypes: ExpoImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
       quality: 1,
     });
 
@@ -58,10 +65,11 @@ const ImagePicker = (props: IProps) => {
           style={{ width: 50, height: 50 }}
         />
         <Text style={styles.title}>
-          field.value ? "Загрузить другое изображение" : "Загрузить изображение"
+          {field.value
+            ? "Загрузить другое изображение"
+            : "Загрузить изображение"}
         </Text>
       </TouchableOpacity>
-      {field}
     </View>
   );
 };

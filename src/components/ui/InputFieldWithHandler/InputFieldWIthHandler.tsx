@@ -1,5 +1,5 @@
 import { colors } from "@/constants/colors";
-import React, { FC, useImperativeHandle, useRef } from "react";
+import React, { FC, useEffect, useImperativeHandle, useRef } from "react";
 import { Control, useController } from "react-hook-form";
 import {
   View,
@@ -55,6 +55,11 @@ const InputFieldWithHandler: FC<IControllerField> = (props) => {
     field.onChange(newValue);
   };
 
+  useEffect(() => {
+    if (field.value) {
+      raisePlaceholder();
+    }
+  }, []);
   const placeholderTop = useSharedValue(11);
   const inputColor = useSharedValue(colors.inputGray);
   const raisePlaceholder = () => {

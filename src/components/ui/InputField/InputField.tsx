@@ -1,5 +1,5 @@
 import { colors } from "@/constants/colors";
-import React, { FC, useImperativeHandle, useRef } from "react";
+import React, { FC, useEffect, useImperativeHandle, useRef } from "react";
 import { Control, InputValidationRules, useController } from "react-hook-form";
 import {
   View,
@@ -24,7 +24,7 @@ interface IField {
   rules?: any;
   keyboardType?: string;
 }
-const InputField: FC<IField> = (props, ref) => {
+const InputField: FC<IField> = (props) => {
   const {
     type = "default",
     placeholder,
@@ -38,6 +38,12 @@ const InputField: FC<IField> = (props, ref) => {
     control,
     name,
     rules,
+  });
+
+  useEffect(() => {
+    if (field.value) {
+      raisePlaceholder();
+    }
   });
   const placeholderTop = useSharedValue(11);
   const inputColor = useSharedValue(colors.inputGray);
@@ -96,6 +102,7 @@ const InputField: FC<IField> = (props, ref) => {
           ref={inputRef}
           secureTextEntry={type === "password"}
           style={styles.input}
+          value={field.value}
           keyboardType={keyboardType}
           onFocus={handleFocus}
           onChangeText={handleChange}

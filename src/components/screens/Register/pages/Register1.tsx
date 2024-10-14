@@ -56,17 +56,13 @@ const Register1: FC<IProps> = (props) => {
     defaultValues: {
       phoneNumber: state.phoneNumber,
       password: state.password,
+      code: state.code,
       repeatPassword: state.password,
     },
   });
   const onSubmit = (data) => {
     if (data.password === data.repeatPassword) {
-      dispatch(
-        addFirstPageData({
-          phoneNumber: data.phoneNumber,
-          password: data.password,
-        })
-      );
+      dispatch(addFirstPageData(data));
       nextPage();
     } else {
       setError("repeatPassword", {

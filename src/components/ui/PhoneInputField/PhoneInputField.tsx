@@ -2,6 +2,7 @@ import { colors } from "@/constants/colors";
 import React, {
   FC,
   forwardRef,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState,
@@ -30,13 +31,13 @@ export interface PhoneInputFieldRef {
   focus: () => void;
 }
 
-interface IControllerField {
+interface IField {
   name: string;
   control: Control<any>;
   error?: any;
   placeholder: string;
 }
-const PhoneInputField: FC<IControllerField> = (props) => {
+const PhoneInputField: FC<IField> = (props) => {
   const { name, control, error, placeholder } = props;
   const rules = {
     required: "Введите номер телефона",
@@ -51,6 +52,13 @@ const PhoneInputField: FC<IControllerField> = (props) => {
     name,
     rules,
   });
+
+  useEffect(() => {
+    if (field.value) {
+      raisePlaceholder();
+    }
+  }, []);
+
   const phoneChangeHandler = (newValue) => {
     const regex = /[0-9]|\+/;
     const oldValue = field.value ? field.value : "";
@@ -96,6 +104,7 @@ const PhoneInputField: FC<IControllerField> = (props) => {
       }
     }
   };
+
   const placeholderTop = useSharedValue(11);
   const inputColor = useSharedValue(colors.inputGray);
   const raisePlaceholder = () => {

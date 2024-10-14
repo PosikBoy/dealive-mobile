@@ -1,5 +1,5 @@
 import { colors } from "@/constants/colors";
-import React, { FC, useImperativeHandle, useRef } from "react";
+import React, { FC, useImperativeHandle, useRef, useEffect } from "react";
 import { Control, useController } from "react-hook-form";
 import {
   View,
@@ -45,7 +45,11 @@ const DataInputField: FC<IControllerField> = (props) => {
     name,
     rules,
   });
-
+  useEffect(() => {
+    if (field.value) {
+      raisePlaceholder();
+    }
+  });
   const dataChangeHandler = (newValue) => {
     const regex = /[0-9]/;
     const oldValue = field.value ? field.value : "";
@@ -54,7 +58,6 @@ const DataInputField: FC<IControllerField> = (props) => {
       return;
     }
     if (regex.test(newValue[newValue.length - 1]) && newValue.length < 12) {
-      console.log(newValue);
       newValue = newValue.replaceAll(/\D/g, "");
       newValue =
         (newValue[0] ? newValue[0] : "") +

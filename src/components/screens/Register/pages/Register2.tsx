@@ -7,7 +7,8 @@ import MyButton from "@/components/ui/Button/Button";
 import arrow from "assets/icons/arrow.png";
 import { colors } from "@/constants/colors";
 import DataInputField from "@/components/ui/DataInputField/DataInputField";
-import { useTypedSelector } from "@/hooks/redux.hooks";
+import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
+import { addSecondPageData } from "@/store/signupForm/signupForm.slice";
 
 interface IProps {
   nextPage: () => void;
@@ -22,7 +23,9 @@ interface IFormField {
 
 const Register2: FC<IProps> = (props) => {
   const { nextPage, previousPage } = props;
+
   const state = useTypedSelector((state) => state.auth);
+  const dispatch = useTypedDispatch();
   const {
     control,
     formState: { errors },
@@ -34,11 +37,12 @@ const Register2: FC<IProps> = (props) => {
       secondName: state.secondName,
       firstName: state.firstName,
       thirdName: state.thirdName,
-      birthDate: state.birthDay,
+      birthDate: state.birthDate,
     },
   });
   const onSubmit = (data) => {
     if (isValidDate(data.birthDate)) {
+      dispatch(addSecondPageData(data));
       nextPage();
     } else {
       setError("birthDate", {

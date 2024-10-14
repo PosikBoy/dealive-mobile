@@ -4,11 +4,12 @@ import { Gender, IInitialState } from "./signupForm.types";
 const initialState: IInitialState = {
   phoneNumber: "",
   password: "",
+  code: "",
   isRulesAccepted: false,
   firstName: "",
   secondName: "",
   thirdName: "",
-  birthDay: "",
+  birthDate: "",
   passportNumber: "",
   issueDate: "",
   passportPhotoImage: null,
@@ -21,13 +22,14 @@ export const signupFormSlice = createSlice({
   reducers: {
     addFirstPageData(state, action) {
       state.phoneNumber = action.payload.phoneNumber;
+      state.code = action.payload.code;
       state.password = action.payload.password;
     },
     addSecondPageData(state, action) {
       state.firstName = action.payload.firstName;
       state.secondName = action.payload.secondName;
       state.thirdName = action.payload.thirdName;
-      state.birthDay = action.payload.birthDay;
+      state.birthDate = action.payload.birthDate;
     },
     addThirdPageData(state, action) {
       state.passportNumber = action.payload.passportNumber;
