@@ -1,8 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import InputField from "@/components/ui/InputField/InputField";
+import InputField from "@/components/ui/TestInputField/TestInputField";
 import { useForm } from "react-hook-form";
-import PhoneInputController from "@/components/ui/PhoneInputField/PhoneInputField";
 import PhoneInputField from "@/components/ui/PhoneInputField/PhoneInputField";
 import { Link } from "expo-router";
 import MyButton from "@/components/ui/Button/Button";
@@ -38,10 +37,23 @@ const index = (props) => {
       )}
       <View style={styles.passwordInputContainer}>
         <InputField
-          control={control}
-          name="password"
-          placeholder="Пароль"
+          placeholder="Введите пароль"
           type="password"
+          {...register("password", {
+            required: "Пароль обязателен",
+            minLength: {
+              value: 6,
+              message: "Минимальная длина пароля 6 символов",
+            },
+            maxLength: {
+              value: 20,
+              message: "Максимальная длина пароля 20 символов",
+            },
+            pattern: {
+              value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,20}$/,
+              message: "Пароль должен содержать буквы и цифры",
+            },
+          })}
         />
       </View>
       {errors.password && (
