@@ -1,10 +1,12 @@
 import { colors } from "@/constants/colors";
 import React, {
+	FC,
   forwardRef,
   useImperativeHandle,
   useRef,
   useState,
 } from "react";
+import { Control, useController } from "react-hook-form";
 import {
   View,
   TextInput,
@@ -24,24 +26,22 @@ interface IField {
   type?: "default" | "password";
   placeholder: string;
   error?: any;
-  color?: "default" | "white";
-  autoComplete?: string;
-  style?: any;
+  name: string;
+  control: Control<any>;
 }
-export interface InputFieldRef {
-  focus: () => void;
-}
-const InputField = forwardRef<InputFieldRef, IField>((props, ref) => {
+const InputField: FC<IField = (props, ref) => {
   const {
     type = "default",
     placeholder,
+    name,
     error,
-    autoComplete,
-    color = "default",
-    style,
-    ...rest
+    control,
   } = props;
-  const [inputValue, setInputValue] = useState("");
+
+  const { field } = useController({
+    control,
+    name,
+  });
   const placeholderTop = useSharedValue(11);
   const inputColor = useSharedValue(colors.inputGray);
   const raisePlaceholder = () => {
@@ -67,16 +67,18 @@ const InputField = forwardRef<InputFieldRef, IField>((props, ref) => {
     };
   });
   const handleBlur = () => {
-    if (inputValue === "") {
+    if (field.value === "") {
       downPlaceholder();
     }
     makeInputColorUnFocused();
-  };
+	};
+	
   const handleFocus = () => {
     raisePlaceholder();
     makeInputColorFocused();
-  };
-  useImperativeHandle(ref, () => {
+	};
+	
+  useImperativeHandle(field.ref, () => {
     return {
       focus: () => {
         inputRef.current.focus();
@@ -84,10 +86,9 @@ const InputField = forwardRef<InputFieldRef, IField>((props, ref) => {
     };
   });
 
-  const inputRef = React.useRef<TextInput>(null);
-
+  const inputRef = useRef<TextInput>(null);
   const handleChange = (e) => {
-    setInputValue(e);
+    field.onChange(e);
   };
   return (
     <View style={styles.container}>
@@ -100,7 +101,6 @@ const InputField = forwardRef<InputFieldRef, IField>((props, ref) => {
           keyboardType="default"
           onFocus={handleFocus}
           onChangeText={handleChange}
-          {...rest}
           onBlur={handleBlur}
         />
       </Animated.View>
@@ -123,7 +123,7 @@ const InputField = forwardRef<InputFieldRef, IField>((props, ref) => {
       {error && <Text style={{ color: colors.red }}>{error?.message}</Text>}
     </View>
   );
-});
+};
 
 export default InputField;
 
