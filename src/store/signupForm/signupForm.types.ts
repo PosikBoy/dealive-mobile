@@ -1,25 +1,15 @@
-type Image = {
-  uri: string;
-  name: string;
-  type: string;
-};
-
-export enum Gender {
-  male = "male",
-  female = "female",
-}
+import { IImagePickerAsset } from "@/types/auth.interface";
 
 export type IInitialState = {
   phoneNumber: string;
   password: string;
   code: string;
+  email: string;
   isRulesAccepted: boolean;
-  firstName: string;
+  name: string;
   secondName: string;
-  thirdName: string;
+  lastName: string;
   birthDate: string;
-  passportNumber: string;
-  issueDate: string;
-  passportPhotoImage?: Image;
-  selfieWithPassportImage?: Image;
+  documentNumber: string;
+  documentFiles: IImagePickerAsset[];
 };

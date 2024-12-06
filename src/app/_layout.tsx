@@ -3,9 +3,10 @@ import * as Font from "expo-font";
 import { fonts } from "@/constants/fonts";
 import { Slot, SplashScreen } from "expo-router";
 import ConnectionCheck from "@/components/other/ConnectionCheck";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StoreProvider } from "@/components/ui/ReduxProvider";
+import { StatusBar } from "expo-status-bar";
 SplashScreen.preventAutoHideAsync();
 
 const index = () => {
@@ -32,6 +33,7 @@ const index = () => {
     <SafeAreaView style={styles.container}>
       <ConnectionCheck>
         <StoreProvider>
+          <StatusBar style="dark" backgroundColor="white" />
           <Slot />
         </StoreProvider>
       </ConnectionCheck>

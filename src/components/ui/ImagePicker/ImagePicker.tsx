@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
-import UploadIcon from "assets/icons/upload.png";
 interface IProps {
   title: string;
   linkSuggestion?: string;
@@ -12,16 +11,10 @@ interface IProps {
 }
 import * as ExpoImagePicker from "expo-image-picker";
 import { Control, useController } from "react-hook-form";
+import { icons } from "@/constants/icons";
 
 const ImagePicker = (props: IProps) => {
-  const {
-    title,
-    linkSuggestion,
-    suggestion,
-    control,
-    name,
-    rules = {},
-  } = props;
+  const { title, linkSuggestion, control, name, rules = {} } = props;
 
   const { field } = useController({ control, name, rules });
 
@@ -39,13 +32,12 @@ const ImagePicker = (props: IProps) => {
 
     // Открываем галерею для выбора изображения
     const result = await ExpoImagePicker.launchImageLibraryAsync({
-      mediaTypes: ExpoImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ["images"],
       allowsEditing: true,
       quality: 1,
     });
-
     if (!result.canceled) {
-      field.onChange(result.assets);
+      field.onChange(result.assets[0]);
     }
   };
 
@@ -61,7 +53,7 @@ const ImagePicker = (props: IProps) => {
       </View>
       <TouchableOpacity style={styles.button} onPress={selectImage}>
         <Image
-          source={field.value ? field.value : UploadIcon}
+          source={field.value ? field.value : icons.upload}
           style={{ width: 50, height: 50 }}
         />
         <Text style={styles.title}>

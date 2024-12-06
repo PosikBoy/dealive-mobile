@@ -7,6 +7,7 @@ import {
   Text,
   StyleSheet,
   TouchableWithoutFeedback,
+  KeyboardTypeOptions,
 } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -22,7 +23,7 @@ interface IField {
   name: string;
   control: Control<any>;
   rules?: any;
-  keyboardType?: string;
+  keyboardType?: KeyboardTypeOptions;
 }
 const InputField: FC<IField> = (props) => {
   const {

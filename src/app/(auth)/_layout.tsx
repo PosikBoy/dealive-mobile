@@ -1,11 +1,7 @@
-import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { Slot } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-type Props = {};
-
-const AuthLayout = (props: Props) => {
+const AuthLayout = () => {
   return (
     <>
       <Slot />
@@ -14,9 +10,3 @@ const AuthLayout = (props: Props) => {
 };
 
 export default AuthLayout;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

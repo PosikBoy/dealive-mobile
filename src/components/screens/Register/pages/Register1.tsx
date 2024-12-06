@@ -1,14 +1,21 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { FC, useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { FC, useState } from "react";
 import InputField from "@/components/ui/InputField/InputField";
 import { useForm } from "react-hook-form";
 import PhoneInputField from "@/components/ui/PhoneInputField/PhoneInputField";
 import MyButton from "@/components/ui/Button/Button";
-import arrow from "assets/icons/arrow.png";
 import { colors } from "@/constants/colors";
-import { useTypedSelector } from "@/hooks/redux.hooks";
-import { useTypedDispatch } from "@/hooks/redux.hooks";
+import { useTypedSelector, useTypedDispatch } from "@/hooks/redux.hooks";
 import { addFirstPageData } from "@/store/signupForm/signupForm.slice";
+import authService from "@/services/auth/auth.service";
+import { icons } from "@/constants/icons";
 
 interface IProps {
   nextPage: () => void;
@@ -18,71 +25,58 @@ interface IProps {
 interface IFormField {
   phoneNumber: string;
   code: string;
+  email: string;
   password: string;
   repeatPassword: string;
-  isAgreementAccepted: boolean;
 }
 
 const Register1: FC<IProps> = (props) => {
   const { nextPage, previousPage } = props;
-  const [isCodeSent, setIsCodeSent] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60);
-  const [isActive, setIsActive] = useState(false);
 
-  const state = useTypedSelector((state) => state.auth);
+  const [existingError, setExistingError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const state = useTypedSelector((state) => state.signupForm);
   const dispatch = useTypedDispatch();
-
-  useEffect(() => {
-    if (isActive) {
-      const interval = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
-      }, 1000);
-      if (timeLeft === 0) {
-        setIsActive(false);
-        setTimeLeft(60);
-      }
-      return () => clearInterval(interval);
-    }
-  }, [timeLeft, isActive]);
 
   const {
     control,
     formState: { errors },
     handleSubmit,
-    getValues,
     setError,
   } = useForm<IFormField>({
     mode: "onChange",
     defaultValues: {
       phoneNumber: state.phoneNumber,
       password: state.password,
+      email: state.email,
       code: state.code,
       repeatPassword: state.password,
     },
   });
-  const onSubmit = (data) => {
-    if (data.password === data.repeatPassword) {
-      dispatch(addFirstPageData(data));
-      nextPage();
-    } else {
+  const onSubmit = async (data: IFormField) => {
+    if (data.password !== data.repeatPassword) {
       setError("repeatPassword", {
         type: "manual",
         message: "Пароли не совпадают",
       });
+      return;
     }
-  };
-  const handleSendCodeButton = () => {
-    const phoneNumber = getValues("phoneNumber");
-    const regexNumber = /^(\+7|8)\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/;
-    if (regexNumber.test(phoneNumber)) {
-      setIsActive(true);
-      setIsCodeSent(true);
-    } else {
-      setError("phoneNumber", {
-        type: "manual",
-        message: "Введите номер телефона",
+    try {
+      setIsLoading(true);
+      await authService.isUserExist({
+        email: data.email,
+        phoneNumber: data.phoneNumber,
       });
+    } catch (error) {
+      setIsLoading(false);
+      setExistingError(error.message);
+      return;
     }
+    setIsLoading(false);
+
+    dispatch(addFirstPageData(data));
+    setExistingError("");
+    nextPage();
   };
 
   return (
@@ -95,7 +89,7 @@ const Register1: FC<IProps> = (props) => {
           }}
         >
           <Image
-            source={arrow}
+            source={icons.arrow}
             width={20}
             height={20}
             resizeMode="contain"
@@ -113,38 +107,33 @@ const Register1: FC<IProps> = (props) => {
             name="phoneNumber"
             placeholder="Номер телефона"
           />
-
-          <View style={styles.sendCodeButtonContainer}>
-            <TouchableOpacity
-              disabled={isActive}
-              onPress={handleSendCodeButton}
-              style={styles.sendCodeButton}
-            >
-              <Text style={styles.sendCodeButtonText}>
-                {isActive ? timeLeft : "Отправить код"}
-              </Text>
-            </TouchableOpacity>
-          </View>
         </View>
-        {isCodeSent && <Text style={styles.codeSentText}>Код отправлен</Text>}
         {errors?.phoneNumber?.message && (
           <Text style={styles.errorText}>{errors?.phoneNumber?.message}</Text>
         )}
       </View>
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите код из смс</Text>
+        <Text style={styles.fieldLabel}>Введите почту</Text>
         <View style={styles.inputField}>
           <InputField
             control={control}
-            name="code"
-            placeholder="Код из смс"
-            rules={{ required: "Код из смс обязателен" }}
+            name="email"
+            placeholder="Электронная почта"
+            rules={{
+              required: "Электронная почта обязательна",
+              pattern: {
+                value:
+                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                message: "Некорректный формат электронной почты",
+              },
+            }}
           />
         </View>
-        {errors?.code?.message && (
-          <Text style={styles.errorText}>{errors?.code?.message}</Text>
+        {errors?.email?.message && (
+          <Text style={styles.errorText}>{errors?.email?.message}</Text>
         )}
       </View>
+
       <View style={styles.fieldContainer}>
         <Text style={styles.fieldLabel}>Введите пароль</Text>
         <View style={styles.inputField}>
@@ -194,6 +183,19 @@ const Register1: FC<IProps> = (props) => {
           <Text style={styles.errorText}>
             {errors?.repeatPassword?.message}
           </Text>
+        )}
+      </View>
+      <View style={styles.loaderErrorContainer}>
+        {isLoading && (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" color={colors.purple} />
+          </View>
+        )}
+
+        {existingError && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{existingError}</Text>
+          </View>
         )}
       </View>
       <View style={styles.buttonContainer}>
@@ -285,7 +287,25 @@ const styles = StyleSheet.create({
   },
   repeat: {},
   buttonContainer: {
-    marginTop: 10,
+    position: "absolute",
+    bottom: 20,
     width: "100%",
+  },
+  loaderContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 20,
+    fontSize: 16,
+    fontFamily: "Montserrat-Regular",
+    color: "#000",
+  },
+  errorContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loaderErrorContainer: {
+    flex: 1,
   },
 });

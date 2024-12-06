@@ -7,7 +7,6 @@ import {
 } from "react-native";
 import React from "react";
 import { colors } from "@/constants/colors";
-import { red } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 
 const OnBoardingItem = ({ title, subtitle, iconUri }) => {
   const { width } = useWindowDimensions();

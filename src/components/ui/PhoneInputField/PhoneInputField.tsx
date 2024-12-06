@@ -21,12 +21,6 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-interface IField {
-  onChange: (value: string) => void;
-  placeholder: string;
-  value: string;
-  error?: any;
-}
 export interface PhoneInputFieldRef {
   focus: () => void;
 }
@@ -59,36 +53,24 @@ const PhoneInputField: FC<IField> = (props) => {
     }
   }, []);
 
-  const phoneChangeHandler = (newValue) => {
+  const phoneChangeHandler = (newValue: string) => {
     const regex = /[0-9]|\+/;
+
     const oldValue = field.value ? field.value : "";
     if (oldValue.length - newValue.length == 1) {
       field.onChange(newValue);
       return;
     }
-    if (regex.test(newValue[newValue.length - 1]) && newValue.length < 19) {
-      newValue = newValue.replaceAll(/\D/g, "");
-      if (newValue[0] == "9") {
+    newValue = newValue.replaceAll(/\D/g, "");
+    const lastSymbol = newValue[newValue.length - 1];
+
+    if (regex.test(lastSymbol)) {
+      if (newValue.length == 1 && newValue[0] != "7" && newValue[0] != "8") {
         newValue = "7" + newValue;
       }
-      if (newValue[0] == "7") {
+      if (newValue[0] == "7" || newValue[0] == "8") {
         newValue =
           "+7 (" +
-          (newValue[1] ? newValue[1] : "") +
-          (newValue[2] ? newValue[2] : "") +
-          (newValue[3] ? newValue[3] + ") " : "") +
-          (newValue[4] ? newValue[4] : "") +
-          (newValue[5] ? newValue[5] : "") +
-          (newValue[6] ? newValue[6] + "-" : "") +
-          (newValue[7] ? newValue[7] : "") +
-          (newValue[8] ? newValue[8] + "-" : "") +
-          (newValue[9] ? newValue[9] : "") +
-          (newValue[10] ? newValue[10] : "");
-        field.onChange(newValue);
-        return;
-      } else if (newValue[0] == "8") {
-        newValue =
-          "8 (" +
           (newValue[1] ? newValue[1] : "") +
           (newValue[2] ? newValue[2] : "") +
           (newValue[3] ? newValue[3] + ") " : "") +

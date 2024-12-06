@@ -1,32 +1,59 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { FC, useEffect, useState } from "react";
-import InputField from "@/components/ui/InputField/InputField";
+import {
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+
+import React, { FC } from "react";
 import { useForm } from "react-hook-form";
-import { router } from "expo-router";
 import MyButton from "@/components/ui/Button/Button";
-import arrow from "assets/icons/arrow.png";
-import { colors } from "@/constants/colors";
-import DataInputField from "@/components/ui/DataInputField/DataInputField";
 import ImagePicker from "@/components/ui/ImagePicker/ImagePicker";
 import InputFieldWithHandler from "@/components/ui/InputFieldWithHandler/InputFieldWIthHandler";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import { addThirdPageData } from "@/store/signupForm/signupForm.slice";
+import { register } from "@/store/auth/auth.actions";
+import { passportNumberHandler } from "@/helpers/passportHandler";
+import { colors } from "@/constants/colors";
+import store from "@/store/store";
+import { router } from "expo-router";
+import { icons } from "@/constants/icons";
+
 interface IProps {
   nextPage: () => void;
   previousPage: () => void;
 }
 
+interface IImagePickerAsset {
+  assetId: string | null;
+  base64: string | null; // Если включена опция base64
+  duration: number | null; // Если это видео
+  exif: Record<string, any> | null; // Если включена опция exif
+  fileName: string | null; // Имя файла
+  fileSize: number | null; // Размер файла в байтах
+  height: number | null; // Высота изображения
+  mimeType: string | null; // MIME-тип файла
+  rotation: number | null; // Поворот изображения
+  type: "image" | "video"; // Тип файла
+  uri: string; // URI файла
+  width: number | null; // Ширина изображения
+}
+
 interface IFormField {
-  passportNumber: string;
-  issueDate: string;
-  selfieWithPassportImage: Image;
-  passportPhotoImage: Image;
+  documentNumber: string;
+  selfieWithPassportImage: IImagePickerAsset;
+  passportPhotoImage: IImagePickerAsset;
 }
 
 const Register3: FC<IProps> = (props) => {
-  const { nextPage, previousPage } = props;
-  const state = useTypedSelector((state) => state.auth);
+  const { previousPage } = props;
+
+  const signupFormState = useTypedSelector((state) => state.signupForm);
+  const authState = useTypedSelector((state) => state.auth);
   const dispatch = useTypedDispatch();
+
   const {
     control,
     formState: { errors },
@@ -35,40 +62,26 @@ const Register3: FC<IProps> = (props) => {
   } = useForm<IFormField>({
     mode: "onChange",
     defaultValues: {
-      passportNumber: state.passportNumber,
-      issueDate: state.issueDate,
-      selfieWithPassportImage: state.selfieWithPassportImage,
-      passportPhotoImage: state.passportPhotoImage,
+      documentNumber: signupFormState.documentNumber,
+      selfieWithPassportImage: signupFormState.documentFiles[0],
+      passportPhotoImage: signupFormState.documentFiles[1],
     },
   });
-  const onSubmit = (data: IFormField) => {
-    dispatch(addThirdPageData(data));
 
-    nextPage();
+  const onSubmit = async (data: IFormField) => {
+    try {
+      // Добавляем данные в состояние
+      dispatch(addThirdPageData(data));
+
+      // Получаем обновленное состояние
+      const updatedFormState = store.getState().signupForm;
+
+      // Отправляем данные на сервер и ожидаем завершения
+      const response = await dispatch(register(updatedFormState)).unwrap();
+      router.replace("/waitForApproval");
+    } catch (error) {}
   };
-  const passportNumberHandler = (newValue: string) => {
-    const regex = /[0-9]/;
-    const oldValue = getValues("passportNumber") || "";
-    if (oldValue.length - newValue.length == 1) {
-      return newValue;
-    }
-    if (regex.test(newValue[newValue.length - 1]) && newValue.length < 12) {
-      newValue = newValue.replaceAll(/\D/g, "");
-      newValue =
-        (newValue[0] ? newValue[0] : "") +
-        (newValue[1] ? newValue[1] : "") +
-        (newValue[2] ? newValue[2] : "") +
-        (newValue[3] ? newValue[3] + " " : "") +
-        (newValue[4] ? newValue[4] : "") +
-        (newValue[5] ? newValue[5] : "") +
-        (newValue[6] ? newValue[6] : "") +
-        (newValue[7] ? newValue[7] : "") +
-        (newValue[8] ? newValue[8] : "") +
-        (newValue[9] ? newValue[9] : "");
-      return newValue;
-    }
-    return oldValue;
-  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -79,7 +92,7 @@ const Register3: FC<IProps> = (props) => {
           }}
         >
           <Image
-            source={arrow}
+            source={icons.arrow}
             width={20}
             height={20}
             resizeMode="contain"
@@ -94,7 +107,7 @@ const Register3: FC<IProps> = (props) => {
         <View style={styles.inputField}>
           <InputFieldWithHandler
             control={control}
-            name="passportNumber"
+            name="documentNumber"
             placeholder="1234 567890"
             keyboardType="number-pad"
             rules={{
@@ -104,28 +117,18 @@ const Register3: FC<IProps> = (props) => {
                 message: "Некорректная серия и номер паспорта",
               },
             }}
-            handler={passportNumberHandler}
+            handler={(value) =>
+              passportNumberHandler(value, getValues().documentNumber)
+            }
           />
         </View>
-        {errors?.passportNumber?.message && (
+        {errors?.documentNumber?.message && (
           <Text style={styles.errorText}>
-            {errors?.passportNumber?.message}
+            {errors?.documentNumber?.message}
           </Text>
         )}
       </View>
-      <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите дату выдачи паспорта</Text>
-        <View style={styles.inputField}>
-          <DataInputField
-            control={control}
-            name="issueDate"
-            placeholder="ДД.ММ.ГГГГ"
-          />
-        </View>
-        {errors?.issueDate?.message && (
-          <Text style={styles.errorText}>{errors?.issueDate?.message}</Text>
-        )}
-      </View>
+
       <View style={styles.imagePickerContainer}>
         <ImagePicker
           title="Загрузите селфи с паспортом"
@@ -153,6 +156,20 @@ const Register3: FC<IProps> = (props) => {
           <Text style={styles.errorText}>
             {errors?.passportPhotoImage?.message}
           </Text>
+        )}
+      </View>
+
+      <View style={styles.loaderErrorContainer}>
+        {authState.isLoading && (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" color={colors.purple} />
+          </View>
+        )}
+
+        {authState.error && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{authState.error}</Text>
+          </View>
         )}
       </View>
 
@@ -219,12 +236,30 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   buttonContainer: {
-    marginTop: 10,
+    position: "absolute",
+    bottom: 20,
     width: "100%",
   },
   imagePickerContainer: {
     height: 100,
     width: "100%",
     marginTop: 10,
+  },
+  loaderContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 20,
+    fontSize: 16,
+    fontFamily: "Montserrat-Regular",
+    color: "#000",
+  },
+  errorContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loaderErrorContainer: {
+    flex: 1,
   },
 });

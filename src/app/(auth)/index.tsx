@@ -6,9 +6,9 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import box from "@/../assets/icons/box.png";
 import MyButton from "@/components/ui/Button/Button";
 import { router } from "expo-router";
+import { icons } from "@/constants/icons";
 
 const main = () => {
   const handleLogin = () => {
@@ -24,7 +24,7 @@ const main = () => {
         <Text style={styles.subtitle}>Поможем с работой!</Text>
       </View>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={box} resizeMode="contain" />
+        <Image style={styles.image} source={icons.box} resizeMode="contain" />
       </View>
       <View style={styles.buttonContainer}>
         <MyButton buttonText="Войти" onPress={handleLogin} />

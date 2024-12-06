@@ -1,23 +1,30 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-} from "react-native";
-import React from "react";
-import box from "@/../assets/icons/box.png";
+import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
 import MyButton from "@/components/ui/Button/Button";
+import { colors } from "@/constants/colors";
+
 import { router } from "expo-router";
-import SuccessIcon from "assets/icons/success.png";
-const Success = () => {
+import { useTypedSelector } from "@/hooks/redux.hooks";
+import { icons } from "@/constants/icons";
+
+const waitForApproval = () => {
+  const { isApproved, isLoading, error } = useTypedSelector(
+    (state) => state.auth
+  );
+
+  const checkApproval = async () => {
+    router.replace("/");
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Ваш аккаунт на подтверждении</Text>
+        <Text style={styles.title}>Вы успешно зарегистрировались</Text>
       </View>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={SuccessIcon} resizeMode="contain" />
+        <Image
+          style={styles.image}
+          source={icons.success}
+          resizeMode="contain"
+        />
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.title}>Поздравляем!</Text>
@@ -26,14 +33,27 @@ const Success = () => {
           займет около двух часов. Спасибо за ожидание.
         </Text>
       </View>
+      {isLoading && <ActivityIndicator size="large" color={colors.purple} />}
+      {!isApproved && (
+        <Text style={styles.subtitle}>Мы все еще проверяем ваш аккаунт</Text>
+      )}
+      {error && <Text style={styles.subtitle}>{error}</Text>}
+
+      <View style={styles.buttonContainer}>
+        <MyButton
+          buttonText="Проверить подтверждение"
+          onPress={checkApproval}
+        />
+      </View>
     </View>
   );
 };
 
-export default Success;
+export default waitForApproval;
 
 const styles = StyleSheet.create({
   container: {
+    width: "100%",
     flex: 1,
     alignItems: "center",
     paddingHorizontal: 20,
@@ -69,9 +89,10 @@ const styles = StyleSheet.create({
   textContainer: {
     width: "100%",
     marginTop: 50,
-    gap: 15,
-    textAlign: "center",
-
-    alignItems: "center",
+  },
+  buttonContainer: {
+    width: "100%",
+    position: "absolute",
+    bottom: 20,
   },
 });

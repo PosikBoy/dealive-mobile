@@ -1,41 +1,39 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Gender, IInitialState } from "./signupForm.types";
+import { IInitialState } from "./signupForm.types";
 
 const initialState: IInitialState = {
   phoneNumber: "",
   password: "",
   code: "",
+  email: "",
   isRulesAccepted: false,
-  firstName: "",
+  name: "",
   secondName: "",
-  thirdName: "",
+  lastName: "",
   birthDate: "",
-  passportNumber: "",
-  issueDate: "",
-  passportPhotoImage: null,
-  selfieWithPassportImage: null,
+  documentNumber: "",
+  documentFiles: [],
 };
-
 export const signupFormSlice = createSlice({
   name: "signupForm",
   initialState,
   reducers: {
     addFirstPageData(state, action) {
       state.phoneNumber = action.payload.phoneNumber;
+      state.email = action.payload.email;
       state.code = action.payload.code;
       state.password = action.payload.password;
     },
     addSecondPageData(state, action) {
-      state.firstName = action.payload.firstName;
+      state.name = action.payload.name;
       state.secondName = action.payload.secondName;
-      state.thirdName = action.payload.thirdName;
+      state.lastName = action.payload.lastName;
       state.birthDate = action.payload.birthDate;
     },
     addThirdPageData(state, action) {
-      state.passportNumber = action.payload.passportNumber;
-      state.issueDate = action.payload.issueDate;
-      state.selfieWithPassportImage = action.payload.selfieWithPassportImage;
-      state.passportPhotoImage = action.payload.passportPhotoImage;
+      state.documentNumber = action.payload.documentNumber;
+      state.documentFiles[0] = action.payload.selfieWithPassportImage;
+      state.documentFiles[1] = action.payload.passportPhotoImage;
     },
   },
 });

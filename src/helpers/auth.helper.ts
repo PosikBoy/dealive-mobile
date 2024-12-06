@@ -1,61 +1,67 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IAuthData, IUserData } from "./auth.types";
+import * as SecureStore from "expo-secure-store";
+import { IAuthResponseData } from "@/types/auth.interface";
 
 class AuthStorage {
-  saveTokens = async (refreshToken, accessToken) => {
-    await AsyncStorage.setItem("refreshToken", refreshToken);
-    await AsyncStorage.setItem("accessToken", accessToken);
+  saveTokens = async (refreshToken: string, accessToken: string) => {
+    await SecureStore.setItemAsync("refreshToken", refreshToken);
+    await SecureStore.setItemAsync("accessToken", accessToken);
   };
-  saveUser = async (user: IUserData) => {
-    await AsyncStorage.setItem("user", JSON.stringify(user));
+
+  saveAuthData = async (authData: IAuthResponseData) => {
+    await this.saveTokens(authData.refreshToken, authData.accessToken);
+    await this.setIsAuth(true);
   };
-  saveAuthData = async (authData: IAuthData) => {
-    this.saveTokens(authData.refreshToken, authData.accessToken);
-    this.saveUser(authData.userData);
-  };
+
   getAccessToken = async () => {
     try {
-      const value = await AsyncStorage.getItem("accessToken");
+      const value = await SecureStore.getItemAsync("accessToken");
       return value || null;
     } catch (e) {
-      console.log(e);
+      console.log("Error getting access token:", e);
+      return null;
     }
   };
+
   getRefreshToken = async () => {
     try {
-      const value = await AsyncStorage.getItem("refreshToken");
+      const value = await SecureStore.getItemAsync("refreshToken");
       return value || null;
     } catch (e) {
-      console.log(e);
+      console.log("Error getting refresh token:", e);
+      return null;
     }
   };
-  getUser = async () => {
-    try {
-      const value = await AsyncStorage.getItem("user");
-      const user = JSON.parse(value || "");
-      return user || null;
-    } catch (e) {
-      console.log(e);
-    }
-  };
+
   removeTokens = async () => {
     try {
-      await AsyncStorage.removeItem("accessToken");
-      await AsyncStorage.removeItem("refreshToken");
+      await SecureStore.deleteItemAsync("accessToken");
+      await SecureStore.deleteItemAsync("refreshToken");
     } catch (e) {
-      console.log(e);
+      console.log("Error removing tokens:", e);
     }
   };
-  removeUser = async () => {
-    try {
-      await AsyncStorage.removeItem("user");
-    } catch (e) {
-      console.log(e);
-    }
-  };
+
   removeAuthData = async () => {
-    this.removeUser();
-    this.removeTokens();
+    await this.setIsAuth(false);
+    await this.removeTokens();
+  };
+
+  setIsAuth = async (value: boolean) => {
+    try {
+      await SecureStore.setItemAsync("isAuth", value.toString());
+    } catch (e) {
+      console.log("Error setting isAuth:", e);
+    }
+  };
+
+  getIsAuth = async () => {
+    try {
+      const value = await SecureStore.getItemAsync("isAuth");
+      return value === "true";
+    } catch (e) {
+      console.log("Error getting isAuth:", e);
+      return false;
+    }
   };
 }
 

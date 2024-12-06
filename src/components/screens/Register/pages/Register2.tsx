@@ -1,30 +1,28 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import InputField from "@/components/ui/InputField/InputField";
 import { useForm } from "react-hook-form";
-import { Link, router } from "expo-router";
 import MyButton from "@/components/ui/Button/Button";
-import arrow from "assets/icons/arrow.png";
 import { colors } from "@/constants/colors";
 import DataInputField from "@/components/ui/DataInputField/DataInputField";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import { addSecondPageData } from "@/store/signupForm/signupForm.slice";
+import { icons } from "@/constants/icons";
 
 interface IProps {
   nextPage: () => void;
   previousPage: () => void;
 }
 interface IFormField {
+  name: string;
   secondName: string;
-  firstName: string;
-  thirdName: string;
+  lastName: string;
   birthDate: string;
 }
 
 const Register2: FC<IProps> = (props) => {
   const { nextPage, previousPage } = props;
-
-  const state = useTypedSelector((state) => state.auth);
+  const state = useTypedSelector((state) => state.signupForm);
   const dispatch = useTypedDispatch();
   const {
     control,
@@ -34,9 +32,9 @@ const Register2: FC<IProps> = (props) => {
   } = useForm<IFormField>({
     mode: "onChange",
     defaultValues: {
+      name: state.name,
       secondName: state.secondName,
-      firstName: state.firstName,
-      thirdName: state.thirdName,
+      lastName: state.lastName,
       birthDate: state.birthDate,
     },
   });
@@ -81,7 +79,7 @@ const Register2: FC<IProps> = (props) => {
           }}
         >
           <Image
-            source={arrow}
+            source={icons.arrow}
             width={20}
             height={20}
             resizeMode="contain"
@@ -110,13 +108,13 @@ const Register2: FC<IProps> = (props) => {
         <View style={styles.inputField}>
           <InputField
             control={control}
-            name="firstName"
+            name="name"
             placeholder="Имя"
             rules={{ required: "Имя обязательно" }}
           />
         </View>
-        {errors?.firstName?.message && (
-          <Text style={styles.errorText}>{errors?.firstName?.message}</Text>
+        {errors?.name?.message && (
+          <Text style={styles.errorText}>{errors?.name?.message}</Text>
         )}
       </View>
       <View style={styles.fieldContainer}>
@@ -124,13 +122,13 @@ const Register2: FC<IProps> = (props) => {
         <View style={styles.inputField}>
           <InputField
             control={control}
-            name="thirdName"
+            name="lastName"
             placeholder="Отчество"
             rules={{ required: "Отчество обязательно" }}
           />
         </View>
-        {errors?.thirdName?.message && (
-          <Text style={styles.errorText}>{errors?.thirdName?.message}</Text>
+        {errors?.lastName?.message && (
+          <Text style={styles.errorText}>{errors?.lastName?.message}</Text>
         )}
       </View>
       <View style={styles.fieldContainer}>
@@ -234,7 +232,8 @@ const styles = StyleSheet.create({
   },
   repeat: {},
   buttonContainer: {
-    marginTop: 10,
+    position: "absolute",
+    bottom: 20,
     width: "100%",
   },
 });

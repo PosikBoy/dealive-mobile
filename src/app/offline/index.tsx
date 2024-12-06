@@ -1,26 +1,25 @@
 import { View, Text, StyleSheet, Image, ToastAndroid } from "react-native";
 import React from "react";
 import NetInfo from "@react-native-community/netinfo";
-import noConnectionImage from "@/../assets/icons/noConnection.png";
 import { colors } from "@/constants/colors";
 import MyButton from "@/components/ui/Button/Button";
-import { Redirect } from "expo-router";
+import { router } from "expo-router";
+import { icons } from "@/constants/icons";
 
 const index = () => {
   const handleCheckConnection = () => {
     NetInfo.fetch().then((state) => {
       if (state.isConnected) {
-        return <Redirect href="/home" />;
+        router.replace("/");
       } else {
         ToastAndroid.show("Нет подключения к интернету", ToastAndroid.SHORT);
-        return <Redirect href="/offline" />;
       }
     });
   };
 
   return (
     <View style={styles.container}>
-      <Image source={noConnectionImage} style={styles.image} />
+      <Image source={icons.noConnection} style={styles.image} />
       <Text style={styles.title}>Нет подключения к интернету</Text>
       <Text style={styles.subtitle}>
         Проверьте соединение и попробуйте еще раз
@@ -28,7 +27,7 @@ const index = () => {
       <View style={styles.buttonContainer}>
         <MyButton
           buttonText="Проверить соединение"
-          handlePress={handleCheckConnection}
+          onPress={handleCheckConnection}
         />
       </View>
     </View>

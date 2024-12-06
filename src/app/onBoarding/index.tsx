@@ -8,31 +8,30 @@ import {
 } from "react-native";
 import React, { useRef, useState } from "react";
 import OnBoardingItem from "./components/OnBoardingItem";
-import money from "@/../assets/icons/moneyPurple.png";
-import time from "@/../assets/icons/time.png";
-import cup from "@/../assets/icons/cup.png";
+
 import Paginator from "./components/Paginator";
 import MyButton from "@/components/ui/Button/Button";
 import { router } from "expo-router";
+import { icons } from "@/constants/icons";
 
 const data = [
   {
     id: 1,
     title: "Курьерская служба",
     subtitle: "Открой для себя удобный и доступный способ заработка ",
-    iconUri: money,
+    iconUri: icons.moneyPurple,
   },
   {
     id: 2,
     title: "Быстро и без заморочек",
     subtitle: "Приступай к работе уже через 20 минут после регистрации",
-    iconUri: time,
+    iconUri: icons.time,
   },
   {
     id: 3,
     title: "Лучшие предложения",
     subtitle: "Выбирай понравившееся среди доступных заказов",
-    iconUri: cup,
+    iconUri: icons.cup,
   },
 ];
 
@@ -47,7 +46,6 @@ const onBoarding = () => {
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
   const nextButtonClick = () => {
-    console.log("aksndc");
     if (currentPage == data.length - 1) {
       router.push("/(auth)");
     }
