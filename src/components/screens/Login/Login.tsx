@@ -9,6 +9,7 @@ import MyButton from "@/components/ui/Button/Button";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import { login } from "@/store/auth/auth.actions";
 import { colors } from "@/constants/colors";
+import { SERVER_URL } from "@/constants/urls";
 
 interface IPhoneNumberPassword {
   phoneNumber: String;
@@ -32,6 +33,8 @@ const Login = () => {
   };
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>{SERVER_URL}</Text>
+
       <Text style={styles.title}>Войдите в аккаунт</Text>
       <Text style={styles.subtitle}>Пожалуйста, введите свои данные</Text>
       <View style={styles.phoneInputContainer}>
