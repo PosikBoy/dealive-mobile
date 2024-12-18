@@ -21,7 +21,7 @@ const AvailableOrders = () => {
       refetchOnReconnect: true,
     }
   );
-
+  console.log(data);
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -42,7 +42,7 @@ const AvailableOrders = () => {
           <Image
             source={icons.searchOrders}
             style={{ width: "100%", height: "100%" }}
-            resizeMode="cover"
+            resizeMode="contain"
           />
         </View>
       </View>

@@ -104,13 +104,16 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   addressText: {
+    flex: 1,
+
     color: colors.black,
     fontFamily: "Montserrat-SemiBold",
-    fontSize: 18,
+    fontSize: 16,
   },
   addressIndex: {
     position: "absolute",
     left: 8.5,
+    top: -2,
   },
   infoLabel: {
     fontSize: 12,

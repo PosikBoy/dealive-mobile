@@ -8,7 +8,7 @@ import {
 } from "@/store/auth/auth.actions";
 import { Redirect } from "expo-router";
 import { colors } from "@/constants/colors";
-import authStorage from "@/helpers/auth.helper";
+import authStorage from "@/helpers/authStorage";
 
 type Props = {
   children: React.ReactNode;

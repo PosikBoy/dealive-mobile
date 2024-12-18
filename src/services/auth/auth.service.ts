@@ -12,7 +12,7 @@ import {
   ILoginRequestData,
   IRegisterRequestData,
 } from "@/types/auth.interface";
-import authHelper from "@/helpers/auth.helper";
+import authHelper from "@/helpers/authStorage";
 import instance from "@/axios/interceptor";
 import { errorCatch } from "@/helpers/errorCatch";
 

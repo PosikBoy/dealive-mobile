@@ -1,15 +1,13 @@
 import { IOrder, IOrderWithoutSensitiveInfo } from "@/types/order.interface";
-import React, { FC, useState } from "react";
+import React, { FC, useCallback, useMemo, useRef, useState } from "react";
 import {
   FlatList,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { colors } from "@/constants/colors";
-import { router } from "expo-router";
 
 import formatDate from "@/helpers/formatDate";
 import MyButton from "@/components/ui/Button/Button";
@@ -17,6 +15,12 @@ import { useTakeOrderMutation } from "@/services/orders/orders.service";
 import Address from "./components/Address";
 import Header from "@/components/ui/Header/Header";
 import Action from "./components/Action";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
 
 interface IProps {
   order: IOrderWithoutSensitiveInfo | IOrder;
@@ -26,12 +30,39 @@ const Order: FC<IProps> = ({ order }) => {
   const [currentPage, setCurrentPage] = useState<"addresses" | "actions">(
     "addresses"
   );
+  const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
+
   const [takeOrder] = useTakeOrderMutation();
   const takeOrderHandle = () => {
-    takeOrder({ orderId: order.id });
+    ref.current.expand();
+    // takeOrder({ orderId: order.id });
   };
+  const ref = useRef<BottomSheetModal>(null);
+  const renderBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop {...props} opacity={0.5} style={{ zIndex: 1000 }} />
+    ),
+    []
+  );
+
   return (
     <View style={styles.container}>
+      <BottomSheet
+        snapPoints={snapPoints}
+        index={2}
+        style={styles.bottomSheet}
+        ref={ref}
+        backdropComponent={renderBackdrop}
+      >
+        <BottomSheetView style={styles.bottomSheetContent}>
+          <Text>Текст</Text>
+          <Text>Текст</Text>
+          <Text>Текст</Text>
+          <Text>Текст</Text>
+          <Text>Текст</Text>
+          <Text>Текст</Text>
+        </BottomSheetView>
+      </BottomSheet>
       <Header title={"Заказ № " + order.id} />
       <View style={styles.togglerTypeContainer}>
         <View style={styles.togglerType}>
@@ -156,7 +187,7 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   togglerOption: {
-    padding: 10,
+    padding: 5,
     alignItems: "center",
     justifyContent: "center",
     width: "50%",
@@ -209,5 +240,16 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontFamily: "Montserrat-Bold",
     textAlign: "center",
+  },
+  bottomSheet: {
+    flex: 1,
+    zIndex: 1200000,
+    backgroundColor: colors.white,
+  },
+  bottomSheetContent: {
+    flex: 1,
+    padding: 36,
+    alignItems: "center",
+    backgroundColor: colors.white,
   },
 });

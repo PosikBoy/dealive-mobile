@@ -8,6 +8,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StoreProvider } from "@/components/ui/ReduxProvider";
 import { StatusBar } from "expo-status-bar";
 import AuthWrapper from "@/components/other/AuthWrapper";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 SplashScreen.preventAutoHideAsync();
 
 const layout = () => {
@@ -32,12 +34,16 @@ const layout = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ConnectionCheck>
-        <StoreProvider>
-          <StatusBar style="dark" backgroundColor="white" />
-          <Slot />
-        </StoreProvider>
-      </ConnectionCheck>
+      <GestureHandlerRootView>
+        <BottomSheetModalProvider>
+          <ConnectionCheck>
+            <StoreProvider>
+              <StatusBar style="dark" backgroundColor="white" />
+              <Slot />
+            </StoreProvider>
+          </ConnectionCheck>
+        </BottomSheetModalProvider>
+      </GestureHandlerRootView>
     </SafeAreaView>
   );
 };

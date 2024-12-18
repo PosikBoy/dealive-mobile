@@ -6,7 +6,7 @@ import {
   IAuthResponseData,
 } from "@/types/auth.interface";
 import { errorCatch } from "@/helpers/errorCatch";
-import authStorage from "@/helpers/auth.helper";
+import authStorage from "@/helpers/authStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const register = createAsyncThunk<

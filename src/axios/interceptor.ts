@@ -1,4 +1,4 @@
-import authHelper from "@/helpers/auth.helper";
+import authHelper from "@/helpers/authStorage";
 import axios from "axios";
 import authService from "@/services/auth/auth.service";
 import { errorCatch } from "@/helpers/errorCatch";

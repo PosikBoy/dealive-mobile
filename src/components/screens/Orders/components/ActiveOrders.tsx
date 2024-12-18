@@ -16,7 +16,7 @@ const AvailableOrders = () => {
   const { data, isLoading, refetch, isFetching } = useGetActiveOrdersQuery(
     undefined,
     {
-      pollingInterval: 60000,
+      pollingInterval: 1000,
       refetchOnFocus: true,
       refetchOnReconnect: true,
     }
@@ -27,7 +27,7 @@ const AvailableOrders = () => {
       <View style={styles.container}>
         <View style={styles.searchOrderContainer}>
           <Image
-            source={icons.refetch}
+            source={icons.searchOrders}
             style={{ width: "100%", height: "100%" }}
             resizeMode="contain"
           />
@@ -42,12 +42,13 @@ const AvailableOrders = () => {
           <Image
             source={icons.noOrders}
             style={{ width: "100%", height: "100%" }}
-            resizeMode="cover"
+            resizeMode="contain"
           />
         </View>
       </View>
     );
   }
+
   return (
     <View style={styles.container}>
       <View>

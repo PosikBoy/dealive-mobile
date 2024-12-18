@@ -7,20 +7,32 @@ import {
   Pressable,
   Linking,
 } from "react-native";
-import React from "react";
+import React, { useRef } from "react";
 import { Link, router } from "expo-router";
 import { colors } from "@/constants/colors";
 import { useTypedDispatch } from "@/hooks/redux.hooks";
 import { logOut } from "@/store/auth/auth.actions";
 import { icons } from "@/constants/icons";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 const Settings = () => {
   const dispatch = useTypedDispatch();
+  const ref = useRef<BottomSheetModal>();
   const logoutHandler = async () => {
-    await dispatch(logOut());
-    router.replace("/");
+    ref.current.present();
+    // await dispatch(logOut());
+    // router.replace("/");
   };
   return (
     <View style={styles.container}>
+      <BottomSheetModal ref={ref} style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
+          <Text>Вытйи из аккаунта</Text>
+          <Text>Вытйи из аккаунта</Text>
+          <Text>Вытйи из аккаунта</Text>
+          <Text>Вытйи из аккаунта</Text>
+          <Text>Вытйи из аккаунта</Text>
+        </View>
+      </BottomSheetModal>
       <View style={styles.header}>
         <Text style={styles.headerText}>Настройки</Text>
       </View>
