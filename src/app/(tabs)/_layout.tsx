@@ -2,9 +2,8 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Tabs, useSegments } from "expo-router";
 import { colors } from "@/constants/colors";
-import tabOrderIcon from "assets/tabs/orders.png";
-import tabSettingsIcon from "assets/tabs/settings.png";
-import tabChatIcon from "assets/tabs/chat.png";
+import { icons } from "@/constants/icons";
+
 const TabIcon = ({ icon, color, name, focused }) => {
   return (
     <View style={tabStyles.container}>
@@ -25,8 +24,6 @@ const TabIcon = ({ icon, color, name, focused }) => {
 
 const TabsLayout = () => {
   const segments = useSegments();
-
-  // Определяем, нужно ли скрывать табы
 
   const hideTabs =
     segments.includes("[id]") ||
@@ -49,13 +46,13 @@ const TabsLayout = () => {
       }}
     >
       <Tabs.Screen
-        name="chat"
+        name="support"
         options={{
           headerShown: false,
           title: "Техподдержка",
           tabBarIcon: ({ focused }) => (
             <TabIcon
-              icon={tabChatIcon}
+              icon={icons.chat}
               color={colors.purple}
               name="Техподдержка"
               focused={focused}
@@ -70,7 +67,7 @@ const TabsLayout = () => {
           title: "Заказы",
           tabBarIcon: ({ focused }) => (
             <TabIcon
-              icon={tabOrderIcon}
+              icon={icons.orders}
               color={colors.purple}
               name="Заказы"
               focused={focused}
@@ -85,7 +82,7 @@ const TabsLayout = () => {
           title: "Настройки",
           tabBarIcon: ({ focused }) => (
             <TabIcon
-              icon={tabSettingsIcon}
+              icon={icons.settings}
               color={colors.purple}
               name="Настройки"
               focused={focused}
@@ -114,7 +111,6 @@ const tabStyles = StyleSheet.create({
   },
   text: {
     width: "100%",
-
     color: colors.gray,
   },
   focusedText: {

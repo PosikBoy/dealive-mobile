@@ -9,4 +9,6 @@ export const colors = {
   red: "#EE2400",
   hoverPurple: "#872CFE",
   hoverRed: "#FF0000",
+  green: "#D0FF84",
+  lightRed: "#D95A5A",
 };

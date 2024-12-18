@@ -7,9 +7,10 @@ import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StoreProvider } from "@/components/ui/ReduxProvider";
 import { StatusBar } from "expo-status-bar";
+import AuthWrapper from "@/components/other/AuthWrapper";
 SplashScreen.preventAutoHideAsync();
 
-const index = () => {
+const layout = () => {
   const [isAppReady, setIsAppReady] = useState(false);
 
   const loadFonts = async () => {
@@ -47,4 +48,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default index;
+export default layout;

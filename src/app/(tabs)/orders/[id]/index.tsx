@@ -12,7 +12,7 @@ const index = () => {
   }, [navigation]);
 
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data, isError, error, isLoading, refetch } = useGetOrderByIdQuery(
+  const { data, isError, error, isLoading } = useGetOrderByIdQuery(
     parseInt(id)
   );
   if (isError) {
@@ -21,7 +21,7 @@ const index = () => {
   if (isLoading) {
     return <ActivityIndicator size={"large"} />;
   }
-  return <Order order={data} refetch={refetch} />;
+  return <Order order={data} />;
 };
 
 export default index;

@@ -8,7 +8,6 @@ import {
 } from "@/store/auth/auth.actions";
 import { Redirect } from "expo-router";
 import { colors } from "@/constants/colors";
-import authStorage from "@/helpers/auth.helper";
 
 type Props = {
   children: React.ReactNode;
@@ -25,19 +24,20 @@ const AuthWrapper: FC<Props> = ({ children }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const storedAuth = await authStorage.getIsAuth();
-
+        const storedAuth = await AsyncStorage.getItem("isAuth");
         if (storedAuth) {
           await dispatch(fetchAuthStatus()).unwrap();
           await dispatch(fetchIsApprovedStatus()).unwrap();
         }
       } catch (err) {
+        console.error("Ошибка проверки авторизации:", err);
       } finally {
         setIsInitialLoading(false); // Завершаем инициализацию
       }
     };
+
     checkAuthStatus();
-  }, []);
+  }, [dispatch]);
 
   if (isInitialLoading || isLoading) {
     return (
@@ -63,7 +63,7 @@ const AuthWrapper: FC<Props> = ({ children }) => {
     return <Redirect href="/waitForApproval" />;
   }
 
-  return <Redirect href="/orders/main" />; // Рендерим детей только после успешной проверки
+  return <>{children}</>; // Рендерим детей только после успешной проверки
 };
 
 const styles = StyleSheet.create({

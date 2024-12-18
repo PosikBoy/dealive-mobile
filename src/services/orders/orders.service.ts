@@ -30,14 +30,14 @@ const axiosBaseQuery =
 export const ordersApi = createApi({
   reducerPath: "ordersApi",
   baseQuery: axiosBaseQuery({ baseUrl: SERVER_URL }),
-  tagTypes: ["Orders"],
+  tagTypes: ["Orders", "takenOrder"],
   endpoints: (builder) => ({
     getOrderById: builder.query<IOrder | IOrderWithoutSensitiveInfo, number>({
       query: (id: number) => ({
         url: `/order/${id}`,
         method: "GET",
       }),
-      providesTags: ["Orders"],
+      providesTags: ["takenOrder"],
     }),
 
     getAllOrders: builder.query<IOrder[], void>({
@@ -69,6 +69,13 @@ export const ordersApi = createApi({
         method: "PUT",
         body: takeOrderDto,
       }),
+      invalidatesTags: ["takenOrder"],
+    }),
+    completeAction: builder.mutation<void, number>({
+      query: (actionId: number) => ({
+        url: `/order/action/${actionId}`,
+        method: "PUT",
+      }),
       invalidatesTags: ["Orders"],
     }),
   }),
@@ -81,4 +88,5 @@ export const {
   useGetAvailableOrdersQuery,
   useGetActiveOrdersQuery,
   useTakeOrderMutation,
+  useCompleteActionMutation,
 } = ordersApi;

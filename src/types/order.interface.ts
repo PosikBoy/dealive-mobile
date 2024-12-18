@@ -4,6 +4,26 @@ export interface IAddressWithoutSensitiveInfo {
   address: string;
   info: string;
 }
+export enum IOrderActionType {
+  GO_TO = "GO_TO",
+  ARRIVED_AT = "ARRIVED_AT",
+  PICKUP = "PICKUP",
+  DELIVER = "DELIVER",
+  COLLECT_PAYMENT = "COLLECT_PAYMENT",
+  PAY_COMMISION = "PAY_COMMISION",
+  COMPLETE_ORDER = "COMPLETE_ORDER",
+}
+export interface IOrderAction {
+  actionType: IOrderActionType;
+  completedAt: Date | null;
+  createdAt: Date;
+  description: string;
+  id: number;
+  isCompleted: boolean;
+  orderId: number;
+  sequence: number;
+  updatedAt: Date;
+}
 
 export interface IOrderWithoutSensitiveInfo {
   id: number;
@@ -13,6 +33,7 @@ export interface IOrderWithoutSensitiveInfo {
   price: number;
   statusId: number;
   addresses: IAddressWithoutSensitiveInfo[];
+  actions: IOrderAction[];
 }
 
 export interface IAddress {
@@ -41,4 +62,5 @@ export interface IOrder {
   createdAt: string;
   updatedAt: string;
   addresses: IAddress[];
+  actions: IOrderAction[];
 }

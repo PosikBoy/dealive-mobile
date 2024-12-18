@@ -1,6 +1,13 @@
 import { IOrder, IOrderWithoutSensitiveInfo } from "@/types/order.interface";
-import React, { FC } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import React, { FC, useState } from "react";
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { colors } from "@/constants/colors";
 import { router } from "expo-router";
 
@@ -9,47 +16,107 @@ import MyButton from "@/components/ui/Button/Button";
 import { useTakeOrderMutation } from "@/services/orders/orders.service";
 import Address from "./components/Address";
 import Header from "@/components/ui/Header/Header";
+import Action from "./components/Action";
 
 interface IProps {
   order: IOrderWithoutSensitiveInfo | IOrder;
-  refetch: () => void;
 }
 
-const Order: FC<IProps> = ({ order, refetch }) => {
+const Order: FC<IProps> = ({ order }) => {
+  const [currentPage, setCurrentPage] = useState<"addresses" | "actions">(
+    "addresses"
+  );
   const [takeOrder] = useTakeOrderMutation();
-
   const takeOrderHandle = () => {
     takeOrder({ orderId: order.id });
-    refetch();
   };
-
   return (
     <View style={styles.container}>
       <Header title={"Заказ № " + order.id} />
-
-      <View style={styles.addresses}>
-        <FlatList
-          data={order.addresses}
-          renderItem={({ item, index }) => (
-            <Address address={item} index={index} price={order.price} />
-          )}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{ gap: 20 }}
-        />
-      </View>
-      <View style={styles.creationDate}>
-        <Text style={styles.creationDateText}>
-          {"Создан " + formatDate(order.date)}
-        </Text>
-      </View>
-      {order.statusId != 3 && (
-        <View style={styles.cancelOrderButton}>
-          <MyButton
-            buttonText="Отменить заказ"
-            onPress={() => {}}
-            color="red"
-          />
+      <View style={styles.togglerTypeContainer}>
+        <View style={styles.togglerType}>
+          <TouchableOpacity
+            onPress={() => setCurrentPage("addresses")}
+            style={[
+              styles.togglerOption,
+              currentPage === "addresses" && styles.activeTogglerOption,
+            ]}
+          >
+            <Text
+              style={[
+                styles.togglerText,
+                currentPage === "addresses" && styles.activeTogglerText,
+              ]}
+            >
+              Адреса
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setCurrentPage("actions")}
+            style={[
+              styles.togglerOption,
+              currentPage === "actions" && styles.activeTogglerOption,
+            ]}
+          >
+            <Text
+              style={[
+                styles.togglerText,
+                currentPage === "actions" && styles.activeTogglerText,
+              ]}
+            >
+              Действия
+            </Text>
+          </TouchableOpacity>
         </View>
+      </View>
+      {currentPage === "addresses" && (
+        <View>
+          <View style={styles.addresses}>
+            <FlatList
+              data={order.addresses}
+              renderItem={({ item, index }) => (
+                <Address address={item} index={index} price={order.price} />
+              )}
+              keyExtractor={(item) => item.id.toString()}
+              contentContainerStyle={{
+                gap: 20,
+                paddingBottom: 200,
+                paddingTop: 10,
+              }}
+              ListFooterComponent={
+                <View style={styles.listFooter}>
+                  <View>
+                    <Text style={styles.creationDateText}>
+                      {"Создан " + formatDate(order.date)}
+                    </Text>
+                  </View>
+                  {order.statusId == 4 && (
+                    <MyButton
+                      buttonText="Отменить заказ"
+                      onPress={() => {}}
+                      color="red"
+                    />
+                  )}
+                </View>
+              }
+            />
+          </View>
+        </View>
+      )}
+      {currentPage === "actions" && (
+        <FlatList
+          data={order.actions}
+          renderItem={({ item }) => <Action action={item} />}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={{
+            gap: 10,
+            paddingTop: 10,
+            paddingBottom: 200,
+          }}
+        />
+      )}
+      {order.statusId == 5 && (
+        <Text style={styles.orderCompleted}>Заказ завершен, спасибо!</Text>
       )}
       <View style={styles.footer}>
         <Text style={styles.footerInfo}>
@@ -68,15 +135,49 @@ export default Order;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 10,
+    gap: 0,
   },
+  togglerTypeContainer: {
+    paddingTop: 10,
+    paddingHorizontal: 10,
+  },
+  togglerType: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    borderRadius: 40,
+    backgroundColor: colors.lightGray,
+    overflow: "hidden",
+  },
+  togglerText: {
+    fontSize: 16,
+    fontFamily: "Montserrat-Regular",
+    color: colors.black,
+  },
+  togglerOption: {
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "50%",
+  },
+  activeTogglerOption: {
+    backgroundColor: colors.purple,
+  },
+  activeTogglerText: {
+    color: colors.white,
+  },
+  // addressesContainer: {
+  //   paddingBottom: 200,
+  // },
+
   addresses: {
     paddingHorizontal: 10,
     width: "100%",
     gap: 20,
   },
-  creationDate: {
-    paddingHorizontal: 10,
+  listFooter: {
+    gap: 10,
   },
   creationDateText: {
     paddingVertical: 20,
@@ -103,7 +204,10 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-SemiBold",
     textAlign: "center",
   },
-  cancelOrderButton: {
-    paddingHorizontal: 10,
+  orderCompleted: {
+    fontSize: 24,
+    color: colors.black,
+    fontFamily: "Montserrat-Bold",
+    textAlign: "center",
   },
 });

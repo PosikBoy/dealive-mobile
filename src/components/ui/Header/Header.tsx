@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     height: 40,
   },
   headerText: {
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: "Montserrat-SemiBold",
   },
 });

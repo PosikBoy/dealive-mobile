@@ -23,7 +23,7 @@ instance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     if (
-      (error.response.status == 401 ||
+      (error?.response?.status == 401 ||
         errorCatch(error) == ServerMessages.INVALID_TOKEN ||
         errorCatch(error) == ServerMessages.AUTH_REQUIRED) &&
       error.config &&

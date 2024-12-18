@@ -63,18 +63,15 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: "100%",
-    // gap: 20,
   },
   ordersHeader: {
+    paddingVertical: 20,
     backgroundColor: colors.white,
     paddingHorizontal: 20,
-    paddingVertical: 20,
     gap: 7,
-    // marginBottom: ,
   },
-
   ordersHeaderText: {
-    fontSize: 24,
+    fontSize: 16,
     fontFamily: "Montserrat-SemiBold",
     textAlign: "center",
   },
@@ -88,12 +85,12 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   togglerText: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: "Montserrat-Regular",
     color: colors.black,
   },
   togglerOption: {
-    padding: 10,
+    padding: 7,
     alignItems: "center",
     justifyContent: "center",
     width: "50%",

@@ -219,15 +219,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   header: {
+    paddingVertical: 20,
     width: "100%",
-    height: 50,
     backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
   },
   headerText: {
     fontFamily: "Montserrat-SemiBold",
-    fontSize: 20,
+    fontSize: 16,
   },
   content: {
     width: "100%",
