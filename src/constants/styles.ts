@@ -21,8 +21,8 @@ export const borderRadiuses = {
 
 export const fontSizes = {
   small: 12,
-  medium: 14,
-  big: 18,
+  medium: 16,
+  big: 20,
   extraBig: 28,
 };
 

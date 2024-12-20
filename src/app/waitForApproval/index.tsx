@@ -1,4 +1,12 @@
-import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Linking,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import MyButton from "@/components/ui/Button/Button";
 import { colors } from "@/constants/colors";
 
@@ -36,10 +44,15 @@ const waitForApproval = () => {
       </View>
       {isLoading && <ActivityIndicator size="large" color={colors.purple} />}
       {!isApproved && (
-        <Text style={styles.subtitle}>Мы все еще проверяем ваш аккаунт</Text>
+        <Text style={styles.subtitle}>Мы все еще проверяем ваш аккаунт </Text>
       )}
       {error && <Text style={styles.subtitle}>{error}</Text>}
-
+      <View style={styles.supportButton}>
+        <MyButton
+          buttonText="Связаться с техподдержкой"
+          onPress={() => Linking.openURL("https://t.me/DealiveSupport")}
+        />
+      </View>
       <View style={styles.buttonContainer}>
         <MyButton
           buttonText="Проверить подтверждение"
@@ -95,5 +108,11 @@ const styles = StyleSheet.create({
     width: "100%",
     position: "absolute",
     bottom: 20,
+  },
+  supportButton: {
+    width: "100%",
+
+    position: "absolute",
+    bottom: 80,
   },
 });

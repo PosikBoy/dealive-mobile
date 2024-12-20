@@ -16,7 +16,7 @@ import Header from "@/components/ui/Header/Header";
 import Action from "./components/Action";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import TakeOrderModal from "./components/TakeOrderModal";
-import { fonts } from "@/constants/styles";
+import { fonts, fontSizes } from "@/constants/styles";
 
 interface IProps {
   order: IOrderWithoutSensitiveInfo | IOrder;
@@ -173,12 +173,12 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   togglerText: {
-    fontSize: 16,
+    fontSize: fontSizes.medium,
     fontFamily: fonts.regular,
     color: colors.black,
   },
   togglerOption: {
-    padding: 5,
+    padding: 7,
     alignItems: "center",
     justifyContent: "center",
     width: "50%",

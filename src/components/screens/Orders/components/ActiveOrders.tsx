@@ -16,7 +16,7 @@ const AvailableOrders = () => {
   const { data, isLoading, refetch, isFetching } = useGetActiveOrdersQuery(
     undefined,
     {
-      pollingInterval: 1000,
+      pollingInterval: 15000,
       refetchOnFocus: true,
       refetchOnReconnect: true,
     }

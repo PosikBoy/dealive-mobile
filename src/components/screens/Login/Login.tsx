@@ -34,7 +34,6 @@ const Login = () => {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{SERVER_URL}</Text>
       <Text style={styles.title}>Войдите в аккаунт</Text>
       <Text style={styles.subtitle}>Пожалуйста, введите свои данные</Text>
       <View style={styles.phoneInputContainer}>

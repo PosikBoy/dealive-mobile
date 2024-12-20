@@ -14,5 +14,3 @@ const MoneyEarned = (props: Props) => {
 };
 
 export default MoneyEarned;
-
-const styles = StyleSheet.create({});

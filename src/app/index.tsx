@@ -1,46 +1,48 @@
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import React, { FC, useEffect, useState } from "react";
+import * as Font from "expo-font";
+import { fonts } from "@/constants/fonts";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   fetchAuthStatus,
   fetchIsApprovedStatus,
   logOut,
 } from "@/store/auth/auth.actions";
-import { Redirect } from "expo-router";
+import { Redirect, router, SplashScreen } from "expo-router";
 import { colors } from "@/constants/colors";
 import authStorage from "@/helpers/authStorage";
 
-type Props = {
-  children: React.ReactNode;
-};
+SplashScreen.preventAutoHideAsync();
 
-const AuthWrapper: FC<Props> = ({ children }) => {
+const indexPage = () => {
   const dispatch = useTypedDispatch();
   const { isAuth, isApproved, isLoading, error } = useTypedSelector(
     (state) => state.auth
   );
+  const [isAppReady, setIsAppReady] = useState(false);
 
-  const [isInitialLoading, setIsInitialLoading] = useState(true); // Локальное состояние загрузки
+  const checkAuthStatus = async () => {
+    try {
+      await Font.loadAsync(fonts);
+      const storedAuth = await authStorage.getIsAuth();
+      if (storedAuth) {
+        await dispatch(fetchAuthStatus()).unwrap();
+        await dispatch(fetchIsApprovedStatus()).unwrap();
+      }
+    } catch (err) {
+    } finally {
+      await SplashScreen.hideAsync();
+      setIsAppReady(true);
+
+      // Завершаем инициализацию
+    }
+  };
 
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        const storedAuth = await authStorage.getIsAuth();
-
-        if (storedAuth) {
-          await dispatch(fetchAuthStatus()).unwrap();
-          await dispatch(fetchIsApprovedStatus()).unwrap();
-        }
-      } catch (err) {
-      } finally {
-        setIsInitialLoading(false); // Завершаем инициализацию
-      }
-    };
     checkAuthStatus();
   }, []);
 
-  if (isInitialLoading || isLoading) {
+  if (!isAppReady || isLoading) {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" color={colors.purple} />
@@ -50,23 +52,17 @@ const AuthWrapper: FC<Props> = ({ children }) => {
 
   if (error) {
     dispatch(logOut());
-    dispatch(fetchAuthStatus()).unwrap();
-    return (
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>Ошибка: {error}</Text>
-      </View>
-    );
   }
 
   if (!isAuth) {
-    return <Redirect href="/onBoarding" />;
+    return <Redirect href={{ pathname: "/onBoarding" }} />;
   }
 
   if (!isApproved) {
-    return <Redirect href="/waitForApproval" />;
+    return <Redirect href={{ pathname: "/waitForApproval" }} />;
   }
 
-  return <Redirect href="/orders/main" />; // Рендерим детей только после успешной проверки
+  return <Redirect href={{ pathname: "/orders/main" }} />;
 };
 
 const styles = StyleSheet.create({
@@ -87,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AuthWrapper;
+export default indexPage;

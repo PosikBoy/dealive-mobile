@@ -32,7 +32,7 @@ const CompletedOrders = () => {
   return (
     <View style={styles.container}>
       <Header title="Завершенные заказы" />
-      <View>
+      <View style={styles.ordersContainer}>
         {completedOrders.length > 0 && (
           <FlatList
             data={completedOrders}
@@ -67,6 +67,9 @@ const styles = StyleSheet.create({
   flatListStyles: {
     paddingTop: 16,
     paddingBottom: 126,
+  },
+  ordersContainer: {
+    paddingHorizontal: 5,
   },
   searchOrderContainer: {
     marginHorizontal: "auto",

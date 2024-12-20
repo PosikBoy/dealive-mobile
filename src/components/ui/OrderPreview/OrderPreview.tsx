@@ -1,7 +1,14 @@
 import { colors } from "@/constants/colors";
 import { IOrderWithoutSensitiveInfo } from "@/types/order.interface";
 import { FC } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import formatDate from "@/helpers/formatDate";
 import { router } from "expo-router";
 import { icons } from "@/constants/icons";
@@ -20,7 +27,10 @@ const OrderPreview: FC<OrderDetailsProps> = ({ order }) => {
   const createdAtString = formatDate(date);
   return (
     <View style={styles.container}>
-      <Pressable onPress={() => router.push(`/orders/${id}`)}>
+      <TouchableOpacity
+        activeOpacity={0.6}
+        onPress={() => router.push(`/orders/${id}`)}
+      >
         <View style={styles.innerCointainer}>
           <Text style={styles.headerText}>
             {order.addresses.length + " адреса | № " + id}
@@ -54,7 +64,7 @@ const OrderPreview: FC<OrderDetailsProps> = ({ order }) => {
             </View>
           </View>
         </View>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

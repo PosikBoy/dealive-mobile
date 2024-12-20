@@ -21,7 +21,6 @@ const AvailableOrders = () => {
       refetchOnReconnect: true,
     }
   );
-  console.log(data);
   if (isLoading) {
     return (
       <View style={styles.container}>

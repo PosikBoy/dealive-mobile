@@ -64,7 +64,6 @@ const ImagePicker = (props: Props) => {
       if (response.message == ServerMessages.FILES_WAS_UPLOADED_SUCCESSFULLY) {
         setAttachments(response.files);
       }
-      console.log(response.message);
       setIsLoading(false);
 
       // Устанавливаем массив с валидными файлами
