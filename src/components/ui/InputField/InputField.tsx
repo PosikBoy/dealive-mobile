@@ -1,4 +1,5 @@
 import { colors } from "@/constants/colors";
+import { fonts } from "@/constants/styles";
 import React, { FC, useEffect, useImperativeHandle, useRef } from "react";
 import { Control, InputValidationRules, useController } from "react-hook-form";
 import {
@@ -149,13 +150,13 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     height: "100%",
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     paddingLeft: 12,
     paddingVertical: 11,
   },
   placeholder: {
     fontSize: 14,
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     color: colors.inputGray,
   },
 });

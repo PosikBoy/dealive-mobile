@@ -5,6 +5,7 @@ import { colors } from "@/constants/colors";
 import MyButton from "@/components/ui/Button/Button";
 import { router } from "expo-router";
 import { icons } from "@/constants/icons";
+import { fonts } from "@/constants/styles";
 
 const index = () => {
   const handleCheckConnection = () => {
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "semibold",
     color: colors.black,
-    fontFamily: "Montserrat-Bold",
+    fontFamily: fonts.bold,
     textAlign: "center",
     marginTop: 20,
   },
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.gray,
     textAlign: "center",
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     marginTop: 10,
   },
   buttonContainer: {

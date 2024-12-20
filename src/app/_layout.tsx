@@ -7,7 +7,6 @@ import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StoreProvider } from "@/components/ui/ReduxProvider";
 import { StatusBar } from "expo-status-bar";
-import AuthWrapper from "@/components/other/AuthWrapper";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 SplashScreen.preventAutoHideAsync();

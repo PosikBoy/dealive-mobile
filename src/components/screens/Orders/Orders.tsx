@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { colors } from "@/constants/colors";
 import AvailableOrders from "./components/AvailableOrders";
 import ActiveOrders from "./components/ActiveOrders";
+import { fonts, fontSizes } from "@/constants/styles";
 
 const OrdersScreen = () => {
   const [currentPage, setCurrentPage] = useState<"available" | "active">(
@@ -71,8 +72,8 @@ const styles = StyleSheet.create({
     gap: 7,
   },
   ordersHeaderText: {
-    fontSize: 16,
-    fontFamily: "Montserrat-SemiBold",
+    fontSize: fontSizes.big,
+    fontFamily: fonts.semiBold,
     textAlign: "center",
   },
   togglerType: {
@@ -85,8 +86,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   togglerText: {
-    fontSize: 14,
-    fontFamily: "Montserrat-Regular",
+    fontSize: fontSizes.medium,
+    fontFamily: fonts.regular,
     color: colors.black,
   },
   togglerOption: {

@@ -9,6 +9,7 @@ import React from "react";
 import MyButton from "@/components/ui/Button/Button";
 import { router } from "expo-router";
 import { icons } from "@/constants/icons";
+import { fonts } from "@/constants/styles";
 
 const main = () => {
   const handleLogin = () => {
@@ -53,11 +54,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
   },
   subtitle: {
     fontSize: 14,
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
   },
   imageContainer: {
     marginTop: 50,
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   registerLabel: {
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
     fontSize: 18,
   },
 });

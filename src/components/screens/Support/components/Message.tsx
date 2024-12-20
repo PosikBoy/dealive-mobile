@@ -5,6 +5,7 @@ import { colors } from "@/constants/colors";
 import formatDate from "@/helpers/formatDate";
 import fileService from "@/services/files/files.service";
 import * as FileSystem from "expo-file-system";
+import { fonts } from "@/constants/styles";
 
 interface IProps {
   message: IMessage;
@@ -85,14 +86,14 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   messageText: {
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     fontSize: 14,
     color: colors.white,
   },
   label: {
     alignSelf: "flex-start",
     marginBottom: 5,
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     fontSize: 12,
     color: colors.lightGray,
   },
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
   },
   createdAt: {
     alignSelf: "flex-end",
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     fontSize: 12,
     color: colors.white,
   },

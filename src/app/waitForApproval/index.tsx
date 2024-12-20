@@ -5,6 +5,7 @@ import { colors } from "@/constants/colors";
 import { router } from "expo-router";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import { icons } from "@/constants/icons";
+import { fonts } from "@/constants/styles";
 
 const waitForApproval = () => {
   const { isApproved, isLoading, error } = useTypedSelector(
@@ -67,14 +68,14 @@ const styles = StyleSheet.create({
     width: "100%",
     textAlign: "center",
     fontSize: 24,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
   },
   subtitle: {
     width: "100%",
     fontSize: 16,
     textAlign: "center",
 
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
   },
   imageContainer: {
     marginTop: 50,

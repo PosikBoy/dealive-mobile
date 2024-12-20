@@ -11,16 +11,14 @@ import { StyleSheet, Text, View } from "react-native";
 interface IProps {
   order: IOrder | IOrderWithoutSensitiveInfo;
   ref: Ref<BottomSheetModal>;
+  takeOrder: () => Promise<void>;
+  error: any;
 }
 
 const TakeOrderModal = forwardRef<BottomSheetModal, IProps>(
   (props, ref: ForwardedRef<BottomSheetModal>) => {
-    const { order } = props;
-    const [takeOrder] = useTakeOrderMutation();
-    const takeOrderHandler = async () => {
-      await takeOrder({ orderId: order.id });
-      //   ref.current.collapse()
-    };
+    const { order, takeOrder, error } = props;
+
     return (
       <CustomBottomSheetModal ref={ref}>
         <View style={styles.container}>
@@ -45,10 +43,14 @@ const TakeOrderModal = forwardRef<BottomSheetModal, IProps>(
               </View>
             </View>
           </View>
-          <Text style={styles.bottomText}>
-            Ознакомьтесь с деталями заказа перед тем, как взять его!
-          </Text>
-          <MyButton onPress={takeOrderHandler} buttonText="Взять заказ" />
+          {error ? (
+            <Text style={styles.bottomText}>{error}</Text>
+          ) : (
+            <Text style={styles.bottomText}>
+              Ознакомьтесь с деталями заказа перед тем, как взять его!
+            </Text>
+          )}
+          <MyButton onPress={takeOrder} buttonText="Взять заказ" />
         </View>
       </CustomBottomSheetModal>
     );

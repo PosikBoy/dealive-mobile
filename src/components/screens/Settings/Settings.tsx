@@ -19,6 +19,7 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import MyButton from "@/components/ui/Button/Button";
+import { fonts } from "@/constants/styles";
 const Settings = () => {
   const dispatch = useTypedDispatch();
   const ref = useRef<BottomSheetModal>();
@@ -106,7 +107,7 @@ const Settings = () => {
             </View>
           </View>
         </Link>
-        <Link href="/settings/notifications">
+        {/* <Link href="/settings/notifications">
           <View style={styles.linkContainer}>
             <View style={styles.linkTextContainer}>
               <View style={styles.iconContainer}>
@@ -127,7 +128,7 @@ const Settings = () => {
               />
             </View>
           </View>
-        </Link>
+        </Link> */}
         {/* <Link href="/settings/money">
           <View style={styles.linkContainer}>
             <View style={styles.linkTextContainer}>
@@ -172,7 +173,7 @@ const Settings = () => {
             </View>
           </View>
         </Pressable>
-        <Link href="/settings/invite">
+        {/* <Link href="/settings/invite">
           <View style={styles.linkContainer}>
             <View style={styles.linkTextContainer}>
               <View style={styles.iconContainer}>
@@ -193,7 +194,7 @@ const Settings = () => {
               />
             </View>
           </View>
-        </Link>
+        </Link> */}
         <Link href="/settings/about">
           <View style={styles.linkContainer}>
             <View style={styles.linkTextContainer}>
@@ -266,7 +267,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerText: {
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
     fontSize: 16,
   },
   content: {
@@ -283,7 +284,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   linkText: {
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
     fontSize: 16,
     flex: 1,
   },
@@ -311,7 +312,7 @@ const styles = StyleSheet.create({
     // alignItems: "center",
   },
   logoutText: {
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
     fontSize: 16,
     color: colors.red,
   },
@@ -322,12 +323,12 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   modalLogOutTitle: {
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
     fontSize: 20,
     textAlign: "center",
   },
   modalLogOutSubtitle: {
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     fontSize: 16,
     textAlign: "center",
   },

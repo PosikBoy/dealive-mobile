@@ -3,11 +3,7 @@ import React from "react";
 import Orders from "@/components/screens/Orders/Orders";
 
 const TabsLayout = () => {
-  return (
-    <View>
-      <Orders />
-    </View>
-  );
+  return <Orders />;
 };
 
 export default TabsLayout;

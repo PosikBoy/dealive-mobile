@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import React from "react";
 import { colors } from "@/constants/colors";
+import { fonts } from "@/constants/styles";
 
 const OnBoardingItem = ({ title, subtitle, iconUri }) => {
   const { width } = useWindowDimensions();
@@ -40,12 +41,12 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   title: {
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
     color: colors.black,
     fontSize: 24,
   },
   subtitle: {
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     color: colors.black,
     fontSize: 14,
   },

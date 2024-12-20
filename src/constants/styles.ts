@@ -2,6 +2,7 @@ export const fonts = {
   regular: "Montserrat-Regular",
   medium: "Montserrat-Medium",
   bold: "Montserrat-Bold",
+  semiBold: "Montserrat-SemiBold",
 };
 export const gaps = {
   //12
@@ -13,7 +14,6 @@ export const gaps = {
 
 export const borderRadiuses = {
   small: 12,
-
   medium: 16,
   big: 20,
   extraBig: 28,

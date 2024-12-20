@@ -5,6 +5,13 @@ import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import formatDate from "@/helpers/formatDate";
 import { router } from "expo-router";
 import { icons } from "@/constants/icons";
+import {
+  borderRadiuses,
+  fonts,
+  fontSizes,
+  gaps,
+  paddings,
+} from "@/constants/styles";
 interface OrderDetailsProps {
   order: IOrderWithoutSensitiveInfo;
 }
@@ -44,7 +51,6 @@ const OrderPreview: FC<OrderDetailsProps> = ({ order }) => {
               <Text style={styles.createdAtText}>
                 {"Заказ создан " + createdAtString}
               </Text>
-              <Text style={styles.moreText}>Подробнее</Text>
             </View>
           </View>
         </View>
@@ -58,18 +64,18 @@ export default OrderPreview;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
-    borderRadius: 16,
-    paddingHorizontal: 20,
-    paddingVertical: 20,
+    borderRadius: borderRadiuses.medium,
+    paddingHorizontal: paddings.medium,
+    paddingVertical: paddings.medium,
   },
   innerCointainer: {
     width: "100%",
-    gap: 12,
+    gap: gaps.medium,
     justifyContent: "center",
   },
   headerText: {
     color: colors.black,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
     fontSize: 18,
     textAlign: "center",
   },
@@ -90,27 +96,27 @@ const styles = StyleSheet.create({
   },
   addressText: {
     color: colors.black,
-    fontFamily: "Montserrat-SemiBold",
-    fontSize: 16,
+    fontFamily: fonts.medium,
+    fontSize: fontSizes.medium,
+    flex: 1,
   },
   addressIndex: {
     position: "absolute",
     left: 8.5,
+    top: -2,
   },
   footer: {
     width: "100%",
-
     gap: 5,
   },
   info: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  type: {},
   parcelTypeText: {
     color: colors.black,
-    fontFamily: "Montserrat-SemiBold",
-    fontSize: 16,
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.medium,
   },
   price: {
     backgroundColor: colors.purple,
@@ -119,8 +125,8 @@ const styles = StyleSheet.create({
   },
   priceText: {
     color: colors.white,
-    fontFamily: "Montserrat-SemiBold",
-    fontSize: 16,
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.medium,
   },
   meta: {
     width: "100%",
@@ -129,12 +135,12 @@ const styles = StyleSheet.create({
   },
   createdAtText: {
     color: colors.gray,
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     fontSize: 14,
   },
   moreText: {
     color: colors.gray,
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     fontSize: 14,
   },
 });

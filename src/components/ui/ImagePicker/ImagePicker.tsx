@@ -12,6 +12,7 @@ interface IProps {
 import * as ExpoImagePicker from "expo-image-picker";
 import { Control, useController } from "react-hook-form";
 import { icons } from "@/constants/icons";
+import { fonts } from "@/constants/styles";
 
 const ImagePicker = (props: IProps) => {
   const { title, linkSuggestion, control, name, rules = {} } = props;
@@ -71,14 +72,14 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
   },
-  title: { fontFamily: "Montserrat-SemiBold", fontSize: 16 },
+  title: { fontFamily: fonts.semiBold, fontSize: 16 },
   suggestion: {
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
   },
   linkSuggestion: {
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
     fontSize: 16,
     color: "blue",
     marginTop: 5,

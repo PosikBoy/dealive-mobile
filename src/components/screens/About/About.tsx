@@ -3,6 +3,7 @@ import React from "react";
 import Header from "@/components/ui/Header/Header";
 import logo from "assets/adaptive-icon.png";
 import { colors } from "@/constants/colors";
+import { fonts, fontSizes } from "@/constants/styles";
 type Props = {};
 
 const About = (props: Props) => {
@@ -35,8 +36,8 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 20,
-    fontFamily: "Montserrat-Regular",
-    fontSize: 16,
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.medium,
     color: colors.black,
   },
 });

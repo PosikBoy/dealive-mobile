@@ -1,4 +1,5 @@
 import { colors } from "@/constants/colors";
+import { fonts } from "@/constants/styles";
 import React, { FC, useEffect, useImperativeHandle, useRef } from "react";
 import { Control, useController } from "react-hook-form";
 import {
@@ -124,7 +125,6 @@ const InputFieldWithHandler: FC<IControllerField> = (props) => {
           placeholder=""
           ref={inputRef}
           style={styles.input}
-          keyboardType={keyboardType}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChangeText={changeHandler}
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     height: "100%",
     color: colors.black,
     fontSize: 14,
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     paddingLeft: 15,
     paddingVertical: 11,
   },
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   placeholder: {
-    fontFamily: "Montserrat-Medium",
+    fontFamily: fonts.medium,
     fontSize: 14,
   },
 });

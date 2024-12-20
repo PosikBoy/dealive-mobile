@@ -1,4 +1,11 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useCallback, useRef, useState } from "react";
 import { IOrderAction, IOrderActionType } from "@/types/order.interface";
 import { colors } from "@/constants/colors";
@@ -10,9 +17,12 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import MyButton from "@/components/ui/Button/Button";
+import CustomBottomSheetModal from "@/components/ui/CustomBottomSheetModal/CustomBottomSheetModal";
+import { fonts } from "@/constants/styles";
 
 type Props = {
   action: IOrderAction;
+  disabled: boolean;
 };
 
 const actionIcons = {
@@ -25,11 +35,22 @@ const actionIcons = {
   [IOrderActionType.COMPLETE_ORDER]: icons.check, // Иконка для COMPLETE_ORDER
 };
 
+const actionSnippets = {
+  [IOrderActionType.GO_TO]: "Выезжаю на адрес", // Иконка для GO_TO
+  [IOrderActionType.ARRIVED_AT]: "Прибыл на адрес", // Иконка для ARRIVED_AT
+  [IOrderActionType.PICKUP]: "Забрал посылку", // Иконка для PICKUP
+  [IOrderActionType.DELIVER]: "Доставил посылку ", // Иконка для DELIVER
+  [IOrderActionType.COLLECT_PAYMENT]: "Получил оплату", // Иконка для COLLECT_PAYMENT
+  [IOrderActionType.PAY_COMMISION]: "Оплатил комиссию", // Иконка для PAY_COMMISION
+  [IOrderActionType.COMPLETE_ORDER]: "Завершил заказ", // Иконка для COMPLETE_ORDER
+};
+
 const Action = (props: Props) => {
-  const { action } = props;
+  const { action, disabled } = props;
 
   const [error, setError] = useState<string>();
-  const icon = actionIcons[action.actionType]; // Получаем иконку из объекта
+  const icon = actionIcons[action.actionType];
+  const snippet = actionSnippets[action.actionType];
   const [completeAction, { isLoading, isError }] = useCompleteActionMutation();
 
   const ref = useRef<BottomSheetModal>(null);
@@ -38,17 +59,10 @@ const Action = (props: Props) => {
     ref.current.present();
   };
 
-  const renderBackdrop = useCallback(
-    (props) => (
-      <BottomSheetBackdrop {...props} opacity={0.5} disappearsOnIndex={-1} />
-    ),
-    []
-  );
-
   const completeActionHandler = async () => {
     try {
       await completeAction(action.id).unwrap();
-      ref.current.collapse();
+      ref.current.close();
     } catch (error) {
       setError(error.data.message);
     }
@@ -56,7 +70,9 @@ const Action = (props: Props) => {
 
   return (
     <View style={styles.actionContainer}>
-      <Pressable
+      <TouchableOpacity
+        activeOpacity={0.7}
+        disabled={disabled}
         onPress={handleCompleteAction}
         style={[styles.action, action.isCompleted && styles.actionCompleted]}
       >
@@ -64,25 +80,18 @@ const Action = (props: Props) => {
           <Image source={icon} style={{ width: 20, height: 20 }} />
         </View>
         <Text style={styles.actionText}>{action.description}</Text>
-      </Pressable>
-      <BottomSheetModal
-        style={styles.bottomSheet}
-        ref={ref}
-        backdropComponent={renderBackdrop}
-      >
-        <BottomSheetView style={styles.bottomSheetContent}>
-          <Text style={styles.modalTitle}>Подтвердите действие</Text>
-          <Text style={styles.modalSubtitle}>
-            Убедитесь, что вы выбрали выполнили это действие
-          </Text>
+      </TouchableOpacity>
+      <CustomBottomSheetModal ref={ref}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalTextGroup}>
+            <Text style={styles.modalTitle}>Подтвердите действие</Text>
+            <Text style={styles.modalSubtitle}>Убедитесь, что сделали это</Text>
+            <Text style={styles.modalSubtitle}>{action.description}</Text>
+          </View>
           <Text style={styles.errorText}>{isError && error}</Text>
-
-          <MyButton
-            onPress={completeActionHandler}
-            buttonText={action.description}
-          />
-        </BottomSheetView>
-      </BottomSheetModal>
+          <MyButton onPress={completeActionHandler} buttonText={snippet} />
+        </View>
+      </CustomBottomSheetModal>
     </View>
   );
 };
@@ -104,7 +113,7 @@ const styles = StyleSheet.create({
   actionText: {
     flex: 1,
     fontSize: 16,
-    fontFamily: "Montserrat-Medium",
+    fontFamily: fonts.medium,
     color: colors.black,
   },
   actionCompleted: {
@@ -118,11 +127,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginRight: 10,
   },
-  bottomSheet: {
-    flex: 1,
-    backgroundColor: colors.white,
-  },
-  bottomSheetContent: {
+
+  modalContainer: {
     flex: 1,
     width: "100%",
     paddingHorizontal: 20,
@@ -131,17 +137,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.white,
   },
+  modalTextGroup: {
+    width: "100%",
+    gap: 5,
+    alignItems: "center",
+  },
   modalTitle: {
-    fontFamily: "Montserrat-Medium",
+    fontFamily: fonts.medium,
     fontSize: 20,
   },
   modalSubtitle: {
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     fontSize: 16,
     textAlign: "center",
   },
   errorText: {
-    fontFamily: "Montserrat-Medium",
+    fontFamily: fonts.medium,
     fontSize: 12,
     color: colors.red,
     textAlign: "center",

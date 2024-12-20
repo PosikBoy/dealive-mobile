@@ -10,6 +10,7 @@ import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import { login } from "@/store/auth/auth.actions";
 import { colors } from "@/constants/colors";
 import { SERVER_URL } from "@/constants/urls";
+import { fonts, fontSizes, paddings } from "@/constants/styles";
 
 interface IPhoneNumberPassword {
   phoneNumber: String;
@@ -34,7 +35,6 @@ const Login = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{SERVER_URL}</Text>
-
       <Text style={styles.title}>Войдите в аккаунт</Text>
       <Text style={styles.subtitle}>Пожалуйста, введите свои данные</Text>
       <View style={styles.phoneInputContainer}>
@@ -87,17 +87,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: paddings.horizontal,
   },
   title: {
     marginTop: 90,
-    fontFamily: "Montserrat-SemiBold",
-    fontSize: 24,
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.big,
   },
   subtitle: {
     marginTop: 8,
-    fontFamily: "Montserrat-Regular",
-    fontSize: 16,
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.medium,
   },
   phoneInputContainer: {
     width: "100%",
@@ -105,14 +105,14 @@ const styles = StyleSheet.create({
     height: 40,
   },
   phoneLabel: {
-    fontFamily: "Montserrat-SemiBold",
-    fontSize: 14,
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.small,
   },
   errorText: {
     alignSelf: "flex-start",
-    fontFamily: "Montserrat-SemiBold",
-    color: "red",
-    fontSize: 12,
+    fontFamily: fonts.semiBold,
+    color: colors.red,
+    fontSize: fontSizes.small,
   },
   passwordInputContainer: {
     marginTop: 20,
@@ -120,12 +120,12 @@ const styles = StyleSheet.create({
     height: 40,
   },
   passwordLabel: {
-    fontFamily: "Montserrat-SemiBold",
-    fontSize: 14,
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.medium,
   },
   forgotPasswordLabel: {
-    fontFamily: "Montserrat-SemiBold",
-    fontSize: 18,
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.big,
     marginTop: 26,
   },
   buttonContainer: {
@@ -133,8 +133,8 @@ const styles = StyleSheet.create({
     marginTop: 26,
   },
   registerLabel: {
-    fontFamily: "Montserrat-SemiBold",
-    fontSize: 18,
+    fontFamily: fonts.semiBold,
+    fontSize: fontSizes.big,
     marginTop: 26,
   },
   bottomContainer: {

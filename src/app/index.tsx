@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   fetchAuthStatus,
   fetchIsApprovedStatus,
+  logOut,
 } from "@/store/auth/auth.actions";
 import { Redirect } from "expo-router";
 import { colors } from "@/constants/colors";
@@ -48,6 +49,8 @@ const AuthWrapper: FC<Props> = ({ children }) => {
   }
 
   if (error) {
+    dispatch(logOut());
+    dispatch(fetchAuthStatus()).unwrap();
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>Ошибка: {error}</Text>

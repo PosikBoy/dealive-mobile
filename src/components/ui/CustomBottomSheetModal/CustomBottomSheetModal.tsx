@@ -4,15 +4,7 @@ import {
   BottomSheetModal,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import {
-  FC,
-  forwardRef,
-  ReactNode,
-  Ref,
-  useCallback,
-  useImperativeHandle,
-  useRef,
-} from "react";
+import { forwardRef, ReactNode, Ref, useCallback } from "react";
 import { StyleSheet } from "react-native";
 
 interface IProps {

@@ -4,6 +4,7 @@ import { useGetProfileQuery } from "@/services/profile/profile.service";
 import { colors } from "@/constants/colors";
 import formatDate from "@/helpers/formatDate";
 import Header from "@/components/ui/Header/Header";
+import { fonts, fontSizes } from "@/constants/styles";
 
 type Props = {};
 
@@ -65,12 +66,12 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   label: {
-    fontSize: 14,
-    fontFamily: "Montserrat-SemiBold",
+    fontSize: fontSizes.medium,
+    fontFamily: fonts.semiBold,
   },
   value: {
-    fontSize: 16,
-    fontFamily: "Montserrat-Regular",
+    fontSize: fontSizes.medium,
+    fontFamily: fonts.regular,
     color: colors.gray,
   },
 });

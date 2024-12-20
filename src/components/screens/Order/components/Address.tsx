@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
+import { fonts } from "@/constants/styles";
 
 interface IAdressProps {
   address: IAddress | IAddressWithoutSensitiveInfo;
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
     flex: 1,
 
     color: colors.black,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
     fontSize: 16,
   },
   addressIndex: {
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
   infoLabel: {
     fontSize: 12,
     color: colors.inputGray,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
   },
   phoneNumber: {
     backgroundColor: colors.lightPurple,
@@ -132,16 +133,16 @@ const styles = StyleSheet.create({
   },
   phoneNumberLabel: {
     color: colors.gray,
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
   },
   phoneNumberInfo: {
     color: colors.black,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
   },
   info: {
     fontSize: 14,
     color: colors.black,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
   },
   priceContainer: {
     flexDirection: "row",
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
   priceText: {
     fontSize: 14,
     color: colors.black,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
   },
 
   floorContainer: {
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
   floorText: {
     fontSize: 14,
     color: colors.black,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
   },
   floorIcon: {
     width: 20,

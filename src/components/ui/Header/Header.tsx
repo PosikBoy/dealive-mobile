@@ -3,6 +3,7 @@ import React from "react";
 import { router } from "expo-router";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
+import { fonts } from "@/constants/styles";
 
 type Props = {
   title: string;
@@ -43,6 +44,6 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 16,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
   },
 });

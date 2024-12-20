@@ -1,15 +1,8 @@
-import { View, Text } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import CompletedOrders from "@/components/screens/CompletedOrders/CompletedOrders";
 
-type Props = {};
-
-const index = (props: Props) => {
-  return (
-    <View>
-      <CompletedOrders />
-    </View>
-  );
+const index = () => {
+  return <CompletedOrders />;
 };
 
 export default index;

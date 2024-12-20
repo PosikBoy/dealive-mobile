@@ -8,16 +8,15 @@ import {
   View,
 } from "react-native";
 import { colors } from "@/constants/colors";
-
 import formatDate from "@/helpers/formatDate";
 import MyButton from "@/components/ui/Button/Button";
 import { useTakeOrderMutation } from "@/services/orders/orders.service";
 import Address from "./components/Address";
 import Header from "@/components/ui/Header/Header";
 import Action from "./components/Action";
-import CustomBottomSheetModal from "@/components/ui/CustomBottomSheetModal/CustomBottomSheetModal";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import TakeOrderModal from "./components/TakeOrderModal";
+import { fonts } from "@/constants/styles";
 
 interface IProps {
   order: IOrderWithoutSensitiveInfo | IOrder;
@@ -28,15 +27,27 @@ const Order: FC<IProps> = ({ order }) => {
     "addresses"
   );
 
-  const takeOrderHandle = () => {
+  const [takeOrder, { error }] = useTakeOrderMutation();
+
+  const showModal = () => {
     ref.current.present();
   };
 
   const ref = useRef<BottomSheetModal>(null);
 
+  const takeOrderHandler = async () => {
+    await takeOrder({ orderId: order.id }).unwrap();
+    ref.current.close();
+  };
+
   return (
     <View style={styles.container}>
-      <TakeOrderModal ref={ref} order={order} />
+      <TakeOrderModal
+        ref={ref}
+        order={order}
+        error={error?.message}
+        takeOrder={takeOrderHandler}
+      />
 
       <Header title={"Заказ № " + order.id} />
       <View style={styles.togglerTypeContainer}>
@@ -96,13 +107,18 @@ const Order: FC<IProps> = ({ order }) => {
                       {"Создан " + formatDate(order.date)}
                     </Text>
                   </View>
-                  {order.statusId == 4 && (
+                  {order.statusId == 5 && (
+                    <Text style={styles.orderCompleted}>
+                      Заказ завершен, спасибо!
+                    </Text>
+                  )}
+                  {/* {order.statusId == 4 && (
                     <MyButton
                       buttonText="Отменить заказ"
                       onPress={() => {}}
                       color="red"
                     />
-                  )}
+                  )} */}
                 </View>
               }
             />
@@ -112,7 +128,9 @@ const Order: FC<IProps> = ({ order }) => {
       {currentPage === "actions" && (
         <FlatList
           data={order.actions}
-          renderItem={({ item }) => <Action action={item} />}
+          renderItem={({ item }) => (
+            <Action action={item} disabled={order.statusId != 4} />
+          )}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={{
             gap: 10,
@@ -121,15 +139,13 @@ const Order: FC<IProps> = ({ order }) => {
           }}
         />
       )}
-      {order.statusId == 5 && (
-        <Text style={styles.orderCompleted}>Заказ завершен, спасибо!</Text>
-      )}
+
       <View style={styles.footer}>
         <Text style={styles.footerInfo}>
           {order.price + "₽ · " + order.weight + " · " + order.parcelType}
         </Text>
         {order.statusId == 3 && (
-          <MyButton buttonText="Взять заказ" onPress={takeOrderHandle} />
+          <MyButton buttonText="Взять заказ" onPress={showModal} />
         )}
       </View>
     </View>
@@ -158,7 +174,7 @@ const styles = StyleSheet.create({
   },
   togglerText: {
     fontSize: 16,
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     color: colors.black,
   },
   togglerOption: {
@@ -180,7 +196,7 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   listFooter: {
-    gap: 10,
+    gap: 20,
   },
   creationDateText: {
     paddingVertical: 20,
@@ -188,7 +204,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     fontSize: 14,
     color: colors.black,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
     textAlign: "center",
   },
   footer: {
@@ -204,13 +220,14 @@ const styles = StyleSheet.create({
   },
   footerInfo: {
     fontSize: 18,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
     textAlign: "center",
   },
   orderCompleted: {
     fontSize: 24,
     color: colors.black,
-    fontFamily: "Montserrat-Bold",
+    fontFamily: fonts.bold,
     textAlign: "center",
+    marginTop: 30,
   },
 });

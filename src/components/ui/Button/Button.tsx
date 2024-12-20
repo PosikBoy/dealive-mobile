@@ -1,4 +1,5 @@
 import { colors } from "@/constants/colors";
+import { fonts } from "@/constants/styles";
 import React from "react";
 import {
   TouchableHighlight,
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     fontSize: 16,
-    fontFamily: "Montserrat-Bold",
+    fontFamily: fonts.bold,
   },
 
   // Дополнительные стили, которые вы хотите добавить

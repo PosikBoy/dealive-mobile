@@ -14,6 +14,7 @@ import chatService from "@/services/chat/chat.service";
 import { Attachment } from "@/types/chat.interface";
 import authStorage from "@/helpers/authStorage";
 import ImagePicker from "./components/ImagePicker";
+import { fonts } from "@/constants/styles";
 
 const Support = () => {
   const [message, setMessage] = useState("");
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 16,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
   },
   footerContainer: {
     width: "100%",
