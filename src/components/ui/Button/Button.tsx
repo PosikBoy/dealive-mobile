@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     padding: 15,
     flexDirection: "row",
     justifyContent: "center",
+    width: "100%",
   },
   buttonRed: {
     backgroundColor: colors.red,
@@ -50,6 +51,7 @@ const styles = StyleSheet.create({
     padding: 15,
     flexDirection: "row",
     justifyContent: "center",
+    width: "100%",
   },
   buttonText: {
     color: "#fff",

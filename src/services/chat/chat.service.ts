@@ -30,7 +30,6 @@ export class ChatService {
         SERVER_URL + "/messages",
         data
       );
-
       return response?.data;
     } catch (error: any) {
       console.log("error", JSON.stringify(error));

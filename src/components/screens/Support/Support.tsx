@@ -6,20 +6,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import * as SecureStore from "expo-secure-store";
 import React, { useCallback, useEffect, useState } from "react";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 import Messages from "./components/Messages";
 import chatService from "@/services/chat/chat.service";
-import * as FileSystem from "expo-file-system";
-import fileService from "@/services/files/files.service";
-import { ServerMessages } from "@/constants/messages";
 import { Attachment } from "@/types/chat.interface";
 import authStorage from "@/helpers/authStorage";
 import ImagePicker from "./components/ImagePicker";
-
-const MAX_FILE_SIZE = 3 * 1024 * 1024;
 
 const Support = () => {
   const [message, setMessage] = useState("");
@@ -32,9 +26,9 @@ const Support = () => {
     try {
       // Пытаемся получить chatId из SecureStore
       const storedChat = await authStorage.getSupportChat();
-      console.log(storedChat);
-      if (storedChat) {
-        setChatId(storedChat.chatId); // Устанавливаем chatId из хранилища
+
+      if (storedChat?.id) {
+        setChatId(storedChat.id); // Устанавливаем chatId из хранилища
       } else {
         // Генерируем новый chatId, если ничего не найдено
         const chat = await chatService.createChat();
@@ -48,7 +42,6 @@ const Support = () => {
   }, []);
 
   const sendMessageHandler = useCallback(async () => {
-    console.log("attachments", message, isLoading);
     if (!message || isLoading) {
       return;
     }

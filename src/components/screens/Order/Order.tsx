@@ -15,12 +15,9 @@ import { useTakeOrderMutation } from "@/services/orders/orders.service";
 import Address from "./components/Address";
 import Header from "@/components/ui/Header/Header";
 import Action from "./components/Action";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
+import CustomBottomSheetModal from "@/components/ui/CustomBottomSheetModal/CustomBottomSheetModal";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import TakeOrderModal from "./components/TakeOrderModal";
 
 interface IProps {
   order: IOrderWithoutSensitiveInfo | IOrder;
@@ -30,39 +27,17 @@ const Order: FC<IProps> = ({ order }) => {
   const [currentPage, setCurrentPage] = useState<"addresses" | "actions">(
     "addresses"
   );
-  const snapPoints = useMemo(() => ["25%", "50%", "90%"], []);
 
-  const [takeOrder] = useTakeOrderMutation();
   const takeOrderHandle = () => {
-    ref.current.expand();
-    // takeOrder({ orderId: order.id });
+    ref.current.present();
   };
+
   const ref = useRef<BottomSheetModal>(null);
-  const renderBackdrop = useCallback(
-    (props) => (
-      <BottomSheetBackdrop {...props} opacity={0.5} style={{ zIndex: 1000 }} />
-    ),
-    []
-  );
 
   return (
     <View style={styles.container}>
-      <BottomSheet
-        snapPoints={snapPoints}
-        index={2}
-        style={styles.bottomSheet}
-        ref={ref}
-        backdropComponent={renderBackdrop}
-      >
-        <BottomSheetView style={styles.bottomSheetContent}>
-          <Text>Текст</Text>
-          <Text>Текст</Text>
-          <Text>Текст</Text>
-          <Text>Текст</Text>
-          <Text>Текст</Text>
-          <Text>Текст</Text>
-        </BottomSheetView>
-      </BottomSheet>
+      <TakeOrderModal ref={ref} order={order} />
+
       <Header title={"Заказ № " + order.id} />
       <View style={styles.togglerTypeContainer}>
         <View style={styles.togglerType}>
@@ -142,7 +117,7 @@ const Order: FC<IProps> = ({ order }) => {
           contentContainerStyle={{
             gap: 10,
             paddingTop: 10,
-            paddingBottom: 200,
+            paddingBottom: 120,
           }}
         />
       )}
@@ -198,9 +173,6 @@ const styles = StyleSheet.create({
   activeTogglerText: {
     color: colors.white,
   },
-  // addressesContainer: {
-  //   paddingBottom: 200,
-  // },
 
   addresses: {
     paddingHorizontal: 10,
@@ -240,16 +212,5 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontFamily: "Montserrat-Bold",
     textAlign: "center",
-  },
-  bottomSheet: {
-    flex: 1,
-    zIndex: 1200000,
-    backgroundColor: colors.white,
-  },
-  bottomSheetContent: {
-    flex: 1,
-    padding: 36,
-    alignItems: "center",
-    backgroundColor: colors.white,
   },
 });

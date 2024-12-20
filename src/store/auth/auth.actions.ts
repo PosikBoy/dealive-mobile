@@ -75,7 +75,6 @@ export const fetchIsApprovedStatus = createAsyncThunk(
   "auth/fetchIsApprovedStatus",
   async (_, thunkAPI) => {
     try {
-      console.log("Отправка запроса на проверку");
       const isApproved = await authService.checkIsApproved();
       return isApproved;
     } catch (error) {

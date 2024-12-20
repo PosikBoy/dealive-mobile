@@ -7,31 +7,56 @@ import {
   Pressable,
   Linking,
 } from "react-native";
-import React, { useRef } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { Link, router } from "expo-router";
 import { colors } from "@/constants/colors";
 import { useTypedDispatch } from "@/hooks/redux.hooks";
 import { logOut } from "@/store/auth/auth.actions";
 import { icons } from "@/constants/icons";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
+import MyButton from "@/components/ui/Button/Button";
 const Settings = () => {
   const dispatch = useTypedDispatch();
   const ref = useRef<BottomSheetModal>();
-  const logoutHandler = async () => {
+
+  const renderBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop {...props} opacity={0.5} disappearsOnIndex={-1} />
+    ),
+    []
+  );
+  const logoutButtonHandler = async () => {
     ref.current.present();
-    // await dispatch(logOut());
-    // router.replace("/");
+  };
+
+  const logOutHandler = async () => {
+    await dispatch(logOut());
+    router.replace("/");
   };
   return (
     <View style={styles.container}>
-      <BottomSheetModal ref={ref} style={{ flex: 1 }}>
-        <View style={{ flex: 1 }}>
-          <Text>Вытйи из аккаунта</Text>
-          <Text>Вытйи из аккаунта</Text>
-          <Text>Вытйи из аккаунта</Text>
-          <Text>Вытйи из аккаунта</Text>
-          <Text>Вытйи из аккаунта</Text>
-        </View>
+      <BottomSheetModal
+        backdropComponent={renderBackdrop}
+        ref={ref}
+        style={{ flex: 1 }}
+      >
+        <BottomSheetView style={styles.modalLogOut}>
+          <Text style={styles.modalLogOutTitle}>
+            Вы уверены, что хотите выйти из аккаунта?
+          </Text>
+          <Text style={styles.modalLogOutSubtitle}>
+            Вы сможете зайти заново используя номер телефона и пароль
+          </Text>
+          <MyButton
+            onPress={logOutHandler}
+            buttonText="Выйти из аккаунта"
+            color="red"
+          />
+        </BottomSheetView>
       </BottomSheetModal>
       <View style={styles.header}>
         <Text style={styles.headerText}>Настройки</Text>
@@ -214,7 +239,10 @@ const Settings = () => {
             </View>
           </View>
         </Pressable>
-        <TouchableOpacity onPress={logoutHandler} style={styles.logoutButton}>
+        <TouchableOpacity
+          onPress={logoutButtonHandler}
+          style={styles.logoutButton}
+        >
           <Text style={styles.logoutText}> Выйти из профиля</Text>
         </TouchableOpacity>
       </View>
@@ -286,5 +314,21 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-SemiBold",
     fontSize: 16,
     color: colors.red,
+  },
+  modalLogOut: {
+    flex: 1,
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+    gap: 14,
+  },
+  modalLogOutTitle: {
+    fontFamily: "Montserrat-SemiBold",
+    fontSize: 20,
+    textAlign: "center",
+  },
+  modalLogOutSubtitle: {
+    fontFamily: "Montserrat-Regular",
+    fontSize: 16,
+    textAlign: "center",
   },
 });

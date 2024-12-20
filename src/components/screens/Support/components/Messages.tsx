@@ -22,7 +22,6 @@ const Messages = (props: Props) => {
   const [page, setPage] = useState(1);
   const { data: myProfileData } = useGetProfileQuery();
   const myId = myProfileData?.id;
-  console.log("myId", myId, props);
   useEffect(() => {
     const getMessages = async () => {
       try {

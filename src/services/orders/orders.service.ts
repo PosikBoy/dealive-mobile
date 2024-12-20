@@ -30,14 +30,14 @@ const axiosBaseQuery =
 export const ordersApi = createApi({
   reducerPath: "ordersApi",
   baseQuery: axiosBaseQuery({ baseUrl: SERVER_URL }),
-  tagTypes: ["Orders", "takenOrder"],
+  tagTypes: ["completeAction", "takeOrder"],
   endpoints: (builder) => ({
     getOrderById: builder.query<IOrder | IOrderWithoutSensitiveInfo, number>({
       query: (id: number) => ({
         url: `/order/${id}`,
         method: "GET",
       }),
-      providesTags: ["takenOrder"],
+      providesTags: ["completeAction", "takeOrder"],
     }),
 
     getAllOrders: builder.query<IOrder[], void>({
@@ -45,6 +45,7 @@ export const ordersApi = createApi({
         url: "/orders",
         method: "GET",
       }),
+      providesTags: ["takeOrder"],
     }),
 
     getAvailableOrders: builder.query<IOrderWithoutSensitiveInfo[], void>({
@@ -52,7 +53,7 @@ export const ordersApi = createApi({
         url: "/orders/available",
         method: "GET",
       }),
-      providesTags: ["Orders"],
+      providesTags: ["takeOrder"],
     }),
 
     getActiveOrders: builder.query<IOrder[], void>({
@@ -60,7 +61,7 @@ export const ordersApi = createApi({
         url: "/orders/active",
         method: "GET",
       }),
-      providesTags: ["Orders"],
+      providesTags: ["takeOrder"],
     }),
 
     takeOrder: builder.mutation<IOrder, { orderId: number }>({
@@ -69,14 +70,14 @@ export const ordersApi = createApi({
         method: "PUT",
         body: takeOrderDto,
       }),
-      invalidatesTags: ["takenOrder"],
+      invalidatesTags: ["takeOrder"],
     }),
     completeAction: builder.mutation<void, number>({
       query: (actionId: number) => ({
         url: `/order/action/${actionId}`,
         method: "PUT",
       }),
-      invalidatesTags: ["Orders"],
+      invalidatesTags: ["completeAction"],
     }),
   }),
 });

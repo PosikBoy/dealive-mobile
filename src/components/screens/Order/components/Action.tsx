@@ -1,9 +1,15 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { IOrderAction, IOrderActionType } from "@/types/order.interface";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 import { useCompleteActionMutation } from "@/services/orders/orders.service";
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
+import MyButton from "@/components/ui/Button/Button";
 
 type Props = {
   action: IOrderAction;
@@ -21,17 +27,33 @@ const actionIcons = {
 
 const Action = (props: Props) => {
   const { action } = props;
+
+  const [error, setError] = useState<string>();
   const icon = actionIcons[action.actionType]; // Получаем иконку из объекта
   const [completeAction, { isLoading, isError }] = useCompleteActionMutation();
 
+  const ref = useRef<BottomSheetModal>(null);
+
   const handleCompleteAction = async () => {
+    ref.current.present();
+  };
+
+  const renderBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop {...props} opacity={0.5} disappearsOnIndex={-1} />
+    ),
+    []
+  );
+
+  const completeActionHandler = async () => {
     try {
-      await completeAction(action.id).unwrap(); // unwrap для обработки результата
-      console.log("Action completed successfully");
+      await completeAction(action.id).unwrap();
+      ref.current.collapse();
     } catch (error) {
-      console.error("Failed to complete action:", error);
+      setError(error.data.message);
     }
   };
+
   return (
     <View style={styles.actionContainer}>
       <Pressable
@@ -43,6 +65,24 @@ const Action = (props: Props) => {
         </View>
         <Text style={styles.actionText}>{action.description}</Text>
       </Pressable>
+      <BottomSheetModal
+        style={styles.bottomSheet}
+        ref={ref}
+        backdropComponent={renderBackdrop}
+      >
+        <BottomSheetView style={styles.bottomSheetContent}>
+          <Text style={styles.modalTitle}>Подтвердите действие</Text>
+          <Text style={styles.modalSubtitle}>
+            Убедитесь, что вы выбрали выполнили это действие
+          </Text>
+          <Text style={styles.errorText}>{isError && error}</Text>
+
+          <MyButton
+            onPress={completeActionHandler}
+            buttonText={action.description}
+          />
+        </BottomSheetView>
+      </BottomSheetModal>
     </View>
   );
 };
@@ -77,5 +117,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 20,
     marginRight: 10,
+  },
+  bottomSheet: {
+    flex: 1,
+    backgroundColor: colors.white,
+  },
+  bottomSheetContent: {
+    flex: 1,
+    width: "100%",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    gap: 12,
+    alignItems: "center",
+    backgroundColor: colors.white,
+  },
+  modalTitle: {
+    fontFamily: "Montserrat-Medium",
+    fontSize: 20,
+  },
+  modalSubtitle: {
+    fontFamily: "Montserrat-Regular",
+    fontSize: 16,
+    textAlign: "center",
+  },
+  errorText: {
+    fontFamily: "Montserrat-Medium",
+    fontSize: 12,
+    color: colors.red,
+    textAlign: "center",
   },
 });

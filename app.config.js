@@ -15,7 +15,4 @@ export default ({ config }) => ({
     fallbackToCacheTimeout: 0,
   },
   assetBundlePatterns: ["**/*"],
-  android: {
-    package: "ru.dealive.mobile",
-  },
 });

@@ -72,6 +72,7 @@ class AuthService {
           withCredentials: true,
         }
       );
+      console.log("response in checkIsApproved", response.data);
       return response?.data?.isApproved;
     } catch (error: any) {
       console.log("error", JSON.stringify(error));

@@ -16,7 +16,7 @@ const index = () => {
     parseInt(id)
   );
   if (isError) {
-    return <Text>{"amsdc" + error.message}</Text>;
+    return <Text>{"Возникла ошибка" + error.message}</Text>;
   }
   if (isLoading) {
     return <ActivityIndicator size={"large"} />;

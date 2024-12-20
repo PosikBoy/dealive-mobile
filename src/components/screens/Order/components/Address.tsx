@@ -57,17 +57,20 @@ const Address: FC<IAdressProps> = ({ address, index, price }) => {
           </Text>
         </TouchableOpacity>
       )}
-      <View>
-        <Text style={styles.infoLabel}>Дополнительно</Text>
-        <Text style={styles.info}>{address.info}</Text>
-      </View>
+      {address.info && (
+        <View>
+          <Text style={styles.infoLabel}>Дополнительно</Text>
+          <Text style={styles.info}>{address.info}</Text>
+        </View>
+      )}
+
       {index == 0 && (
         <View style={styles.priceContainer}>
           <Image source={icons.money} style={styles.priceIcon} />
           <Text style={styles.priceText}>{"Получить " + price + "₽"}</Text>
         </View>
       )}
-      {"floor" in address && (
+      {"floor" in address && address.floor && (
         <View style={styles.floorContainer}>
           <Image source={icons.building} style={styles.floorIcon} />
           <Text style={styles.floorText}>
