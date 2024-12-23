@@ -3,12 +3,12 @@ export default ({ config }) => ({
   icon: "./assets/icon.png",
   splash: {
     image: "./assets/splash.png",
-    resizeMode: "contain",
+    resizeMode: "cover",
     backgroundColor: "#ffffff",
   },
   name: "Dealive - срочная доставка",
   slug: "dealive-mobile",
-  version: "1.0.1",
+  version: "1.1.0",
   orientation: "portrait",
   icon: "./assets/icon.png",
   updates: {

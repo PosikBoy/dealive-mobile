@@ -1,4 +1,5 @@
 export const getMetroColor = (line: string) => {
+  console.log(line);
   switch (line) {
     case "Таганско-Краснопресненская":
       return "#8A4298"; // Цвет для Таганско-Краснопресненской линии
@@ -37,7 +38,9 @@ export const getMetroColor = (line: string) => {
       return "#ED9F2D";
     case "Калужско-Нижегородский":
       return "#3CB183";
+    case "Московский монорельс":
+      return "rgb(33, 77, 166)";
     default:
-      return "#000000"; // Цвет по умолчанию
+      return "#"; // Цвет по умолчанию
   }
 };

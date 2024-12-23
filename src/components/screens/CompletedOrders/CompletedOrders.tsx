@@ -1,15 +1,30 @@
 import { FlatList, Image, StyleSheet, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useGetAllOrdersQuery } from "@/services/orders/orders.service";
 import OrderPreview from "@/components/ui/OrderPreview/OrderPreview";
 import { orderStatuses } from "@/constants/orderStatuses";
 import Header from "@/components/ui/Header/Header";
 import { icons } from "@/constants/icons";
+import { useTypedSelector } from "@/hooks/redux.hooks";
+import geodataService from "@/services/geodata/geodata.service";
+import { IOrderWithoutSensitiveInfo } from "@/types/order.interface";
 const CompletedOrders = () => {
+  const [orders, setOrders] = useState<IOrderWithoutSensitiveInfo[]>([]);
+
   const { data, isLoading } = useGetAllOrdersQuery(undefined, {
     refetchOnFocus: false,
     refetchOnReconnect: false,
   });
+
+  const location = useTypedSelector((state) => state.location);
+
+  useEffect(() => {
+    if (!location.isLocationLoading && data) {
+      const enrichedOrders = geodataService.enrichOrders(data, location);
+
+      setOrders(enrichedOrders);
+    }
+  }, [data, location]);
 
   if (isLoading) {
     return (
@@ -24,6 +39,7 @@ const CompletedOrders = () => {
       </View>
     );
   }
+
   const completedOrders = data.filter(
     (order) => order.statusId == orderStatuses.delivered
   );
@@ -34,7 +50,7 @@ const CompletedOrders = () => {
       <View style={styles.ordersContainer}>
         {completedOrders.length > 0 && (
           <FlatList
-            data={completedOrders}
+            data={orders}
             renderItem={({ item }) => <OrderPreview order={item} />}
             keyExtractor={(item) => item.id.toString()}
             ItemSeparatorComponent={() => <View style={styles.separator} />}

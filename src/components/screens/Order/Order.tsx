@@ -27,6 +27,8 @@ const Order: FC<IProps> = ({ order }) => {
     "addresses"
   );
 
+  console.log("Адреса заказов", order.addresses);
+  console.log("Действия", order.actions);
   const [takeOrder, { error }] = useTakeOrderMutation();
 
   const showModal = () => {

@@ -53,7 +53,7 @@ const OrderPreview: FC<OrderDetailsProps> = ({ order }) => {
                         </Text>
                       )}
                       <Text style={styles.locationInfoText}>
-                        {address.distance.toFixed(1) + " км от вас"}
+                        {address.distance?.toFixed(1) + " км от вас"}
                       </Text>
                     </View>
                   </View>
@@ -127,9 +127,9 @@ const styles = StyleSheet.create({
   },
   locationInfo: {
     flexGrow: 0,
+    flexWrap: "wrap",
     flexDirection: "row",
     alignSelf: "flex-start",
-    width: "auto",
     gap: 5,
     backgroundColor: colors.purple,
     paddingHorizontal: 10,

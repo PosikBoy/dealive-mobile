@@ -25,7 +25,6 @@ const AvailableOrders = () => {
   const [sortingRules, setSortingRules] = useState<
     "lastDate" | "priceASC" | "priceDESC" | "distance"
   >("lastDate");
-
   const ref = useRef<BottomSheetModal>(null);
   const { data, isLoading, refetch, isFetching } = useGetAvailableOrdersQuery(
     undefined,
@@ -36,7 +35,6 @@ const AvailableOrders = () => {
     }
   );
 
-  const handleBottomSheetSorting = () => {};
   useEffect(() => {
     if (!location.isLocationLoading && data) {
       const enrichedOrders = geodataService.enrichOrders(data, location);

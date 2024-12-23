@@ -71,6 +71,8 @@ const Action = (props: Props) => {
   const completeActionHandler = async () => {
     if (action.actionType == IOrderActionType.ARRIVED_AT) {
       try {
+        console.log(location, address);
+
         const distance = geodataService.calculateDistanceToAddress(
           location,
           address
@@ -81,7 +83,9 @@ const Action = (props: Props) => {
           );
           return;
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log("error", JSON.stringify(error));
+      }
     }
     try {
       await completeAction(action.id).unwrap();

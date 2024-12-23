@@ -151,7 +151,9 @@ const Settings = () => {
             </View>
           </View>
         </Link> */}
-        <Pressable onPress={() => Linking.openURL("https://dealive.ru/about")}>
+        <Pressable
+          onPress={() => Linking.openURL("https://dealive.ru/courier/faq")}
+        >
           <View style={styles.linkContainer}>
             <View style={styles.linkTextContainer}>
               <View style={styles.iconContainer}>
