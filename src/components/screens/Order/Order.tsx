@@ -141,7 +141,7 @@ const Order: FC<IProps> = ({ order }) => {
           contentContainerStyle={{
             gap: 10,
             paddingTop: 10,
-            paddingBottom: 120,
+            paddingBottom: 130,
           }}
         />
       )}

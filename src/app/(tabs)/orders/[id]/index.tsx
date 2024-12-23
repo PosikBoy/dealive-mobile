@@ -1,5 +1,4 @@
 import Order from "@/components/screens/Order/Order";
-import { useLocation } from "@/hooks/location.hook";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import geodataService from "@/services/geodata/geodata.service";
 import { useGetOrderByIdQuery } from "@/services/orders/orders.service";
@@ -16,8 +15,6 @@ const index = () => {
   const { data, isError, isLoading } = useGetOrderByIdQuery(parseInt(id));
 
   useEffect(() => {
-    console.log(location);
-
     if (data && !location.isLocationLoading) {
       const enrichedOrder = geodataService.enrichOrder(data, location);
       setOrder(enrichedOrder);

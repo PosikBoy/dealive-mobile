@@ -20,13 +20,10 @@ export const useLocation = () => {
           setError("Необходим доступ к местоположению");
           return;
         }
-        console.log("getLocation", location);
 
         const { coords } = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.Balanced,
         });
-
-        console.log("getLocation", coords);
 
         setLocation({ lon: coords.longitude, lat: coords.latitude });
         setIsLoading(false);

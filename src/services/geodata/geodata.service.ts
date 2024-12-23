@@ -14,10 +14,7 @@ interface ILocation {
 }
 
 class GeodataService {
-  enrichOrders(
-    orders: IOrder[] | IOrderWithoutSensitiveInfo[],
-    location: ILocation
-  ) {
+  enrichOrders(orders: IOrderWithoutSensitiveInfo[], location: ILocation) {
     const enrichedOrders = orders?.map((order) => {
       const enrichedAddresses = order?.addresses.map((address) => {
         const distance = this.calculateDistanceToAddress(location, address);
@@ -28,6 +25,7 @@ class GeodataService {
     });
     return enrichedOrders;
   }
+
   enrichOrder(order: IOrder | IOrderWithoutSensitiveInfo, location: ILocation) {
     const enrichedAddresses = order?.addresses.map((address) => {
       const distance = this.calculateDistanceToAddress(location, address);

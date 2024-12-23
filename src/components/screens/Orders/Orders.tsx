@@ -10,7 +10,9 @@ const OrdersScreen = () => {
   const [currentPage, setCurrentPage] = useState<"available" | "active">(
     "available"
   );
-
+  const [sortingRules, setSortingRules] = useState<
+    "date" | "price" | "distance"
+  >("date");
   return (
     <View style={styles.container}>
       <View style={styles.ordersHeader}>
