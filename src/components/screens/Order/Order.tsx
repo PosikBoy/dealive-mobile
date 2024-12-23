@@ -129,7 +129,13 @@ const Order: FC<IProps> = ({ order }) => {
         <FlatList
           data={order.actions}
           renderItem={({ item }) => (
-            <Action action={item} disabled={order.statusId != 4} />
+            <Action
+              address={order.addresses.find(
+                (address) => address.id == item.addressId
+              )}
+              action={item}
+              disabled={order.statusId != 4}
+            />
           )}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={{
@@ -194,6 +200,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     width: "100%",
     gap: 20,
+    paddingBottom: 100,
   },
   listFooter: {
     gap: 20,

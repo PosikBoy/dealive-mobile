@@ -7,12 +7,18 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useGetAvailableOrdersQuery } from "@/services/orders/orders.service";
 import OrderPreview from "@/components/ui/OrderPreview/OrderPreview";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
+import { IOrderWithoutSensitiveInfo } from "@/types/order.interface";
+import geodataService from "@/services/geodata/geodata.service";
+import { useTypedSelector } from "@/hooks/redux.hooks";
+import { fonts } from "@/constants/styles";
 const AvailableOrders = () => {
+  const [orders, setOrders] = useState<IOrderWithoutSensitiveInfo[]>([]);
+  const location = useTypedSelector((state) => state.location);
   const { data, isLoading, refetch, isFetching } = useGetAvailableOrdersQuery(
     undefined,
     {
@@ -21,20 +27,28 @@ const AvailableOrders = () => {
       refetchOnReconnect: true,
     }
   );
-  if (isLoading) {
+
+  useEffect(() => {
+    if (!location.isLocationLoading && data) {
+      const enrichedOrders = geodataService.enrichOrders(data, location);
+      setOrders(enrichedOrders);
+    }
+  }, [data, location]);
+
+  if (location.isLocationLoading || isLoading) {
     return (
       <View style={styles.container}>
         <View style={styles.searchOrderContainer}>
-          <Image
-            source={icons.searchOrders}
-            style={{ width: "100%", height: "100%" }}
-            resizeMode="contain"
-          />
+          <ActivityIndicator size={"large"} color={colors.purple} />
+          <Text style={styles.text}>
+            Ищем заказы или пытаемся определить ваше местоположение
+          </Text>
+          <Text style={styles.text}>Подождите, пожалуйста</Text>
         </View>
       </View>
     );
   }
-  if (data.length === 0) {
+  if (orders.length === 0) {
     return (
       <View style={styles.container}>
         <View style={styles.searchOrderContainer}>
@@ -51,7 +65,7 @@ const AvailableOrders = () => {
     <View style={styles.container}>
       <View>
         <FlatList
-          data={data}
+          data={orders}
           renderItem={({ item }) => <OrderPreview order={item} />}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.flatListStyles}
@@ -81,6 +95,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     position: "relative",
   },
+  text: {
+    color: colors.black,
+    fontSize: 18,
+    textAlign: "center",
+    fontFamily: fonts.medium,
+  },
   flatListStyles: {
     paddingTop: 16,
     paddingBottom: 126,
@@ -95,7 +115,6 @@ const styles = StyleSheet.create({
     height: 20, // Отступ между элементами
     backgroundColor: "transparent",
   },
-
   update: {
     position: "absolute",
     bottom: 130,

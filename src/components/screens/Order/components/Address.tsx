@@ -13,7 +13,8 @@ import {
 } from "react-native";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
-import { fonts } from "@/constants/styles";
+import { fonts, fontSizes } from "@/constants/styles";
+import { getMetroColor } from "@/utils/getColorMetro";
 
 interface IAdressProps {
   address: IAddress | IAddressWithoutSensitiveInfo;
@@ -23,7 +24,7 @@ interface IAdressProps {
 
 const Address: FC<IAdressProps> = ({ address, index, price }) => {
   const handleOpenURL = () => {
-    const url = "https://yandex.ru/maps/213/moscow/search/" + address.address;
+    const url = `https://yandex.ru/maps/?rtext=~${address.geoData.geoLat}%2C${address.geoData.geoLon}`;
     Linking.canOpenURL(url)
       .then((supported) => {
         if (supported) {
@@ -43,21 +44,35 @@ const Address: FC<IAdressProps> = ({ address, index, price }) => {
     <View style={styles.address}>
       <TouchableOpacity onPress={handleOpenURL}>
         <View style={styles.addressTextContainer}>
-          <View style={styles.addressIconContainer}>
-            <Image source={icons.address} style={styles.addressIcon} />
-          </View>
-          <Text style={styles.addressText}>{address.address}</Text>
           <Text style={styles.addressIndex}>{index + 1}</Text>
+          <Text style={styles.addressText}>{address.address}</Text>
         </View>
       </TouchableOpacity>
       {"phoneNumber" in address && (
         <TouchableOpacity onPress={handleCall} style={styles.phoneNumber}>
           <Text style={styles.phoneNumberLabel}>Номер телефона </Text>
           <Text style={styles.phoneNumberInfo}>
-            {address.phoneNumber + " · " + address?.phoneName}
+            {address.phoneNumber + "  " + address?.phoneName}
           </Text>
         </TouchableOpacity>
       )}
+      <View
+        style={[
+          styles.locationInfo,
+          address.geoData?.metro && {
+            backgroundColor: getMetroColor(address.geoData.metro[0].line),
+          },
+        ]}
+      >
+        {address.geoData?.metro && (
+          <Text style={styles.locationInfoText}>
+            {address.geoData?.metro[0]?.name + " |"}
+          </Text>
+        )}
+        <Text style={styles.locationInfoText}>
+          {address?.distance.toFixed(1) + " км от вас"}
+        </Text>
+      </View>
       {address.info && (
         <View>
           <Text style={styles.infoLabel}>Дополнительно</Text>
@@ -98,6 +113,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     gap: 10,
+    alignItems: "center",
   },
   addressIconContainer: {
     width: 22,
@@ -109,15 +125,14 @@ const styles = StyleSheet.create({
   },
   addressText: {
     flex: 1,
-
     color: colors.black,
     fontFamily: fonts.semiBold,
     fontSize: 16,
   },
   addressIndex: {
-    position: "absolute",
-    left: 8.5,
-    top: -2,
+    color: colors.black,
+    fontFamily: fonts.medium,
+    fontSize: fontSizes.extraBig,
   },
   infoLabel: {
     fontSize: 12,
@@ -174,5 +189,21 @@ const styles = StyleSheet.create({
   },
   cancelOrderButton: {
     padding: 10,
+  },
+  locationInfo: {
+    flexGrow: 0,
+    flexDirection: "row",
+    alignSelf: "flex-start",
+    width: "auto",
+    gap: 5,
+    backgroundColor: colors.purple,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 20,
+  },
+  locationInfoText: {
+    color: colors.white,
+    fontFamily: fonts.regular,
+    fontSize: 14,
   },
 });

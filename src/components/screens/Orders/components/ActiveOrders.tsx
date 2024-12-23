@@ -7,12 +7,20 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useGetActiveOrdersQuery } from "@/services/orders/orders.service";
 import OrderPreview from "@/components/ui/OrderPreview/OrderPreview";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
+import { useTypedSelector } from "@/hooks/redux.hooks";
+import geodataService from "@/services/geodata/geodata.service";
+import { IOrder, IOrderWithoutSensitiveInfo } from "@/types/order.interface";
+import { fonts } from "@/constants/styles";
 const AvailableOrders = () => {
+  const [orders, setOrders] = useState<IOrderWithoutSensitiveInfo[] | IOrder[]>(
+    []
+  );
+
   const { data, isLoading, refetch, isFetching } = useGetActiveOrdersQuery(
     undefined,
     {
@@ -21,16 +29,24 @@ const AvailableOrders = () => {
       refetchOnReconnect: true,
     }
   );
+  const location = useTypedSelector((state) => state.location);
 
-  if (isLoading) {
+  useEffect(() => {
+    if (!location.isLocationLoading && data) {
+      const enrichedOrders = geodataService.enrichOrders(data, location);
+      setOrders(enrichedOrders);
+    }
+  }, [data, location]);
+
+  if (location.isLocationLoading || isLoading) {
     return (
       <View style={styles.container}>
         <View style={styles.searchOrderContainer}>
-          <Image
-            source={icons.searchOrders}
-            style={{ width: "100%", height: "100%" }}
-            resizeMode="contain"
-          />
+          <ActivityIndicator size={"large"} color={colors.purple} />
+          <Text style={styles.text}>
+            Ищем заказы или пытаемся определить ваше местоположение
+          </Text>
+          <Text style={styles.text}>Подождите, пожалуйста</Text>
         </View>
       </View>
     );
@@ -53,7 +69,7 @@ const AvailableOrders = () => {
     <View style={styles.container}>
       <View>
         <FlatList
-          data={data}
+          data={orders}
           renderItem={({ item }) => <OrderPreview order={item} />}
           keyExtractor={(item) => item.id.toString()}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -97,7 +113,12 @@ const styles = StyleSheet.create({
     height: 20, // Отступ между элементами
     backgroundColor: "transparent",
   },
-
+  text: {
+    color: colors.black,
+    fontSize: 18,
+    textAlign: "center",
+    fontFamily: fonts.medium,
+  },
   update: {
     position: "absolute",
     bottom: 130,

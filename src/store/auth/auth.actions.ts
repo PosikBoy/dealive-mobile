@@ -5,9 +5,7 @@ import {
   ILoginRequestData,
   IAuthResponseData,
 } from "@/types/auth.interface";
-import { errorCatch } from "@/helpers/errorCatch";
 import authStorage from "@/helpers/authStorage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const register = createAsyncThunk<
   IAuthResponseData,
@@ -43,21 +41,6 @@ export const logOut = createAsyncThunk("auth/logout", async (_, thunkApi) => {
     return thunkApi.rejectWithValue(error.message);
   }
 });
-
-// export const checkAuth = createAsyncThunk(
-//   "auth/checkAuth",
-//   async (_, thunkApi) => {
-//     try {
-//       const response = await authService.getNewTokens();
-//       return response;
-//     } catch (error: any) {
-//       if (errorCatch(error) === "jwt expired") {
-//         thunkApi.dispatch(logOut());
-//       }
-//       return thunkApi.rejectWithValue(error.message);
-//     }
-//   }
-// );
 
 export const fetchAuthStatus = createAsyncThunk(
   "auth/fetchAuthStatus",

@@ -1,8 +1,31 @@
+export interface IGeoData {
+  address: string;
+  geoLat: string;
+  geoLon: string;
+  qcGeo: number;
+  metro?: IMetro[];
+  beltwayHit?: BeltwayHit;
+  beltwayDistance?: number;
+}
+
+interface IMetro {
+  line: string;
+  name: string;
+  distance: number;
+}
+enum BeltwayHit {
+  IN_MKAD,
+  OUT_MKAD,
+  IN_KAD,
+  OUT_KAD,
+}
 export interface IAddressWithoutSensitiveInfo {
   id: number;
   orderId: number;
   address: string;
   info: string;
+  geoData: IGeoData;
+  distance?: number;
 }
 export enum IOrderActionType {
   GO_TO = "GO_TO",
@@ -21,6 +44,7 @@ export interface IOrderAction {
   id: number;
   isCompleted: boolean;
   orderId: number;
+  addressId: number;
   sequence: number;
   updatedAt: Date;
 }
@@ -45,8 +69,10 @@ export interface IAddress {
   phoneNumber: string;
   phoneName: string;
   info: string;
+  geoData: IGeoData;
   createdAt: string;
   updatedAt: string;
+  distance?: number;
 }
 export interface IOrder {
   id: number;

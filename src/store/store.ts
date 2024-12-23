@@ -4,12 +4,14 @@ import { authSlice } from "./auth/auth.slice";
 import { ordersApi } from "@/services/orders/orders.service";
 import { profileApi } from "@/services/profile/profile.service";
 import { supportChatSlice } from "./supportChat/supportChat.slice";
+import { locationSlice } from "./location/location.slice";
 const rootReducer = combineReducers({
   [ordersApi.reducerPath]: ordersApi.reducer,
   [profileApi.reducerPath]: profileApi.reducer,
   signupForm: signupFormSlice.reducer,
   auth: authSlice.reducer,
   supportChat: supportChatSlice.reducer,
+  location: locationSlice.reducer,
 });
 
 const store = configureStore({

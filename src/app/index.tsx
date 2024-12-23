@@ -8,7 +8,7 @@ import {
   fetchIsApprovedStatus,
   logOut,
 } from "@/store/auth/auth.actions";
-import { Redirect, router, SplashScreen } from "expo-router";
+import { Redirect, SplashScreen } from "expo-router";
 import { colors } from "@/constants/colors";
 import authStorage from "@/helpers/authStorage";
 
@@ -33,8 +33,6 @@ const indexPage = () => {
     } finally {
       await SplashScreen.hideAsync();
       setIsAppReady(true);
-
-      // Завершаем инициализацию
     }
   };
 
@@ -71,15 +69,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  errorText: {
-    color: "red",
-    fontSize: 16,
   },
 });
 

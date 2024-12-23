@@ -7,7 +7,12 @@ import {
   View,
 } from "react-native";
 import React, { useCallback, useRef, useState } from "react";
-import { IOrderAction, IOrderActionType } from "@/types/order.interface";
+import {
+  IAddress,
+  IAddressWithoutSensitiveInfo,
+  IOrderAction,
+  IOrderActionType,
+} from "@/types/order.interface";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 import { useCompleteActionMutation } from "@/services/orders/orders.service";
@@ -19,10 +24,13 @@ import {
 import MyButton from "@/components/ui/Button/Button";
 import CustomBottomSheetModal from "@/components/ui/CustomBottomSheetModal/CustomBottomSheetModal";
 import { fonts } from "@/constants/styles";
+import { useTypedSelector } from "@/hooks/redux.hooks";
+import geodataService from "@/services/geodata/geodata.service";
 
 type Props = {
   action: IOrderAction;
   disabled: boolean;
+  address: IAddressWithoutSensitiveInfo | IAddress;
 };
 
 const actionIcons = {
@@ -46,12 +54,13 @@ const actionSnippets = {
 };
 
 const Action = (props: Props) => {
-  const { action, disabled } = props;
+  const { action, disabled, address } = props;
 
   const [error, setError] = useState<string>();
   const icon = actionIcons[action.actionType];
   const snippet = actionSnippets[action.actionType];
   const [completeAction, { isLoading, isError }] = useCompleteActionMutation();
+  const location = useTypedSelector((state) => state.location);
 
   const ref = useRef<BottomSheetModal>(null);
 
@@ -60,6 +69,20 @@ const Action = (props: Props) => {
   };
 
   const completeActionHandler = async () => {
+    if (action.actionType == IOrderActionType.ARRIVED_AT) {
+      try {
+        const distance = geodataService.calculateDistanceToAddress(
+          location,
+          address
+        );
+        if (distance > 1) {
+          setError(
+            "Кажется, вы немного отошли от указанного адреса. Пожалуйста, проверьте ваше местоположение и убедитесь, что вы на правильном адресе."
+          );
+          return;
+        }
+      } catch (error) {}
+    }
     try {
       await completeAction(action.id).unwrap();
       ref.current.close();
@@ -88,7 +111,13 @@ const Action = (props: Props) => {
             <Text style={styles.modalSubtitle}>Убедитесь, что сделали это</Text>
             <Text style={styles.modalSubtitle}>{action.description}</Text>
           </View>
-          <Text style={styles.errorText}>{isError && error}</Text>
+          {action.actionType == IOrderActionType.PAY_COMMISION && (
+            <Text style={styles.modalSubtitle}>
+              Для оплаты комиссии с вами свяжется диспетчер. Если с вами не
+              связались - напишите в техподдержку в Telegram.
+            </Text>
+          )}
+          <Text style={styles.errorText}>{error}</Text>
           <MyButton onPress={completeActionHandler} buttonText={snippet} />
         </View>
       </CustomBottomSheetModal>

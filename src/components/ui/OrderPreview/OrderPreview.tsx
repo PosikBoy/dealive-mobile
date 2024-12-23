@@ -1,17 +1,9 @@
 import { colors } from "@/constants/colors";
 import { IOrderWithoutSensitiveInfo } from "@/types/order.interface";
 import { FC } from "react";
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import formatDate from "@/helpers/formatDate";
 import { router } from "expo-router";
-import { icons } from "@/constants/icons";
 import {
   borderRadiuses,
   fonts,
@@ -19,6 +11,7 @@ import {
   gaps,
   paddings,
 } from "@/constants/styles";
+import { getMetroColor } from "@/utils/getColorMetro";
 interface OrderDetailsProps {
   order: IOrderWithoutSensitiveInfo;
 }
@@ -39,11 +32,31 @@ const OrderPreview: FC<OrderDetailsProps> = ({ order }) => {
             {addresses.map((address, index) => {
               return (
                 <View key={address.id} style={styles.address}>
-                  <View style={styles.addressIconContainer}>
-                    <Image source={icons.address} style={styles.addressIcon} />
+                  <View>
+                    <Text style={styles.addressIndexText}>{index + 1}</Text>
                   </View>
-                  <Text style={styles.addressText}>{address.address}</Text>
-                  <Text style={styles.addressIndex}>{index + 1}</Text>
+                  <View style={styles.addressTextContainer}>
+                    <Text style={styles.addressText}>{address.address}</Text>
+                    <View
+                      style={[
+                        styles.locationInfo,
+                        address.geoData?.metro && {
+                          backgroundColor: getMetroColor(
+                            address.geoData.metro[0].line
+                          ),
+                        },
+                      ]}
+                    >
+                      {address.geoData?.metro && (
+                        <Text style={styles.locationInfoText}>
+                          {address.geoData?.metro[0]?.name + " |"}
+                        </Text>
+                      )}
+                      <Text style={styles.locationInfoText}>
+                        {address.distance.toFixed(1) + " км от вас"}
+                      </Text>
+                    </View>
+                  </View>
                 </View>
               );
             })}
@@ -96,13 +109,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
   },
-  addressIconContainer: {
-    width: 22,
-    height: 24,
-  },
-  addressIcon: {
-    width: "100%",
-    height: "100%",
+  addressTextContainer: {
+    flex: 1,
+    gap: 5,
   },
   addressText: {
     color: colors.black,
@@ -110,10 +119,27 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.medium,
     flex: 1,
   },
-  addressIndex: {
-    position: "absolute",
-    left: 8.5,
-    top: -2,
+  addressIndexText: {
+    width: 20,
+    color: colors.black,
+    fontFamily: fonts.medium,
+    fontSize: fontSizes.extraBig,
+  },
+  locationInfo: {
+    flexGrow: 0,
+    flexDirection: "row",
+    alignSelf: "flex-start",
+    width: "auto",
+    gap: 5,
+    backgroundColor: colors.purple,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 20,
+  },
+  locationInfoText: {
+    color: colors.white,
+    fontFamily: fonts.regular,
+    fontSize: 14,
   },
   footer: {
     width: "100%",
@@ -132,10 +158,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.purple,
     borderRadius: 20,
     padding: 5,
+    paddingHorizontal: 10,
   },
   priceText: {
     color: colors.white,
-    fontFamily: fonts.semiBold,
+    fontFamily: fonts.medium,
     fontSize: fontSizes.medium,
   },
   meta: {

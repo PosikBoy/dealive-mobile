@@ -132,7 +132,7 @@ const Register3: FC<IProps> = (props) => {
       <View style={styles.imagePickerContainer}>
         <ImagePicker
           title="Загрузите селфи с паспортом"
-          linkSuggestion="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTC3n_U6LYAo7YKJf3_jdNfJQNQvV6D2vx0uA&s"
+          linkSuggestion="https://dealive.ru/selfie-passport.jpg"
           control={control}
           name="selfieWithPassportImage"
           rules={{ required: "Загрузите селфи с паспортом" }}
@@ -147,7 +147,7 @@ const Register3: FC<IProps> = (props) => {
       <View style={styles.imagePickerContainer}>
         <ImagePicker
           title="Загрузите фото паспорта"
-          linkSuggestion="https://s3.cms.mts.ru/cms-files/%D1%86%D1%83%D0%B0%D1%86%D1%83%D0%B0%D1%86%D1%83%D0%B0_66ec26dd47fe2c1ddf3d2d04.png"
+          linkSuggestion="https://dealive.ru/passport.png"
           control={control}
           name="passportPhotoImage"
           rules={{ required: "Загрузите фото паспорта" }}

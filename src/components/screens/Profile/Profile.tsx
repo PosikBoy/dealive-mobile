@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { useGetProfileQuery } from "@/services/profile/profile.service";
 import { colors } from "@/constants/colors";
-import formatDate from "@/helpers/formatDate";
+import formatDate, { formatDateWithoutTime } from "@/helpers/formatDate";
 import Header from "@/components/ui/Header/Header";
 import { fonts, fontSizes } from "@/constants/styles";
 
@@ -41,7 +41,9 @@ const Profile = (props: Props) => {
       <View style={styles.content}>
         <View style={styles.infoContainer}>
           <Text style={styles.label}>Дата рождения</Text>
-          <Text style={styles.value}>{formatDate(data.birthDate)}</Text>
+          <Text style={styles.value}>
+            {formatDateWithoutTime(data.birthDate)}
+          </Text>
         </View>
       </View>
     </View>

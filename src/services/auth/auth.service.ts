@@ -44,10 +44,19 @@ class AuthService {
             } as any); // Cast для React Native
           });
         } else {
+          if (key == "birthDate" && typeof value == "string") {
+            const parts = value.split(".");
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10); // Месяцы в JavaScript нумеруются с 0
+            const year = parseInt(parts[2], 10);
+
+            value = `${month}.${day}.${year}`;
+          }
+
           formData.append(key, value as string);
         }
       });
-
+      console.log(formData);
       const response = await axios.post<
         IRegisterRequestData,
         { data: IAuthResponseData }
@@ -61,6 +70,7 @@ class AuthService {
       }
       return response?.data;
     } catch (error: any) {
+      console.log(error.response.data);
       throw Error(error.response.data.message);
     }
   }
