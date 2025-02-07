@@ -8,6 +8,7 @@ import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import LocationProvider from "@/components/other/LocationProvider";
+import { colors } from "@/constants/colors";
 
 const layout = () => {
   return (
@@ -31,6 +32,7 @@ const layout = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.white,
   },
 });
 

@@ -33,6 +33,7 @@ const indexPage = () => {
         await dispatch(fetchIsApprovedStatus()).unwrap();
       }
     } catch (err) {
+      console.log(err);
     } finally {
       await SplashScreen.hideAsync();
       setIsAppReady(true);

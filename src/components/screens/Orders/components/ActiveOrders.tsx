@@ -20,7 +20,6 @@ import AvailableOrders from "./AvailableOrders";
 const ActiveOrders = () => {
   const location = useTypedSelector((state) => state.location);
   const { data, isLoading, refetch } = useGetActiveOrdersQuery();
-  console.log(isLoading, data, location.isLocationLoading);
 
   if (location.isLocationLoading || isLoading) {
     return (
