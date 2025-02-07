@@ -5,17 +5,17 @@ import { fonts } from "@/constants/styles";
 import { colors } from "@/constants/colors";
 
 const TabsLayout = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>
-        На данный момент техподдержка работает в Telegram!
-      </Text>
-      <Text style={styles.text}>
-        Откройте настройки и нажмите на пункт Техподдержка в Telegram!
-      </Text>
-    </View>
-  );
-  // return <Support />;
+  // return (
+  //   <View style={styles.container}>
+  //     <Text style={styles.text}>
+  //       На данный момент техподдержка работает в Telegram!
+  //     </Text>
+  //     <Text style={styles.text}>
+  //       Откройте настройки и нажмите на пункт Техподдержка в Telegram!
+  //     </Text>
+  //   </View>
+  // );
+  return <Support />;
 };
 
 export default TabsLayout;

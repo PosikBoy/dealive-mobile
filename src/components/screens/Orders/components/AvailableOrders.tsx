@@ -7,83 +7,71 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
-import { useGetAvailableOrdersQuery } from "@/services/orders/orders.service";
-import OrderPreview from "@/components/ui/OrderPreview/OrderPreview";
+import React, { useRef, useState } from "react";
+import { useGetAvailableOrdersQueryWithSorting } from "@/services/orders/orders.service";
+import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
-import { IOrderWithoutSensitiveInfo } from "@/types/order.interface";
-import geodataService from "@/services/geodata/geodata.service";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import { borderRadiuses, fonts, fontSizes } from "@/constants/styles";
-import CustomBottomSheetModal from "@/components/ui/CustomBottomSheetModal/CustomBottomSheetModal";
+import CustomBottomSheetModal from "@/components/shared/CustomBottomSheetModal/CustomBottomSheetModal";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import OrderPreviewSkeleton from "@/components/features/OrderPreviewSkeleton/OrderPreviewSkeleton";
+
 const AvailableOrders = () => {
-  const [orders, setOrders] = useState<IOrderWithoutSensitiveInfo[]>([]);
   const location = useTypedSelector((state) => state.location);
 
   const [sortingRules, setSortingRules] = useState<
     "lastDate" | "priceASC" | "priceDESC" | "distance"
   >("lastDate");
   const ref = useRef<BottomSheetModal>(null);
-  const { data, isLoading, refetch, isFetching } = useGetAvailableOrdersQuery(
-    undefined,
-    {
-      pollingInterval: 60000,
-      refetchOnFocus: true,
-      refetchOnReconnect: true,
-    }
-  );
+  const { data, isLoading, refetch, isFetching } =
+    useGetAvailableOrdersQueryWithSorting(sortingRules);
 
-  useEffect(() => {
-    if (!location.isLocationLoading && data) {
-      const enrichedOrders = geodataService.enrichOrders(data, location);
-      const sortedOrders = enrichedOrders.sort((a, b) => {
-        if (sortingRules === "priceASC") {
-          return a.price - b.price;
-        } else if (sortingRules === "priceDESC") {
-          return b.price - a.price;
-        } else if (sortingRules === "distance") {
-          return a.addresses[0].distance - b.addresses[0].distance;
-        } else if (sortingRules === "lastDate") {
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        }
-      });
-      setOrders(sortedOrders);
-    }
-  }, [data, location, sortingRules]);
+  if (location.error) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <OrderPreviewSkeleton />
+          <OrderPreviewSkeleton />
+          <OrderPreviewSkeleton />
+        </View>
+        <View style={styles.loadingTextContainer}>
+          <View style={styles.loadingModal}>
+            <Text style={styles.text}>{location.error}</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
 
   if (location.isLocationLoading || isLoading) {
     return (
       <View style={styles.container}>
-        <View style={styles.searchOrderContainer}>
-          <ActivityIndicator size={"large"} color={colors.purple} />
-          <Text style={styles.text}>
-            Ищем заказы или пытаемся определить ваше местоположение
-          </Text>
-          <Text style={styles.text}>Подождите, пожалуйста</Text>
+        <View style={styles.loadingContainer}>
+          <OrderPreviewSkeleton />
+          <OrderPreviewSkeleton />
+          <OrderPreviewSkeleton />
+        </View>
+        <View style={styles.loadingTextContainer}>
+          <View style={styles.loadingModal}>
+            <ActivityIndicator size={"large"} color={colors.purple} />
+            <Text style={styles.text}>
+              {location.isLocationLoading
+                ? "Пытаемся определить ваше местоположение"
+                : "Запрашиваем заказы с сервера"}
+            </Text>
+          </View>
         </View>
       </View>
     );
   }
-  if (orders.length === 0) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.searchOrderContainer}>
-          <Image
-            source={icons.searchOrders}
-            style={{ width: "100%", height: "100%" }}
-            resizeMode="contain"
-          />
-        </View>
-      </View>
-    );
-  }
+
   return (
     <View style={styles.container}>
       <View>
         <FlatList
-          data={orders}
+          data={data}
           ListHeaderComponent={() => (
             <TouchableOpacity
               onPress={() => ref.current?.present()}
@@ -167,6 +155,28 @@ const styles = StyleSheet.create({
     height: "100%",
     paddingHorizontal: 5,
     position: "relative",
+  },
+  loadingContainer: {
+    marginTop: 16,
+    gap: 20,
+  },
+  loadingTextContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.05)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingModal: {
+    transform: [{ translateY: -60 }],
+    backgroundColor: colors.white,
+    padding: 20,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
     color: colors.black,

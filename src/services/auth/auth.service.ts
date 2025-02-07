@@ -14,7 +14,6 @@ import {
 } from "@/types/auth.interface";
 import authHelper from "@/helpers/authStorage";
 import instance from "@/axios/interceptor";
-import { errorCatch } from "@/helpers/errorCatch";
 
 class AuthService {
   async login(data: ILoginRequestData) {
@@ -41,13 +40,13 @@ class AuthService {
               uri: file.uri,
               name: file.fileName,
               type: file.mimeType,
-            } as any); // Cast для React Native
+            } as any);
           });
         } else {
           if (key == "birthDate" && typeof value == "string") {
             const parts = value.split(".");
             const day = parseInt(parts[0], 10);
-            const month = parseInt(parts[1], 10); // Месяцы в JavaScript нумеруются с 0
+            const month = parseInt(parts[1], 10);
             const year = parseInt(parts[2], 10);
 
             value = `${month}.${day}.${year}`;
@@ -56,7 +55,6 @@ class AuthService {
           formData.append(key, value as string);
         }
       });
-      console.log(formData);
       const response = await axios.post<
         IRegisterRequestData,
         { data: IAuthResponseData }
@@ -84,8 +82,6 @@ class AuthService {
       );
       return response?.data?.isApproved;
     } catch (error: any) {
-      console.log("error", JSON.stringify(error));
-
       throw Error(error.response.data.message);
     }
   }
@@ -122,6 +118,7 @@ class AuthService {
       >(IS_USER_EXIST_URL, data);
       return response;
     } catch (error: any) {
+      console.log(JSON.stringify(error));
       throw Error(error.response.data.message);
     }
   }

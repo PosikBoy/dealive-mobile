@@ -14,6 +14,7 @@ import {
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 import { fonts, fontSizes } from "@/constants/styles";
+import Hyperlink from "react-native-hyperlink";
 import { getMetroColor } from "@/utils/getColorMetro";
 
 interface IAdressProps {
@@ -76,7 +77,9 @@ const Address: FC<IAdressProps> = ({ address, index, price }) => {
       {address.info && (
         <View>
           <Text style={styles.infoLabel}>Дополнительно</Text>
-          <Text style={styles.info}>{address.info}</Text>
+          <Hyperlink onPress={(url) => Linking.openURL(url)}>
+            <Text style={styles.info}>{address.info}</Text>
+          </Hyperlink>
         </View>
       )}
 

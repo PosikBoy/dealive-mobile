@@ -1,26 +1,32 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface IInitialState {
+export interface ILocationInitialState {
   lon: number;
   lat: number;
   isLocationLoading: boolean;
+  error: string | null;
 }
 
-const initialState: IInitialState = {
+const initialState: ILocationInitialState = {
   lon: 0,
   lat: 0,
   isLocationLoading: true,
+  error: null,
 };
 export const locationSlice = createSlice({
   name: "signupForm",
   initialState,
   reducers: {
     pushLocation(state, action) {
-      state.lon = action.payload.location.lon;
-      state.lat = action.payload.location.lat;
+      state.lon = action.payload?.lon;
+      state.lat = action.payload?.lat;
       state.isLocationLoading = false;
+      state.error = null;
+    },
+    pushError(state, action) {
+      state.error = action.payload;
     },
   },
 });
 
-export const { pushLocation } = locationSlice.actions;
+export const { pushLocation, pushError } = locationSlice.actions;

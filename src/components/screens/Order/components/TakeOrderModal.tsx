@@ -1,5 +1,5 @@
 import MyButton from "@/components/ui/Button/Button";
-import CustomBottomSheetModal from "@/components/ui/CustomBottomSheetModal/CustomBottomSheetModal";
+import CustomBottomSheetModal from "@/components/shared/CustomBottomSheetModal/CustomBottomSheetModal";
 import { colors } from "@/constants/colors";
 import { fonts, fontSizes, gaps, paddings } from "@/constants/styles";
 import { useTakeOrderMutation } from "@/services/orders/orders.service";

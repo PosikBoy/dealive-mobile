@@ -15,12 +15,6 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-interface IField {
-  onChange: (value: string) => void;
-  placeholder: string;
-  value: string;
-  error?: any;
-}
 export interface DataInputFieldRef {
   focus: () => void;
 }
@@ -35,15 +29,7 @@ interface IControllerField {
   rules?: any;
 }
 const InputFieldWithHandler: FC<IControllerField> = (props) => {
-  const {
-    name,
-    control,
-    error,
-    placeholder,
-    keyboardType = "default",
-    handler,
-    rules = {},
-  } = props;
+  const { name, control, error, placeholder, handler, rules = {} } = props;
 
   const { field } = useController({
     control,
@@ -56,11 +42,6 @@ const InputFieldWithHandler: FC<IControllerField> = (props) => {
     field.onChange(newValue);
   };
 
-  useEffect(() => {
-    if (field.value) {
-      raisePlaceholder();
-    }
-  }, []);
   const placeholderTop = useSharedValue(11);
   const inputColor = useSharedValue(colors.inputGray);
   const raisePlaceholder = () => {
@@ -117,6 +98,12 @@ const InputFieldWithHandler: FC<IControllerField> = (props) => {
       },
     };
   });
+
+  useEffect(() => {
+    if (field.value) {
+      raisePlaceholder();
+    }
+  }, []);
 
   return (
     <View style={styles.container}>

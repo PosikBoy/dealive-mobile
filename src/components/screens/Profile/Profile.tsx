@@ -3,7 +3,7 @@ import React from "react";
 import { useGetProfileQuery } from "@/services/profile/profile.service";
 import { colors } from "@/constants/colors";
 import formatDate, { formatDateWithoutTime } from "@/helpers/formatDate";
-import Header from "@/components/ui/Header/Header";
+import Header from "@/components/shared/Header/Header";
 import { fonts, fontSizes } from "@/constants/styles";
 
 type Props = {};

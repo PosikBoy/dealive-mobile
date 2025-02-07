@@ -1,11 +1,4 @@
-import {
-  ActivityIndicator,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import React, { FC, useState } from "react";
 import InputField from "@/components/ui/InputField/InputField";
 import { useForm } from "react-hook-form";
@@ -15,7 +8,7 @@ import { colors } from "@/constants/colors";
 import { useTypedSelector, useTypedDispatch } from "@/hooks/redux.hooks";
 import { addFirstPageData } from "@/store/signupForm/signupForm.slice";
 import authService from "@/services/auth/auth.service";
-import { icons } from "@/constants/icons";
+import Header from "@/components/shared/Header/Header";
 
 interface IProps {
   nextPage: () => void;
@@ -24,7 +17,6 @@ interface IProps {
 
 interface IFormField {
   phoneNumber: string;
-  code: string;
   email: string;
   password: string;
   repeatPassword: string;
@@ -35,6 +27,7 @@ const Register1: FC<IProps> = (props) => {
 
   const [existingError, setExistingError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
   const state = useTypedSelector((state) => state.signupForm);
   const dispatch = useTypedDispatch();
 
@@ -49,10 +42,10 @@ const Register1: FC<IProps> = (props) => {
       phoneNumber: state.phoneNumber,
       password: state.password,
       email: state.email,
-      code: state.code,
       repeatPassword: state.password,
     },
   });
+
   const onSubmit = async (data: IFormField) => {
     if (data.password !== data.repeatPassword) {
       setError("repeatPassword", {
@@ -63,6 +56,7 @@ const Register1: FC<IProps> = (props) => {
     }
     try {
       setIsLoading(true);
+
       await authService.isUserExist({
         email: data.email,
         phoneNumber: data.phoneNumber,
@@ -73,7 +67,6 @@ const Register1: FC<IProps> = (props) => {
       return;
     }
     setIsLoading(false);
-
     dispatch(addFirstPageData(data));
     setExistingError("");
     nextPage();
@@ -81,24 +74,7 @@ const Register1: FC<IProps> = (props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.arrowButton}
-          onPress={() => {
-            previousPage();
-          }}
-        >
-          <Image
-            source={icons.arrow}
-            width={20}
-            height={20}
-            resizeMode="contain"
-            style={styles.arrowIcon}
-          />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>Создать аккаунт</Text>
-        <View style={{ width: 20 }}></View>
-      </View>
+      <Header title="Регистрация" onPressBack={previousPage} />
       <View style={styles.fieldContainer}>
         <Text style={styles.fieldLabel}>Введите номер телефона</Text>
         <View style={[styles.inputField, styles.phoneNumberField]}>
@@ -185,21 +161,26 @@ const Register1: FC<IProps> = (props) => {
           </Text>
         )}
       </View>
+
       <View style={styles.loaderErrorContainer}>
         {isLoading && (
           <View style={styles.loaderContainer}>
             <ActivityIndicator size="large" color={colors.purple} />
           </View>
         )}
-
         {existingError && (
           <View style={styles.errorContainer}>
             <Text style={styles.errorText}>{existingError}</Text>
           </View>
         )}
       </View>
+
       <View style={styles.buttonContainer}>
-        <MyButton buttonText="Далее" onPress={handleSubmit(onSubmit)} />
+        <MyButton
+          buttonText="Далее"
+          disabled={isLoading}
+          onPress={handleSubmit(onSubmit)}
+        />
       </View>
     </View>
   );

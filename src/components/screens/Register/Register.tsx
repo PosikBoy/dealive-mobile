@@ -14,6 +14,7 @@ const RegisterScreen = () => {
           previousPage={() => router.push("/(auth)")}
         />
       );
+
     case 2:
       return (
         <Register2
@@ -21,6 +22,7 @@ const RegisterScreen = () => {
           previousPage={() => setCurrentPage(1)}
         />
       );
+
     case 3:
       return (
         <Register3

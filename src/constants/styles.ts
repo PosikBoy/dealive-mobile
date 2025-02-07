@@ -1,13 +1,11 @@
 export const fonts = {
-  regular: "Montserrat-Regular",
-  medium: "Montserrat-Medium",
-  bold: "Montserrat-Bold",
-  semiBold: "Montserrat-SemiBold",
+  regular: "CeraRoundPro-Regular",
+  medium: "CeraRoundPro-Medium",
+  bold: "CeraRoundPro-Bold",
+  semiBold: "CeraRoundPro-SemiBold",
 };
 export const gaps = {
-  //12
   small: 12,
-  //16
   medium: 16,
   big: 20,
 };

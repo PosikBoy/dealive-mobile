@@ -3,7 +3,7 @@
     "name": "dealive-mobile",
     "slug": "dealive-mobile",
     "scheme": "dealive-scheme",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "jsEngine": "hermes",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,7 +25,7 @@
       "eas": {
         "projectId": "2a4f1120-aec1-46ab-9a43-f965b3d49e86"
       },
-      "SERVER_URL": "https://api.dealive.ru"
+      "SERVER_URL": "http://192.168.3.9:5000"
     },
     "newArchEnabled": true
   }

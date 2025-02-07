@@ -12,19 +12,22 @@ import {
   paddings,
 } from "@/constants/styles";
 import { getMetroColor } from "@/utils/getColorMetro";
+
 interface OrderDetailsProps {
   order: IOrderWithoutSensitiveInfo;
 }
+
 const OrderPreview: FC<OrderDetailsProps> = ({ order }) => {
   const { id, date, parcelType, weight, price, addresses } = order;
   const createdAtString = formatDate(date);
+
+  const navigateToOrder = () => {
+    router.push(`/orders/${id}`);
+  };
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        activeOpacity={0.6}
-        onPress={() => router.push(`/orders/${id}`)}
-      >
-        <View style={styles.innerCointainer}>
+      <TouchableOpacity activeOpacity={0.8} onPress={navigateToOrder}>
+        <View style={styles.innerContainer}>
           <Text style={styles.headerText}>
             {order.addresses.length + " адреса | № " + id}
           </Text>
@@ -32,7 +35,7 @@ const OrderPreview: FC<OrderDetailsProps> = ({ order }) => {
             {addresses.map((address, index) => {
               return (
                 <View key={address.id} style={styles.address}>
-                  <View>
+                  <View style={styles.addressIndexContainer}>
                     <Text style={styles.addressIndexText}>{index + 1}</Text>
                   </View>
                   <View style={styles.addressTextContainer}>
@@ -91,7 +94,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: paddings.medium,
     paddingVertical: paddings.medium,
   },
-  innerCointainer: {
+  innerContainer: {
     width: "100%",
     gap: gaps.medium,
     justifyContent: "center",
@@ -107,7 +110,7 @@ const styles = StyleSheet.create({
   },
   address: {
     flexDirection: "row",
-    gap: 10,
+    gap: 20,
   },
   addressTextContainer: {
     flex: 1,
@@ -119,8 +122,12 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.medium,
     flex: 1,
   },
+  addressIndexContainer: {
+    width: "auto",
+    justifyContent: "center",
+  },
   addressIndexText: {
-    width: 20,
+    width: "auto",
     color: colors.black,
     fontFamily: fonts.medium,
     fontSize: fontSizes.extraBig,
@@ -171,11 +178,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   createdAtText: {
-    color: colors.gray,
-    fontFamily: fonts.regular,
-    fontSize: 14,
-  },
-  moreText: {
     color: colors.gray,
     fontFamily: fonts.regular,
     fontSize: 14,

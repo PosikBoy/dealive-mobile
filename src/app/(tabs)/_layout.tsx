@@ -1,10 +1,10 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Tabs, useSegments } from "expo-router";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 
-const TabIcon = ({ icon, color, name, focused }) => {
+const TabIcon = ({ icon, color, focused }) => {
   return (
     <View style={tabStyles.container}>
       <View style={tabStyles.iconContainer}>
@@ -15,12 +15,20 @@ const TabIcon = ({ icon, color, name, focused }) => {
           resizeMode="contain"
         />
       </View>
-      <Text style={focused ? tabStyles.focusedText : tabStyles.text}>
-        {name}
-      </Text>
     </View>
   );
 };
+
+const CustomTabButton = (props) => (
+  <Pressable
+    {...props}
+    android_ripple={{ color: "transparent" }} // Отключаем ripple-эффект на Android
+    style={({ pressed }) => [
+      props.style,
+      { opacity: pressed ? 1 : 1 }, // Убираем изменение прозрачности при нажатии
+    ]}
+  />
+);
 
 const TabsLayout = () => {
   const segments = useSegments();
@@ -35,14 +43,16 @@ const TabsLayout = () => {
         tabBarShowLabel: false,
         tabBarActiveTintColor: colors.purple,
         tabBarInactiveTintColor: colors.gray,
+        tabBarButton: (props) => <CustomTabButton {...props} />,
         tabBarStyle: {
-          backgroundColor: colors.white, // цвет фона, если требуется
-          borderTopWidth: 1, // убираем верхнюю границу
-          shadowOpacity: 2, // убираем тень на iOS
+          backgroundColor: colors.white,
+          borderTopWidth: 1,
+          shadowOpacity: 2,
           height: 60,
           alignItems: "center",
           display: hideTabs ? "none" : "flex",
         },
+        animation: "shift",
       }}
     >
       <Tabs.Screen
@@ -54,7 +64,6 @@ const TabsLayout = () => {
             <TabIcon
               icon={icons.chat}
               color={colors.purple}
-              name="Техподдержка"
               focused={focused}
             />
           ),
@@ -69,7 +78,6 @@ const TabsLayout = () => {
             <TabIcon
               icon={icons.orders}
               color={colors.purple}
-              name="Заказы"
               focused={focused}
             />
           ),
@@ -84,7 +92,6 @@ const TabsLayout = () => {
             <TabIcon
               icon={icons.settings}
               color={colors.purple}
-              name="Настройки"
               focused={focused}
             />
           ),
@@ -102,8 +109,8 @@ const tabStyles = StyleSheet.create({
     alignItems: "center",
   },
   iconContainer: {
-    height: 25,
-    width: 25,
+    height: 50,
+    width: 30,
   },
   icon: {
     width: "100%",

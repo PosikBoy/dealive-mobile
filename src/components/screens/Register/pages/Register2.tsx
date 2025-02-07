@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React, { FC } from "react";
 import InputField from "@/components/ui/InputField/InputField";
 import { useForm } from "react-hook-form";
@@ -7,7 +7,8 @@ import { colors } from "@/constants/colors";
 import DataInputField from "@/components/ui/DataInputField/DataInputField";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import { addSecondPageData } from "@/store/signupForm/signupForm.slice";
-import { icons } from "@/constants/icons";
+import Header from "@/components/shared/Header/Header";
+import { fonts } from "@/constants/styles";
 
 interface IProps {
   nextPage: () => void;
@@ -71,24 +72,7 @@ const Register2: FC<IProps> = (props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.arrowButton}
-          onPress={() => {
-            previousPage();
-          }}
-        >
-          <Image
-            source={icons.arrow}
-            width={20}
-            height={20}
-            resizeMode="contain"
-            style={styles.arrowIcon}
-          />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>Создать аккаунт</Text>
-        <View style={{ width: 20 }}></View>
-      </View>
+      <Header title="Регистрация" onPressBack={previousPage} />
       <View style={styles.fieldContainer}>
         <Text style={styles.fieldLabel}>Введите фамилию</Text>
         <View style={[styles.inputField, styles.phoneNumberField]}>
@@ -158,6 +142,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingHorizontal: 20,
+    backgroundColor: colors.white,
   },
   header: {
     width: "100%",
@@ -176,11 +161,11 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
   },
   title: {
     marginTop: 90,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
     fontSize: 24,
   },
   fieldContainer: {
@@ -189,7 +174,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   fieldLabel: {
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     fontSize: 16,
   },
   inputField: {
@@ -217,17 +202,17 @@ const styles = StyleSheet.create({
   },
   sendCodeButtonText: {
     color: "white",
-    fontFamily: "Montserrat-Bold",
+    fontFamily: fonts.bold,
     fontSize: 14,
   },
   codeSentText: {
     color: "green",
-    fontFamily: "Montserrat-Bold",
+    fontFamily: fonts.bold,
     fontSize: 12,
   },
   errorText: {
     color: "red",
-    fontFamily: "Montserrat-Bold",
+    fontFamily: fonts.bold,
     fontSize: 12,
   },
   repeat: {},

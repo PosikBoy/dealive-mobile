@@ -1,9 +1,9 @@
 import { FlatList, Image, StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useGetAllOrdersQuery } from "@/services/orders/orders.service";
-import OrderPreview from "@/components/ui/OrderPreview/OrderPreview";
+import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
 import { orderStatuses } from "@/constants/orderStatuses";
-import Header from "@/components/ui/Header/Header";
+import Header from "@/components/shared/Header/Header";
 import { icons } from "@/constants/icons";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import geodataService from "@/services/geodata/geodata.service";

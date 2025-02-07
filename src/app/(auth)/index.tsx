@@ -10,6 +10,7 @@ import MyButton from "@/components/ui/Button/Button";
 import { router } from "expo-router";
 import { icons } from "@/constants/icons";
 import { fonts } from "@/constants/styles";
+import { colors } from "@/constants/colors";
 
 const main = () => {
   const handleLogin = () => {
@@ -47,6 +48,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
+    backgroundColor: colors.white,
   },
   textContainer: {
     marginTop: 64,

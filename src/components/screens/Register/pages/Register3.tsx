@@ -1,13 +1,6 @@
-import {
-  ActivityIndicator,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import MyButton from "@/components/ui/Button/Button";
 import ImagePicker from "@/components/ui/ImagePicker/ImagePicker";
@@ -19,7 +12,8 @@ import { passportNumberHandler } from "@/helpers/passportHandler";
 import { colors } from "@/constants/colors";
 import store from "@/store/store";
 import { router } from "expo-router";
-import { icons } from "@/constants/icons";
+import Header from "@/components/shared/Header/Header";
+import { fonts } from "@/constants/styles";
 
 interface IProps {
   nextPage: () => void;
@@ -51,7 +45,7 @@ const Register3: FC<IProps> = (props) => {
   const { previousPage } = props;
 
   const signupFormState = useTypedSelector((state) => state.signupForm);
-  const authState = useTypedSelector((state) => state.auth);
+  const { error, isLoading } = useTypedSelector((state) => state.auth);
   const dispatch = useTypedDispatch();
 
   const {
@@ -70,38 +64,17 @@ const Register3: FC<IProps> = (props) => {
 
   const onSubmit = async (data: IFormField) => {
     try {
-      // Добавляем данные в состояние
       dispatch(addThirdPageData(data));
 
-      // Получаем обновленное состояние
       const updatedFormState = store.getState().signupForm;
-
-      // Отправляем данные на сервер и ожидаем завершения
-      const response = await dispatch(register(updatedFormState)).unwrap();
+      await dispatch(register(updatedFormState));
       router.replace("/waitForApproval");
     } catch (error) {}
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.arrowButton}
-          onPress={() => {
-            previousPage();
-          }}
-        >
-          <Image
-            source={icons.arrow}
-            width={20}
-            height={20}
-            resizeMode="contain"
-            style={styles.arrowIcon}
-          />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>Создать аккаунт</Text>
-        <View style={{ width: 20 }}></View>
-      </View>
+      <Header title="Регистрация" onPressBack={previousPage} />
       <View style={styles.fieldContainer}>
         <Text style={styles.fieldLabel}>Введите серию и номер паспорта</Text>
         <View style={styles.inputField}>
@@ -160,15 +133,15 @@ const Register3: FC<IProps> = (props) => {
       </View>
 
       <View style={styles.loaderErrorContainer}>
-        {authState.isLoading && (
+        {isLoading && (
           <View style={styles.loaderContainer}>
             <ActivityIndicator size="large" color={colors.purple} />
           </View>
         )}
 
-        {authState.error && (
+        {error && (
           <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{authState.error}</Text>
+            <Text style={styles.errorText}>{error}</Text>
           </View>
         )}
       </View>
@@ -177,6 +150,7 @@ const Register3: FC<IProps> = (props) => {
         <MyButton
           buttonText="Создать аккаунт"
           onPress={handleSubmit(onSubmit)}
+          disabled={isLoading}
         />
       </View>
     </View>
@@ -190,6 +164,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingHorizontal: 20,
+    backgroundColor: colors.white,
   },
   header: {
     width: "100%",
@@ -208,11 +183,11 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
   },
   title: {
     marginTop: 90,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: fonts.semiBold,
     fontSize: 24,
   },
   fieldContainer: {
@@ -221,7 +196,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   fieldLabel: {
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     fontSize: 16,
   },
   inputField: {
@@ -232,7 +207,7 @@ const styles = StyleSheet.create({
 
   errorText: {
     color: "red",
-    fontFamily: "Montserrat-Bold",
+    fontFamily: fonts.bold,
     fontSize: 12,
   },
   buttonContainer: {
@@ -252,7 +227,7 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 20,
     fontSize: 16,
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     color: "#000",
   },
   errorContainer: {

@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { FC } from "react";
 import { router } from "expo-router";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
@@ -7,16 +7,17 @@ import { fonts } from "@/constants/styles";
 
 type Props = {
   title: string;
+  onPressBack?: () => void;
 };
 
-const Header = (props: Props) => {
-  const { title } = props;
-  const onPressBackButton = () => {
-    router.back();
-  };
+const onPressBackDefault = () => {
+  router.back();
+};
+
+const Header: FC<Props> = ({ title, onPressBack = onPressBackDefault }) => {
   return (
     <View style={styles.header}>
-      <TouchableOpacity style={styles.backButton} onPress={onPressBackButton}>
+      <TouchableOpacity style={styles.backButton} onPress={onPressBack}>
         <Image source={icons.arrow} style={{ width: "100%", height: "100%" }} />
       </TouchableOpacity>
       <Text style={styles.headerText}>{title}</Text>

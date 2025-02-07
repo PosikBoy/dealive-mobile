@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import React from "react";
 import { colors } from "@/constants/colors";
-import Header from "@/components/ui/Header/Header";
+import Header from "@/components/shared/Header/Header";
 
 type Props = {};
 

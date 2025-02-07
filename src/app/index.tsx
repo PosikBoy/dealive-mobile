@@ -21,9 +21,12 @@ const indexPage = () => {
   );
   const [isAppReady, setIsAppReady] = useState(false);
 
+  const loadFonts = async () => {
+    await Font.loadAsync(fonts);
+  };
+
   const checkAuthStatus = async () => {
     try {
-      await Font.loadAsync(fonts);
       const storedAuth = await authStorage.getIsAuth();
       if (storedAuth) {
         await dispatch(fetchAuthStatus()).unwrap();
@@ -37,6 +40,7 @@ const indexPage = () => {
   };
 
   useEffect(() => {
+    loadFonts();
     checkAuthStatus();
   }, []);
 

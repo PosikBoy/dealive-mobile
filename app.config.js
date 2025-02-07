@@ -6,9 +6,9 @@ export default ({ config }) => ({
     resizeMode: "cover",
     backgroundColor: "#ffffff",
   },
-  name: "Dealive - срочная доставка",
+  name: "Dealive",
   slug: "dealive-mobile",
-  version: "1.1.0",
+  version: "1.1.1",
   orientation: "portrait",
   icon: "./assets/icon.png",
   updates: {

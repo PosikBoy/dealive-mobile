@@ -22,7 +22,7 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import MyButton from "@/components/ui/Button/Button";
-import CustomBottomSheetModal from "@/components/ui/CustomBottomSheetModal/CustomBottomSheetModal";
+import CustomBottomSheetModal from "@/components/shared/CustomBottomSheetModal/CustomBottomSheetModal";
 import { fonts } from "@/constants/styles";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import geodataService from "@/services/geodata/geodata.service";
@@ -71,12 +71,11 @@ const Action = (props: Props) => {
   const completeActionHandler = async () => {
     if (action.actionType == IOrderActionType.ARRIVED_AT) {
       try {
-        console.log(location, address);
-
         const distance = geodataService.calculateDistanceToAddress(
           location,
           address
         );
+
         if (distance > 1) {
           setError(
             "Кажется, вы немного отошли от указанного адреса. Пожалуйста, проверьте ваше местоположение и убедитесь, что вы на правильном адресе."

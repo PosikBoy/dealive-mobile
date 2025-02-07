@@ -2,7 +2,6 @@ import {
   ActivityIndicator,
   Image,
   Linking,
-  Pressable,
   StyleSheet,
   Text,
   View,
@@ -11,17 +10,31 @@ import MyButton from "@/components/ui/Button/Button";
 import { colors } from "@/constants/colors";
 
 import { router } from "expo-router";
-import { useTypedSelector } from "@/hooks/redux.hooks";
+import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import { icons } from "@/constants/icons";
 import { fonts } from "@/constants/styles";
+import {
+  fetchAuthStatus,
+  fetchIsApprovedStatus,
+} from "@/store/auth/auth.actions";
 
 const waitForApproval = () => {
   const { isApproved, isLoading, error } = useTypedSelector(
     (state) => state.auth
   );
 
+  const dispatch = useTypedDispatch();
+
   const checkApproval = async () => {
-    router.replace("/");
+    try {
+      await dispatch(fetchAuthStatus()).unwrap();
+      const isApproved = await dispatch(fetchIsApprovedStatus()).unwrap();
+      if (isApproved) {
+        router.replace("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <View style={styles.container}>
@@ -42,11 +55,19 @@ const waitForApproval = () => {
           займет около двух часов. Спасибо за ожидание.
         </Text>
       </View>
-      {isLoading && <ActivityIndicator size="large" color={colors.purple} />}
-      {!isApproved && (
-        <Text style={styles.subtitle}>Мы все еще проверяем ваш аккаунт </Text>
-      )}
+
       {error && <Text style={styles.subtitle}>{error}</Text>}
+      {}
+      {isLoading ? (
+        <ActivityIndicator size="large" color={colors.purple} />
+      ) : (
+        !isApproved && (
+          <Text style={styles.approvalText}>
+            Мы все еще проверяем ваш аккаунт{" "}
+          </Text>
+        )
+      )}
+
       <View style={styles.supportButton}>
         <MyButton
           buttonText="Связаться с техподдержкой"
@@ -71,6 +92,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingHorizontal: 20,
+    backgroundColor: colors.white,
   },
   header: {
     width: "100%",
@@ -87,8 +109,13 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 16,
     textAlign: "center",
-
     fontFamily: fonts.regular,
+  },
+  approvalText: {
+    width: "100%",
+    fontSize: 18,
+    textAlign: "center",
+    fontFamily: fonts.bold,
   },
   imageContainer: {
     marginTop: 50,
@@ -111,7 +138,6 @@ const styles = StyleSheet.create({
   },
   supportButton: {
     width: "100%",
-
     position: "absolute",
     bottom: 80,
   },

@@ -7,60 +7,51 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useGetActiveOrdersQuery } from "@/services/orders/orders.service";
-import OrderPreview from "@/components/ui/OrderPreview/OrderPreview";
+import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 import { useTypedSelector } from "@/hooks/redux.hooks";
-import geodataService from "@/services/geodata/geodata.service";
-import { IOrder, IOrderWithoutSensitiveInfo } from "@/types/order.interface";
 import { fonts } from "@/constants/styles";
-const AvailableOrders = () => {
-  const [orders, setOrders] = useState<IOrderWithoutSensitiveInfo[] | IOrder[]>(
-    []
-  );
+import OrderPreviewSkeleton from "@/components/features/OrderPreviewSkeleton/OrderPreviewSkeleton";
+import AvailableOrders from "./AvailableOrders";
 
-  const { data, isLoading, refetch, isFetching } = useGetActiveOrdersQuery(
-    undefined,
-    {
-      pollingInterval: 15000,
-      refetchOnFocus: true,
-      refetchOnReconnect: true,
-    }
-  );
+const ActiveOrders = () => {
   const location = useTypedSelector((state) => state.location);
-
-  useEffect(() => {
-    if (!location.isLocationLoading && data) {
-      const enrichedOrders = geodataService.enrichOrders(data, location);
-      setOrders(enrichedOrders);
-    }
-  }, [data, location]);
+  const { data, isLoading, refetch } = useGetActiveOrdersQuery();
+  console.log(isLoading, data, location.isLocationLoading);
 
   if (location.isLocationLoading || isLoading) {
     return (
       <View style={styles.container}>
-        <View style={styles.searchOrderContainer}>
-          <ActivityIndicator size={"large"} color={colors.purple} />
-          <Text style={styles.text}>
-            Ищем заказы или пытаемся определить ваше местоположение
-          </Text>
-          <Text style={styles.text}>Подождите, пожалуйста</Text>
+        <View style={styles.loadingContainer}>
+          <OrderPreviewSkeleton />
+          <OrderPreviewSkeleton />
+          <OrderPreviewSkeleton />
+        </View>
+        <View style={styles.loadingTextContainer}>
+          <View style={styles.loadingModal}>
+            <ActivityIndicator size={"large"} color={colors.purple} />
+            <Text style={styles.text}>
+              {location.isLocationLoading
+                ? "Пытаемся определить ваше местоположение"
+                : "Запрашиваем заказы с сервера"}
+            </Text>
+          </View>
         </View>
       </View>
     );
   }
+
   if (data.length === 0) {
     return (
       <View style={styles.container}>
-        <View style={styles.searchOrderContainer}>
-          <Image
-            source={icons.noOrders}
-            style={{ width: "100%", height: "100%" }}
-            resizeMode="contain"
-          />
-        </View>
+        <Text style={styles.noOrdersText}>
+          Похоже, что у вас нет активных заказов на данный момент. Вы можете
+          выбрать подходящий из списка ниже!
+        </Text>
+        <AvailableOrders />
       </View>
     );
   }
@@ -69,7 +60,7 @@ const AvailableOrders = () => {
     <View style={styles.container}>
       <View>
         <FlatList
-          data={orders}
+          data={data}
           renderItem={({ item }) => <OrderPreview order={item} />}
           keyExtractor={(item) => item.id.toString()}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -77,8 +68,12 @@ const AvailableOrders = () => {
           showsVerticalScrollIndicator={false}
         />
       </View>
-      <TouchableOpacity style={styles.update} onPress={() => refetch()}>
-        {isFetching ? (
+      <TouchableOpacity
+        style={styles.update}
+        onPress={() => refetch()}
+        disabled={isLoading}
+      >
+        {isLoading ? (
           <ActivityIndicator size="small" color={colors.purple} />
         ) : (
           <Image
@@ -91,7 +86,7 @@ const AvailableOrders = () => {
   );
 };
 
-export default AvailableOrders;
+export default ActiveOrders;
 
 const styles = StyleSheet.create({
   container: {
@@ -103,21 +98,44 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 126,
   },
-  searchOrderContainer: {
-    marginHorizontal: "auto",
-    marginTop: 100,
-    height: 256,
-    width: 256,
+  loadingContainer: {
+    marginTop: 16,
+    gap: 20,
   },
-  separator: {
-    height: 20, // Отступ между элементами
-    backgroundColor: "transparent",
+  loadingTextContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.05)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noOrdersText: {
+    margin: 20,
+    textAlign: "center",
+    color: colors.black,
+    fontFamily: fonts.medium,
+    fontSize: 16,
+  },
+  loadingModal: {
+    transform: [{ translateY: -60 }],
+    backgroundColor: colors.white,
+    padding: 20,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
     color: colors.black,
     fontSize: 18,
     textAlign: "center",
     fontFamily: fonts.medium,
+  },
+  separator: {
+    height: 20,
+    backgroundColor: "transparent",
   },
   update: {
     position: "absolute",

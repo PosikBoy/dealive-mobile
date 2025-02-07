@@ -1,12 +1,9 @@
-import instance from "@/axios/interceptor";
-import { SERVER_URL } from "@/constants/urls";
 import {
   IAddress,
   IAddressWithoutSensitiveInfo,
   IOrder,
   IOrderWithoutSensitiveInfo,
 } from "@/types/order.interface";
-import * as Location from "expo-location";
 
 interface ILocation {
   lon: number;
@@ -14,7 +11,10 @@ interface ILocation {
 }
 
 class GeodataService {
-  enrichOrders(orders: IOrderWithoutSensitiveInfo[], location: ILocation) {
+  enrichOrders(
+    orders: IOrderWithoutSensitiveInfo[] | IOrder[],
+    location: ILocation
+  ) {
     const enrichedOrders = orders?.map((order) => {
       const enrichedAddresses = order?.addresses.map((address) => {
         const distance = this.calculateDistanceToAddress(location, address);
@@ -33,6 +33,7 @@ class GeodataService {
     });
     return { ...order, addresses: enrichedAddresses };
   }
+
   calculateDistanceToAddress(
     location: ILocation,
     address: IAddress | IAddressWithoutSensitiveInfo

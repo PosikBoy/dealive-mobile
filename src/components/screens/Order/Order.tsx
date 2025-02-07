@@ -12,7 +12,7 @@ import formatDate from "@/helpers/formatDate";
 import MyButton from "@/components/ui/Button/Button";
 import { useTakeOrderMutation } from "@/services/orders/orders.service";
 import Address from "./components/Address";
-import Header from "@/components/ui/Header/Header";
+import Header from "@/components/shared/Header/Header";
 import Action from "./components/Action";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import TakeOrderModal from "./components/TakeOrderModal";
@@ -27,11 +27,9 @@ const Order: FC<IProps> = ({ order }) => {
     "addresses"
   );
 
-  console.log("Адреса заказов", order.addresses);
-  console.log("Действия", order.actions);
   const [takeOrder, { error }] = useTakeOrderMutation();
 
-  const showModal = () => {
+  const takeOrderModal = () => {
     ref.current.present();
   };
 
@@ -153,7 +151,7 @@ const Order: FC<IProps> = ({ order }) => {
           {order.price + "₽ · " + order.weight + " · " + order.parcelType}
         </Text>
         {order.statusId == 3 && (
-          <MyButton buttonText="Взять заказ" onPress={showModal} />
+          <MyButton buttonText="Взять заказ" onPress={takeOrderModal} />
         )}
       </View>
     </View>

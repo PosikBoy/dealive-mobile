@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingHorizontal: paddings.horizontal,
+    backgroundColor: colors.white,
   },
   title: {
     marginTop: 90,
