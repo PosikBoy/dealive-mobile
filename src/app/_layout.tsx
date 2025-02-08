@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { Slot } from "expo-router";
-import ConnectionCheck from "@/components/other/ConnectionCheck";
+import ConnectionCheck from "@/components/contexts/ConnectionCheck";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StoreProvider } from "@/components/other/ReduxProvider";
+import { StoreProvider } from "@/components/contexts/ReduxProvider";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import LocationProvider from "@/components/other/LocationProvider";
+import LocationProvider from "@/components/contexts/LocationProvider";
 import { colors } from "@/constants/colors";
 
 const layout = () => {

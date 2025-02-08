@@ -8,18 +8,18 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import { useGetActiveOrdersQuery } from "@/services/orders/orders.service";
+import { useGetActiveOrders } from "@/services/orders/orders.service";
 import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import { fonts } from "@/constants/styles";
-import OrderPreviewSkeleton from "@/components/features/OrderPreviewSkeleton/OrderPreviewSkeleton";
+import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
 import AvailableOrders from "./AvailableOrders";
 
 const ActiveOrders = () => {
   const location = useTypedSelector((state) => state.location);
-  const { data, isLoading, refetch } = useGetActiveOrdersQuery();
+  const { data, isLoading, refetch } = useGetActiveOrders();
 
   if (location.isLocationLoading || isLoading) {
     return (

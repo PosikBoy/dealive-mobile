@@ -40,7 +40,7 @@ export const useLocation = () => {
 
       try {
         const data = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced,
+          accuracy: Location.Accuracy.Lowest,
         });
 
         if (data?.mocked) {

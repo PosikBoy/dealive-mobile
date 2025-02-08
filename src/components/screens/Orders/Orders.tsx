@@ -1,48 +1,139 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
-
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Animated,
+  LayoutChangeEvent,
+} from "react-native";
 import { colors } from "@/constants/colors";
 import AvailableOrders from "./components/AvailableOrders";
 import ActiveOrders from "./components/ActiveOrders";
 import { fonts, fontSizes } from "@/constants/styles";
 
 const OrdersScreen = () => {
-  const [currentPage, setCurrentPage] = useState<"available" | "active">(
+  const [activeTab, setActiveTab] = useState<"available" | "active">(
     "available"
   );
+  const tabAnimation = useRef(
+    new Animated.Value(activeTab === "available" ? 0 : 1)
+  ).current;
+  const [togglerWidth, setTogglerWidth] = useState(0);
+
+  useEffect(() => {
+    Animated.spring(tabAnimation, {
+      toValue: activeTab === "available" ? 0 : 1,
+      useNativeDriver: true,
+      bounciness: 5,
+      speed: 12,
+    }).start();
+  }, [activeTab, tabAnimation]);
+
+  // Интерполяция для контента табов
+  const availableTranslate = useMemo(
+    () =>
+      tabAnimation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, -20],
+      }),
+    [tabAnimation]
+  );
+
+  const activeTranslate = useMemo(
+    () =>
+      tabAnimation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [20, 0],
+      }),
+    [tabAnimation]
+  );
+
+  const availableOpacity = useMemo(
+    () =>
+      tabAnimation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [1, 0],
+      }),
+    [tabAnimation]
+  );
+
+  const activeOpacity = useMemo(
+    () =>
+      tabAnimation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, 1],
+      }),
+    [tabAnimation]
+  );
+
+  // Интерполяция для индикатора тогглера
+  // Если ширина контейнера тогглера известна, то ширина каждой кнопки = togglerWidth / 2
+  const indicatorTranslateX = useMemo(() => {
+    return tabAnimation.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, togglerWidth / 2],
+    });
+  }, [tabAnimation, togglerWidth]);
+
+  const handleAvailablePress = useCallback(() => setActiveTab("available"), []);
+  const handleActivePress = useCallback(() => setActiveTab("active"), []);
+
+  // Получение ширины контейнера тогглера
+  const onTogglerLayout = (event: LayoutChangeEvent) => {
+    const { width } = event.nativeEvent.layout;
+    setTogglerWidth(width);
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.ordersHeader}>
         <Text style={styles.ordersHeaderText}>Заказы</Text>
-        <View style={styles.togglerType}>
+        <View style={styles.togglerType} onLayout={onTogglerLayout}>
+          {/* Анимированный индикатор */}
+          <Animated.View
+            style={[
+              styles.indicator,
+              { transform: [{ translateX: indicatorTranslateX }] },
+            ]}
+          />
           <TouchableOpacity
-            onPress={() => setCurrentPage("available")}
+            accessible={true}
+            accessibilityLabel="Показать доступные заказы"
+            onPress={handleAvailablePress}
             style={[
               styles.togglerOption,
-              currentPage === "available" && styles.activeTogglerOption,
+              activeTab === "available" && styles.activeTogglerOption,
             ]}
           >
             <Text
               style={[
                 styles.togglerText,
-                currentPage === "available" && styles.activeTogglerText,
+                activeTab === "available" && styles.activeTogglerText,
               ]}
             >
               Доступные
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => setCurrentPage("active")}
+            accessible={true}
+            accessibilityLabel="Показать активные заказы"
+            onPress={handleActivePress}
             style={[
               styles.togglerOption,
-              currentPage === "active" && styles.activeTogglerOption,
+              activeTab === "active" && styles.activeTogglerOption,
             ]}
           >
             <Text
               style={[
                 styles.togglerText,
-                currentPage === "active" && styles.activeTogglerText,
+                activeTab === "active" && styles.activeTogglerText,
               ]}
             >
               Активные
@@ -52,24 +143,44 @@ const OrdersScreen = () => {
       </View>
 
       <View style={styles.ordersContainer}>
-        {currentPage === "available" ? <AvailableOrders /> : <ActiveOrders />}
+        <Animated.View
+          style={[
+            styles.tabContent,
+            {
+              opacity: availableOpacity,
+              transform: [{ translateX: availableTranslate }],
+              pointerEvents: activeTab === "available" ? "auto" : "none",
+            },
+          ]}
+        >
+          <AvailableOrders />
+        </Animated.View>
+
+        <Animated.View
+          style={[
+            styles.tabContent,
+            {
+              opacity: activeOpacity,
+              transform: [{ translateX: activeTranslate }],
+              pointerEvents: activeTab === "active" ? "auto" : "none",
+            },
+          ]}
+        >
+          <ActiveOrders />
+        </Animated.View>
       </View>
     </View>
   );
 };
 
-export default OrdersScreen;
-
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    height: "100%",
+    flex: 1,
   },
   ordersHeader: {
     paddingVertical: 20,
     backgroundColor: colors.white,
     paddingHorizontal: 20,
-    gap: 7,
   },
   ordersHeaderText: {
     fontSize: fontSizes.big,
@@ -78,6 +189,7 @@ const styles = StyleSheet.create({
   },
   togglerType: {
     flexDirection: "row",
+    position: "relative",
     alignItems: "center",
     justifyContent: "space-between",
     width: "100%",
@@ -85,10 +197,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGray,
     overflow: "hidden",
   },
-  togglerText: {
-    fontSize: fontSizes.medium,
-    fontFamily: fonts.regular,
-    color: colors.black,
+  indicator: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: "100%",
+    width: "50%", // Индикатор занимает половину ширины контейнера
+    backgroundColor: colors.purple,
+    zIndex: -1, // Помещаем индикатор под текст
   },
   togglerOption: {
     padding: 7,
@@ -96,12 +212,28 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: "50%",
   },
-
+  togglerText: {
+    fontSize: fontSizes.medium,
+    fontFamily: fonts.regular,
+    color: colors.black,
+  },
   activeTogglerOption: {
-    backgroundColor: colors.purple,
+    // Дополнительное оформление для активной вкладки, если нужно
   },
   activeTogglerText: {
     color: colors.white,
   },
-  ordersContainer: {},
+  ordersContainer: {
+    flex: 1,
+    position: "relative",
+  },
+  tabContent: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    top: 0,
+    left: 0,
+  },
 });
+
+export default OrdersScreen;

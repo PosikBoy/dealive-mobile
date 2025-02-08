@@ -16,7 +16,7 @@ import { useTypedSelector } from "@/hooks/redux.hooks";
 import { borderRadiuses, fonts, fontSizes } from "@/constants/styles";
 import CustomBottomSheetModal from "@/components/shared/CustomBottomSheetModal/CustomBottomSheetModal";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import OrderPreviewSkeleton from "@/components/features/OrderPreviewSkeleton/OrderPreviewSkeleton";
+import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
 
 const AvailableOrders = () => {
   const location = useTypedSelector((state) => state.location);

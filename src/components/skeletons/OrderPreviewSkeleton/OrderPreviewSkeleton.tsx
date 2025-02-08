@@ -1,49 +1,24 @@
+import Shimmer from "@/components/ui/Shimmer/Shimmer";
 import { colors } from "@/constants/colors";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { StyleSheet, View } from "react-native";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withRepeat,
-  withTiming,
-  Easing,
-} from "react-native-reanimated";
 
 const OrderPreviewSkeleton: FC = () => {
-  const shimmerOpacity = useSharedValue(0.3);
-
-  useEffect(() => {
-    shimmerOpacity.value = withRepeat(
-      withTiming(0.7, {
-        duration: 2000,
-        easing: Easing.linear,
-      }),
-      -1,
-      true
-    );
-  }, []); // Запуск анимации только один раз при монтировании компонента
-
-  const shimmerStyle = useAnimatedStyle(() => {
-    return {
-      opacity: shimmerOpacity.value,
-    };
-  });
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Animated.View style={[styles.shimmer, shimmerStyle]} />
+        <Shimmer />
       </View>
       <View style={styles.addresses}>
         <View style={styles.address}>
-          <Animated.View style={[styles.shimmer, shimmerStyle]} />
+          <Shimmer />
         </View>
         <View style={styles.address}>
-          <Animated.View style={[styles.shimmer, shimmerStyle]} />
+          <Shimmer />
         </View>
       </View>
       <View style={styles.footer}>
-        <Animated.View style={[styles.shimmer, shimmerStyle]} />
+        <Shimmer />
       </View>
     </View>
   );
@@ -87,13 +62,5 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: "hidden",
     position: "relative",
-  },
-  shimmer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgb(255, 255, 255)", // Полупрозрачный белый
   },
 });

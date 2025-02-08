@@ -137,7 +137,7 @@ export const useGetAvailableOrdersQueryWithSorting = (
   });
 };
 
-export const useGetActiveOrdersQuery = () => {
+export const useGetActiveOrders = () => {
   const location = useTypedSelector((state: TypeRootState) => state.location);
 
   return ordersApi.useGetActiveOrdersQuery(location, {
@@ -150,6 +150,7 @@ export const useGetActiveOrdersQuery = () => {
 export const {
   useGetOrderByIdQuery,
   useGetAllOrdersQuery,
+  useGetActiveOrdersQuery,
   useTakeOrderMutation,
   useCompleteActionMutation,
   useGetAvailableOrdersQuery,

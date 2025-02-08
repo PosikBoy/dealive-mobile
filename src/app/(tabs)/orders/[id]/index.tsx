@@ -1,7 +1,9 @@
 import Order from "@/components/screens/Order/Order";
+import OrderSkeleton from "@/components/skeletons/OrderSkeleton/OrderSkeleton";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import geodataService from "@/services/geodata/geodata.service";
 import {
+  useGetActiveOrdersQuery,
   useGetAvailableOrdersQuery,
   useGetOrderByIdQuery,
 } from "@/services/orders/orders.service";
@@ -15,26 +17,34 @@ const index = () => {
   const [order, setOrder] = useState<IOrder | IOrderWithoutSensitiveInfo>();
   const location = useTypedSelector((state) => state.location);
 
-  const { data: cachedOrder } = useGetAvailableOrdersQuery(undefined, {
+  const { data: cachedAvailableOrder } = useGetAvailableOrdersQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      data: data?.find((order) => order.id === parseInt(id)),
+    }),
+    pollingInterval: 60 * 1000,
+  });
+
+  const { data: cachedActiveOrder } = useGetActiveOrdersQuery(undefined, {
     selectFromResult: ({ data }) => ({
       data: data?.find((order) => order.id === parseInt(id)),
     }),
   });
-
   const { data, isError, isLoading } = useGetOrderByIdQuery(parseInt(id), {
-    skip: !!cachedOrder, // Пропускаем запрос, если заказ уже есть в кэше
+    skip: !!cachedAvailableOrder || !!cachedActiveOrder,
   });
 
   useEffect(() => {
-    const orderData = cachedOrder || data;
+    const orderData = cachedAvailableOrder || cachedActiveOrder || data;
+
     if (orderData && !location.isLocationLoading) {
       const enrichedOrder = geodataService.enrichOrder(orderData, location);
+
       setOrder(enrichedOrder);
     }
-  }, [data, location, cachedOrder]);
+  }, [data, location, cachedAvailableOrder, cachedActiveOrder]);
 
   if (!order || isLoading) {
-    return <ActivityIndicator size={"large"} />;
+    return <OrderSkeleton />;
   }
 
   if (isError) {
