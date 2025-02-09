@@ -17,22 +17,23 @@ import { fonts, fontSizes } from "@/constants/styles";
 import Hyperlink from "react-native-hyperlink";
 import { getMetroColor } from "@/utils/getColorMetro";
 
-interface IAdressProps {
+interface IAddressProps {
   address: IAddress | IAddressWithoutSensitiveInfo;
   index: number;
   price: number;
 }
 
-const Address: FC<IAdressProps> = ({ address, index, price }) => {
-  const handleOpenURL = () => {
-    const url = `https://yandex.ru/maps/?rtext=~${address.geoData.geoLat}%2C${address.geoData.geoLon}`;
-    Linking.canOpenURL(url)
-      .then((supported) => {
-        if (supported) {
-          Linking.openURL(url);
-        }
-      })
-      .catch((err) => console.error("Ошибка при открытии URL: ", err));
+const Address: FC<IAddressProps> = ({ address, index, price }) => {
+  const handleOpenURL = async () => {
+    try {
+      const url = `https://yandex.ru/maps/?rtext=~${address.geoData.geoLat}%2C${address.geoData.geoLon}`;
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      }
+    } catch (err) {
+      console.error("Ошибка при открытии URL:", err);
+    }
   };
 
   const handleCall = () => {
