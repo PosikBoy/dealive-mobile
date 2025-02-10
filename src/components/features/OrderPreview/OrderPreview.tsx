@@ -1,5 +1,4 @@
 import { colors } from "@/constants/colors";
-import { IOrderWithoutSensitiveInfo } from "@/types/order.interface";
 import { FC } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import formatDate from "@/helpers/formatDate";
@@ -12,9 +11,10 @@ import {
   paddings,
 } from "@/constants/styles";
 import { getMetroColor } from "@/utils/getColorMetro";
+import { IOrder } from "@/types/order.interface";
 
 interface OrderDetailsProps {
-  order: IOrderWithoutSensitiveInfo;
+  order: IOrder;
 }
 
 const OrderPreview: FC<OrderDetailsProps> = ({ order }) => {

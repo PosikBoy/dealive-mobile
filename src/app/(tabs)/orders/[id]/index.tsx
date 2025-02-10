@@ -7,14 +7,14 @@ import {
   useGetAvailableOrdersQuery,
   useGetOrderByIdQuery,
 } from "@/services/orders/orders.service";
-import { IOrder, IOrderWithoutSensitiveInfo } from "@/types/order.interface";
+import { IOrder } from "@/types/order.interface";
 import { Redirect, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 
 const index = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [order, setOrder] = useState<IOrder | IOrderWithoutSensitiveInfo>();
+  const [order, setOrder] = useState<IOrder>();
   const location = useTypedSelector((state) => state.location);
 
   const { data: cachedAvailableOrder } = useGetAvailableOrdersQuery(undefined, {
@@ -28,7 +28,9 @@ const index = () => {
     selectFromResult: ({ data }) => ({
       data: data?.find((order) => order.id === parseInt(id)),
     }),
+    pollingInterval: 60 * 1000,
   });
+
   const { data, isError, isLoading } = useGetOrderByIdQuery(parseInt(id), {
     skip: !!cachedAvailableOrder || !!cachedActiveOrder,
   });

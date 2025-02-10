@@ -1,84 +1,181 @@
-import { IOrder, IOrderWithoutSensitiveInfo } from "@/types/order.interface";
-import React, { FC, useCallback, useMemo, useRef, useState } from "react";
+import { IOrder } from "@/types/order.interface";
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
-  FlatList,
+  Animated,
+  LayoutChangeEvent,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { colors } from "@/constants/colors";
-import formatDate from "@/helpers/formatDate";
 import MyButton from "@/components/ui/Button/Button";
 import { useTakeOrderMutation } from "@/services/orders/orders.service";
-import Address from "./components/Address";
 import Header from "@/components/shared/Header/Header";
-import Action from "./components/Action";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import TakeOrderModal from "./components/TakeOrderModal";
 import { fonts, fontSizes } from "@/constants/styles";
+import { Action, CompleteActionModal } from "./components/Action";
+import Addresses from "./components/Addresses";
+import Actions from "./components/Actions";
 
 interface IProps {
-  order: IOrderWithoutSensitiveInfo | IOrder;
+  order: IOrder;
 }
 
 const Order: FC<IProps> = ({ order }) => {
-  const [currentPage, setCurrentPage] = useState<"addresses" | "actions">(
+  const [activeTab, setActiveTab] = useState<"addresses" | "actions">(
     "addresses"
   );
 
   const [takeOrder, { error }] = useTakeOrderMutation();
 
-  const takeOrderModal = () => {
-    ref.current.present();
-  };
+  const TakeOrderModalRef = useRef<BottomSheetModal>(null);
 
-  const ref = useRef<BottomSheetModal>(null);
+  const takeOrderModalShow = () => {
+    TakeOrderModalRef.current.present();
+  };
 
   const takeOrderHandler = async () => {
     await takeOrder({ orderId: order.id }).unwrap();
-    ref.current.close();
+    TakeOrderModalRef.current.close();
+  };
+
+  const CompleteActionModalRef = useRef<BottomSheetModal>(null);
+
+  const completeActionModalShow = () => {
+    CompleteActionModalRef.current.present();
+  };
+
+  const lastAction = order.actions.find((action) => !action.isCompleted);
+
+  const lastAddress = order.addresses.find(
+    (address) => address.id == lastAction?.addressId
+  );
+
+  //Анимации
+  const [togglerWidth, setTogglerWidth] = useState(0);
+
+  const tabAnimation = useRef(
+    new Animated.Value(activeTab === "addresses" ? 0 : 1)
+  ).current;
+
+  useEffect(() => {
+    Animated.spring(tabAnimation, {
+      toValue: activeTab === "addresses" ? 0 : 1,
+      useNativeDriver: true,
+      bounciness: 5,
+      speed: 12,
+    }).start();
+  }, [activeTab, tabAnimation]);
+
+  const availableTranslate = useMemo(
+    () =>
+      tabAnimation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, -20],
+      }),
+    [tabAnimation]
+  );
+
+  const activeTranslate = useMemo(
+    () =>
+      tabAnimation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [20, 0],
+      }),
+    [tabAnimation]
+  );
+
+  const availableOpacity = useMemo(
+    () =>
+      tabAnimation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [1, 0],
+      }),
+    [tabAnimation]
+  );
+
+  const activeOpacity = useMemo(
+    () =>
+      tabAnimation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, 1],
+      }),
+    [tabAnimation]
+  );
+
+  const indicatorTranslateX = useMemo(() => {
+    return tabAnimation.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, togglerWidth / 2],
+    });
+  }, [tabAnimation, togglerWidth]);
+
+  const handleAddressesPress = useCallback(() => setActiveTab("addresses"), []);
+  const handleActionsPress = useCallback(() => setActiveTab("actions"), []);
+
+  const onTogglerLayout = (event: LayoutChangeEvent) => {
+    const { width } = event.nativeEvent.layout;
+    setTogglerWidth(width);
   };
 
   return (
     <View style={styles.container}>
       <TakeOrderModal
-        ref={ref}
+        ref={TakeOrderModalRef}
         order={order}
         error={error?.message}
         takeOrder={takeOrderHandler}
       />
 
+      <CompleteActionModal
+        ref={CompleteActionModalRef}
+        action={lastAction}
+        address={lastAddress}
+      />
+
       <Header title={"Заказ № " + order.id} />
       <View style={styles.togglerTypeContainer}>
-        <View style={styles.togglerType}>
-          <TouchableOpacity
-            onPress={() => setCurrentPage("addresses")}
+        <View style={styles.togglerType} onLayout={onTogglerLayout}>
+          <Animated.View
             style={[
-              styles.togglerOption,
-              currentPage === "addresses" && styles.activeTogglerOption,
+              styles.indicator,
+              { transform: [{ translateX: indicatorTranslateX }] },
             ]}
+          />
+          <TouchableOpacity
+            accessible={true}
+            accessibilityLabel="Показать адреса заказа"
+            onPress={handleAddressesPress}
+            style={[styles.togglerOption]}
           >
             <Text
               style={[
                 styles.togglerText,
-                currentPage === "addresses" && styles.activeTogglerText,
+                activeTab === "addresses" && styles.activeTogglerText,
               ]}
             >
               Адреса
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => setCurrentPage("actions")}
-            style={[
-              styles.togglerOption,
-              currentPage === "actions" && styles.activeTogglerOption,
-            ]}
+            accessible={true}
+            accessibilityLabel="Показать действия заказа"
+            onPress={handleActionsPress}
+            style={[styles.togglerOption]}
           >
             <Text
               style={[
                 styles.togglerText,
-                currentPage === "actions" && styles.activeTogglerText,
+                activeTab === "actions" && styles.activeTogglerText,
               ]}
             >
               Действия
@@ -86,72 +183,45 @@ const Order: FC<IProps> = ({ order }) => {
           </TouchableOpacity>
         </View>
       </View>
-      {currentPage === "addresses" && (
-        <View>
-          <View style={styles.addresses}>
-            <FlatList
-              data={order.addresses}
-              renderItem={({ item, index }) => (
-                <Address address={item} index={index} price={order.price} />
-              )}
-              keyExtractor={(item) => item.id.toString()}
-              contentContainerStyle={{
-                gap: 20,
-                paddingBottom: 200,
-                paddingTop: 10,
-              }}
-              ListFooterComponent={
-                <View style={styles.listFooter}>
-                  <View>
-                    <Text style={styles.creationDateText}>
-                      {"Создан " + formatDate(order.date)}
-                    </Text>
-                  </View>
-                  {order.statusId == 5 && (
-                    <Text style={styles.orderCompleted}>
-                      Заказ завершен, спасибо!
-                    </Text>
-                  )}
-                  {/* {order.statusId == 4 && (
-                    <MyButton
-                      buttonText="Отменить заказ"
-                      onPress={() => {}}
-                      color="red"
-                    />
-                  )} */}
-                </View>
-              }
-            />
-          </View>
-        </View>
-      )}
-      {currentPage === "actions" && (
-        <FlatList
-          data={order.actions}
-          renderItem={({ item }) => (
-            <Action
-              address={order.addresses.find(
-                (address) => address.id == item.addressId
-              )}
-              action={item}
-              disabled={order.statusId != 4}
-            />
-          )}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{
-            gap: 10,
-            paddingTop: 10,
-            paddingBottom: 130,
-          }}
-        />
-      )}
+      <View style={styles.orderContainer}>
+        <Animated.View
+          style={[
+            styles.tabContent,
+            {
+              opacity: availableOpacity,
+              transform: [{ translateX: availableTranslate }],
+              pointerEvents: activeTab === "addresses" ? "auto" : "none",
+            },
+          ]}
+        >
+          <Addresses order={order} />
+        </Animated.View>
 
+        <Animated.View
+          style={[
+            styles.tabContent,
+            {
+              opacity: activeOpacity,
+              transform: [{ translateX: activeTranslate }],
+              pointerEvents: activeTab === "actions" ? "auto" : "none",
+            },
+          ]}
+        >
+          <Actions order={order} />
+        </Animated.View>
+      </View>
       <View style={styles.footer}>
         <Text style={styles.footerInfo}>
           {order.price + "₽ · " + order.weight + " · " + order.parcelType}
         </Text>
         {order.statusId == 3 && (
-          <MyButton buttonText="Взять заказ" onPress={takeOrderModal} />
+          <MyButton buttonText="Взять заказ" onPress={takeOrderModalShow} />
+        )}
+        {order.statusId == 4 && (
+          <MyButton
+            buttonText={lastAction.description}
+            onPress={completeActionModalShow}
+          />
         )}
       </View>
     </View>
@@ -163,7 +233,15 @@ export default Order;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 0,
+  },
+  indicator: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: "100%",
+    width: "50%", // Индикатор занимает половину ширины контейнера
+    backgroundColor: colors.purple,
+    zIndex: -1, // Помещаем индикатор под текст
   },
   togglerTypeContainer: {
     paddingTop: 10,
@@ -173,6 +251,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    position: "relative",
     width: "100%",
     borderRadius: 40,
     backgroundColor: colors.lightGray,
@@ -189,30 +268,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: "50%",
   },
-  activeTogglerOption: {
-    backgroundColor: colors.purple,
-  },
   activeTogglerText: {
     color: colors.white,
   },
-
-  addresses: {
-    paddingHorizontal: 10,
-    width: "100%",
-    gap: 20,
-    paddingBottom: 100,
-  },
-  listFooter: {
-    gap: 20,
-  },
-  creationDateText: {
-    paddingVertical: 20,
-    backgroundColor: colors.white,
-    borderRadius: 20,
-    fontSize: 14,
-    color: colors.black,
-    fontFamily: fonts.semiBold,
-    textAlign: "center",
+  orderContainer: {
+    flex: 1,
+    position: "relative",
   },
   footer: {
     position: "absolute",
@@ -230,11 +291,11 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semiBold,
     textAlign: "center",
   },
-  orderCompleted: {
-    fontSize: 24,
-    color: colors.black,
-    fontFamily: fonts.bold,
-    textAlign: "center",
-    marginTop: 30,
+  tabContent: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    top: 0,
+    left: 0,
   },
 });

@@ -7,9 +7,10 @@ import Header from "@/components/shared/Header/Header";
 import { icons } from "@/constants/icons";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import geodataService from "@/services/geodata/geodata.service";
-import { IOrderWithoutSensitiveInfo } from "@/types/order.interface";
+import { IOrder } from "@/types/order.interface";
+
 const CompletedOrders = () => {
-  const [orders, setOrders] = useState<IOrderWithoutSensitiveInfo[]>([]);
+  const [orders, setOrders] = useState<IOrder[]>([]);
 
   const { data, isLoading } = useGetAllOrdersQuery(undefined, {
     refetchOnFocus: false,

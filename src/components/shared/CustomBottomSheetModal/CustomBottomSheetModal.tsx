@@ -2,6 +2,7 @@ import { colors } from "@/constants/colors";
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
+  BottomSheetScrollView,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { forwardRef, ReactNode, Ref, useCallback } from "react";
@@ -27,10 +28,11 @@ const CustomBottomSheetModal = forwardRef<BottomSheetModal, IProps>(
         style={styles.bottomSheet}
         backdropComponent={renderBackdrop}
         ref={ref}
+        maxDynamicContentSize={1000}
       >
-        <BottomSheetView style={styles.bottomSheetContent}>
+        <BottomSheetScrollView style={styles.bottomSheetContent}>
           {children}
-        </BottomSheetView>
+        </BottomSheetScrollView>
       </BottomSheetModal>
     );
   }
@@ -47,5 +49,6 @@ const styles = StyleSheet.create({
   bottomSheetContent: {
     flex: 1,
     width: "100%",
+    height: "100%",
   },
 });

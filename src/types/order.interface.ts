@@ -13,20 +13,14 @@ interface IMetro {
   name: string;
   distance: number;
 }
+
 enum BeltwayHit {
   IN_MKAD,
   OUT_MKAD,
   IN_KAD,
   OUT_KAD,
 }
-export interface IAddressWithoutSensitiveInfo {
-  id: number;
-  orderId: number;
-  address: string;
-  info: string;
-  geoData: IGeoData;
-  distance?: number;
-}
+
 export enum IOrderActionType {
   GO_TO = "GO_TO",
   ARRIVED_AT = "ARRIVED_AT",
@@ -36,6 +30,7 @@ export enum IOrderActionType {
   PAY_COMMISION = "PAY_COMMISION",
   COMPLETE_ORDER = "COMPLETE_ORDER",
 }
+
 export interface IOrderAction {
   actionType: IOrderActionType;
   completedAt: Date | null;
@@ -49,44 +44,33 @@ export interface IOrderAction {
   updatedAt: Date;
 }
 
-export interface IOrderWithoutSensitiveInfo {
-  id: number;
-  date: string;
-  parcelType: string;
-  weight: string;
-  price: number;
-  statusId: number;
-  addresses: IAddressWithoutSensitiveInfo[];
-  actions: IOrderAction[];
-}
-
 export interface IAddress {
   id: number;
   orderId: number;
   address: string;
   floor: string;
   apartment: string;
-  phoneNumber: string;
-  phoneName: string;
+  phoneNumber?: string;
+  phoneName?: string;
   info: string;
   geoData: IGeoData;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
   distance?: number;
 }
 export interface IOrder {
   id: number;
-  clientId: number;
+  clientId?: number;
   date: string;
-  phoneNumber: string;
-  phoneName: string;
+  phoneNumber?: string;
+  phoneName?: string;
   parcelType: string;
   weight: string;
   statusId: number;
   price: number;
-  courierId: number;
-  createdAt: string;
-  updatedAt: string;
+  courierId?: number;
+  createdAt?: string;
+  updatedAt?: string;
   addresses: IAddress[];
   actions: IOrderAction[];
 }

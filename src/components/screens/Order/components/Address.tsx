@@ -1,8 +1,5 @@
 import { FC } from "react";
-import {
-  IAddress,
-  IAddressWithoutSensitiveInfo,
-} from "@/types/order.interface";
+import { IAddress } from "@/types/order.interface";
 import {
   Image,
   Linking,
@@ -18,7 +15,7 @@ import Hyperlink from "react-native-hyperlink";
 import { getMetroColor } from "@/utils/getColorMetro";
 
 interface IAddressProps {
-  address: IAddress | IAddressWithoutSensitiveInfo;
+  address: IAddress;
   index: number;
   price: number;
 }
@@ -50,7 +47,7 @@ const Address: FC<IAddressProps> = ({ address, index, price }) => {
           <Text style={styles.addressText}>{address.address}</Text>
         </View>
       </TouchableOpacity>
-      {"phoneNumber" in address && (
+      {address.phoneNumber && (
         <TouchableOpacity onPress={handleCall} style={styles.phoneNumber}>
           <Text style={styles.phoneNumberLabel}>Номер телефона </Text>
           <Text style={styles.phoneNumberInfo}>
@@ -90,7 +87,7 @@ const Address: FC<IAddressProps> = ({ address, index, price }) => {
           <Text style={styles.priceText}>{"Получить " + price + "₽"}</Text>
         </View>
       )}
-      {"floor" in address && address.floor && (
+      {address.floor && (
         <View style={styles.floorContainer}>
           <Image source={icons.building} style={styles.floorIcon} />
           <Text style={styles.floorText}>

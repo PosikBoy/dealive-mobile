@@ -6,21 +6,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useCallback, useRef, useState } from "react";
+import React, { ForwardedRef, forwardRef, Ref, useState } from "react";
 import {
   IAddress,
-  IAddressWithoutSensitiveInfo,
   IOrderAction,
   IOrderActionType,
 } from "@/types/order.interface";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 import { useCompleteActionMutation } from "@/services/orders/orders.service";
-import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import MyButton from "@/components/ui/Button/Button";
 import CustomBottomSheetModal from "@/components/shared/CustomBottomSheetModal/CustomBottomSheetModal";
 import { fonts } from "@/constants/styles";
@@ -30,7 +25,7 @@ import geodataService from "@/services/geodata/geodata.service";
 type Props = {
   action: IOrderAction;
   disabled: boolean;
-  address: IAddressWithoutSensitiveInfo | IAddress;
+  address: IAddress;
 };
 
 const actionIcons = {
@@ -53,53 +48,14 @@ const actionSnippets = {
   [IOrderActionType.COMPLETE_ORDER]: "Завершил заказ", // Иконка для COMPLETE_ORDER
 };
 
-const Action = (props: Props) => {
-  const { action, disabled, address } = props;
-
-  const [error, setError] = useState<string>();
+export const Action = (props: Props) => {
+  const { action, disabled } = props;
   const icon = actionIcons[action.actionType];
-  const snippet = actionSnippets[action.actionType];
-  const [completeAction, { isLoading, isError }] = useCompleteActionMutation();
-  const location = useTypedSelector((state) => state.location);
-
-  const ref = useRef<BottomSheetModal>(null);
-
-  const handleCompleteAction = async () => {
-    ref.current.present();
-  };
-
-  const completeActionHandler = async () => {
-    if (action.actionType == IOrderActionType.ARRIVED_AT) {
-      try {
-        const distance = geodataService.calculateDistanceToAddress(
-          location,
-          address
-        );
-
-        if (distance > 1) {
-          setError(
-            "Кажется, вы немного отошли от указанного адреса. Пожалуйста, проверьте ваше местоположение и убедитесь, что вы на правильном адресе."
-          );
-          return;
-        }
-      } catch (error) {
-        console.log("error", JSON.stringify(error));
-      }
-    }
-    try {
-      await completeAction(action.id).unwrap();
-      ref.current.close();
-    } catch (error) {
-      setError(error.data.message);
-    }
-  };
-
   return (
     <View style={styles.actionContainer}>
       <TouchableOpacity
         activeOpacity={0.7}
         disabled={disabled}
-        onPress={handleCompleteAction}
         style={[styles.action, action.isCompleted && styles.actionCompleted]}
       >
         <View style={styles.iconContainer}>
@@ -107,6 +63,55 @@ const Action = (props: Props) => {
         </View>
         <Text style={styles.actionText}>{action.description}</Text>
       </TouchableOpacity>
+    </View>
+  );
+};
+
+interface IProps {
+  action: IOrderAction;
+  address: IAddress;
+  ref: Ref<BottomSheetModal>;
+}
+
+export const CompleteActionModal = forwardRef<BottomSheetModal, IProps>(
+  (props, ref: ForwardedRef<BottomSheetModal>) => {
+    const { action, address } = props;
+    const location = useTypedSelector((state) => state.location);
+    const snippet = actionSnippets[action.actionType];
+    const [completeAction, { isLoading, isError }] =
+      useCompleteActionMutation();
+    const [error, setError] = useState<string>();
+
+    const completeActionHandler = async () => {
+      if (action.actionType == IOrderActionType.ARRIVED_AT) {
+        try {
+          const distance = geodataService.calculateDistanceToAddress(
+            location,
+            address
+          );
+
+          if (distance > 1) {
+            setError(
+              "Кажется, вы немного отошли от указанного адреса. Пожалуйста, проверьте ваше местоположение и убедитесь, что вы на правильном адресе."
+            );
+            return;
+          }
+        } catch (error) {
+          console.log("error", JSON.stringify(error));
+        }
+      }
+      try {
+        await completeAction(action.id).unwrap();
+        if (ref && "current" in ref && ref.current) {
+          ref.current.close(); // Закрываем модальное окно, если ref доступен
+        }
+      } catch (error) {
+        console.log(error);
+        setError(error.data.message);
+      }
+    };
+
+    return (
       <CustomBottomSheetModal ref={ref}>
         <View style={styles.modalContainer}>
           <View style={styles.modalTextGroup}>
@@ -124,11 +129,9 @@ const Action = (props: Props) => {
           <MyButton onPress={completeActionHandler} buttonText={snippet} />
         </View>
       </CustomBottomSheetModal>
-    </View>
-  );
-};
-
-export default Action;
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   actionContainer: {

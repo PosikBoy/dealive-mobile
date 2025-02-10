@@ -1,7 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { SERVER_URL } from "@/constants/urls";
 import instance from "@/axios/interceptor";
-import { IOrder, IOrderWithoutSensitiveInfo } from "@/types/order.interface";
+import { IOrder } from "@/types/order.interface";
 import { errorCatch } from "@/helpers/errorCatch";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import { TypeRootState } from "@/store/store";
@@ -35,7 +35,7 @@ export const ordersApi = createApi({
   baseQuery: axiosBaseQuery({ baseUrl: SERVER_URL }),
   tagTypes: ["completeAction", "takeOrder"],
   endpoints: (builder) => ({
-    getOrderById: builder.query<IOrder | IOrderWithoutSensitiveInfo, number>({
+    getOrderById: builder.query<IOrder, number>({
       query: (id: number) => ({
         url: `/order/${id}`,
         method: "GET",
@@ -50,16 +50,13 @@ export const ordersApi = createApi({
       providesTags: ["takeOrder"],
     }),
 
-    getAvailableOrders: builder.query<
-      IOrderWithoutSensitiveInfo[],
-      ILocationInitialState
-    >({
+    getAvailableOrders: builder.query<IOrder[], ILocationInitialState>({
       query: () => ({
         url: "/orders/available",
         method: "GET",
       }),
       transformResponse: (
-        orders: IOrderWithoutSensitiveInfo[],
+        orders: IOrder[],
         meta,
         location: ILocationInitialState
       ) => {
@@ -82,7 +79,7 @@ export const ordersApi = createApi({
         if (!location || location.isLocationLoading) return orders;
         return geodataService.enrichOrders(orders, location);
       },
-      providesTags: ["takeOrder"],
+      providesTags: ["takeOrder", "completeAction"],
     }),
 
     takeOrder: builder.mutation<IOrder, { orderId: number }>({

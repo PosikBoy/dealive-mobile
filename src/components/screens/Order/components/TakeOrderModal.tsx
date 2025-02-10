@@ -2,14 +2,13 @@ import MyButton from "@/components/ui/Button/Button";
 import CustomBottomSheetModal from "@/components/shared/CustomBottomSheetModal/CustomBottomSheetModal";
 import { colors } from "@/constants/colors";
 import { fonts, fontSizes, gaps, paddings } from "@/constants/styles";
-import { useTakeOrderMutation } from "@/services/orders/orders.service";
-import { IOrder, IOrderWithoutSensitiveInfo } from "@/types/order.interface";
+import { IOrder } from "@/types/order.interface";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { FC, ForwardedRef, forwardRef, Ref } from "react";
+import { ForwardedRef, forwardRef, Ref } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 interface IProps {
-  order: IOrder | IOrderWithoutSensitiveInfo;
+  order: IOrder;
   ref: Ref<BottomSheetModal>;
   takeOrder: () => Promise<void>;
   error: any;
@@ -18,7 +17,6 @@ interface IProps {
 const TakeOrderModal = forwardRef<BottomSheetModal, IProps>(
   (props, ref: ForwardedRef<BottomSheetModal>) => {
     const { order, takeOrder, error } = props;
-
     return (
       <CustomBottomSheetModal ref={ref}>
         <View style={styles.container}>

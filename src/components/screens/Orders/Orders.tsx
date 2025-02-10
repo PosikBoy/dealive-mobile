@@ -36,7 +36,6 @@ const OrdersScreen = () => {
     }).start();
   }, [activeTab, tabAnimation]);
 
-  // Интерполяция для контента табов
   const availableTranslate = useMemo(
     () =>
       tabAnimation.interpolate({
@@ -73,8 +72,6 @@ const OrdersScreen = () => {
     [tabAnimation]
   );
 
-  // Интерполяция для индикатора тогглера
-  // Если ширина контейнера тогглера известна, то ширина каждой кнопки = togglerWidth / 2
   const indicatorTranslateX = useMemo(() => {
     return tabAnimation.interpolate({
       inputRange: [0, 1],
@@ -107,10 +104,7 @@ const OrdersScreen = () => {
             accessible={true}
             accessibilityLabel="Показать доступные заказы"
             onPress={handleAvailablePress}
-            style={[
-              styles.togglerOption,
-              activeTab === "available" && styles.activeTogglerOption,
-            ]}
+            style={[styles.togglerOption]}
           >
             <Text
               style={[
@@ -125,10 +119,7 @@ const OrdersScreen = () => {
             accessible={true}
             accessibilityLabel="Показать активные заказы"
             onPress={handleActivePress}
-            style={[
-              styles.togglerOption,
-              activeTab === "active" && styles.activeTogglerOption,
-            ]}
+            style={[styles.togglerOption]}
           >
             <Text
               style={[
@@ -216,9 +207,6 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.medium,
     fontFamily: fonts.regular,
     color: colors.black,
-  },
-  activeTogglerOption: {
-    // Дополнительное оформление для активной вкладки, если нужно
   },
   activeTogglerText: {
     color: colors.white,
