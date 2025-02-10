@@ -12,7 +12,7 @@ const About = () => {
       <Header title="О приложении" />
       <View style={styles.content}>
         <Image source={logo} style={{ width: 200, height: 200 }} />
-        <Text style={styles.text}>Версия приложения: 1.1</Text>
+        <Text style={styles.text}>Версия приложения: 1.1.2</Text>
         <Text style={styles.text}>Создано в учебных целях</Text>
       </View>
     </View>

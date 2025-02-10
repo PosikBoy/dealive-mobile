@@ -2,8 +2,8 @@
   "expo": {
     "name": "dealive-mobile",
     "slug": "dealive-mobile",
-    "scheme": "dealive-scheme",
-    "version": "1.1.1",
+    "scheme": "dealive",
+    "version": "1.1.2",
     "jsEngine": "hermes",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
