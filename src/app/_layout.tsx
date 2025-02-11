@@ -13,7 +13,7 @@ import "@/components/sheets/SheetsManager.tsx";
 
 const layout = () => {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView>
       <StoreProvider>
         <SheetProvider>
           <GestureHandlerRootView>
@@ -29,12 +29,5 @@ const layout = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.white,
-  },
-});
 
 export default layout;

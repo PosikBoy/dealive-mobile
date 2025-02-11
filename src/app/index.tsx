@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
 import React, { FC, useEffect, useState } from "react";
 import * as Font from "expo-font";
 import { fonts } from "@/constants/fonts";
@@ -11,6 +11,7 @@ import {
 import { Redirect, SplashScreen } from "expo-router";
 import { colors } from "@/constants/colors";
 import authStorage from "@/helpers/authStorage";
+import splashImage from "assets/splash.png";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -49,6 +50,7 @@ const indexPage = () => {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" color={colors.purple} />
+        <Image source={splashImage} />
       </View>
     );
   }
