@@ -13,7 +13,7 @@ import "@/components/sheets/SheetsManager.tsx";
 
 const layout = () => {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={StyleSheet.absoluteFill}>
       <StoreProvider>
         <SheetProvider>
           <GestureHandlerRootView>

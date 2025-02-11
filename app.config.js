@@ -3,9 +3,7 @@ export default ({ config }) => ({
   icon: "./assets/icon.png",
   splash: {
     image: "./assets/splash.png",
-    resizeMode: "contain",
     backgroundColor: "#ffffff",
-    imageWidth: 400,
     enableFullScreenImage_legacy: true,
   },
   name: "Dealive",

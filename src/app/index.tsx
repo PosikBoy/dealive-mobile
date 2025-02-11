@@ -11,7 +11,6 @@ import {
 import { Redirect, SplashScreen } from "expo-router";
 import { colors } from "@/constants/colors";
 import authStorage from "@/helpers/authStorage";
-import splashImage from "assets/splash.png";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -50,7 +49,6 @@ const indexPage = () => {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" color={colors.purple} />
-        <Image source={splashImage} />
       </View>
     );
   }
@@ -76,6 +74,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
+    height: "100%",
+    width: "100%",
   },
 });
 
