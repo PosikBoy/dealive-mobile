@@ -7,58 +7,22 @@ import {
   Pressable,
   Linking,
 } from "react-native";
-import React, { useCallback, useMemo, useRef } from "react";
-import { Link, router } from "expo-router";
+import React from "react";
+import { Link } from "expo-router";
 import { colors } from "@/constants/colors";
-import { useTypedDispatch } from "@/hooks/redux.hooks";
-import { logOut } from "@/store/auth/auth.actions";
 import { icons } from "@/constants/icons";
-import {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
-import MyButton from "@/components/ui/Button/Button";
+
 import { fonts } from "@/constants/styles";
+
+import { SheetManager } from "react-native-actions-sheet";
+
 const Settings = () => {
-  const dispatch = useTypedDispatch();
-  const ref = useRef<BottomSheetModal>();
-
-  const renderBackdrop = useCallback(
-    (props) => (
-      <BottomSheetBackdrop {...props} opacity={0.5} disappearsOnIndex={-1} />
-    ),
-    []
-  );
   const logoutButtonHandler = async () => {
-    ref.current.present();
+    SheetManager.show("log-out-sheet");
   };
 
-  const logOutHandler = async () => {
-    await dispatch(logOut());
-    router.replace("/");
-  };
   return (
     <View style={styles.container}>
-      <BottomSheetModal
-        backdropComponent={renderBackdrop}
-        ref={ref}
-        style={{ flex: 1 }}
-      >
-        <BottomSheetView style={styles.modalLogOut}>
-          <Text style={styles.modalLogOutTitle}>
-            Вы уверены, что хотите выйти из аккаунта?
-          </Text>
-          <Text style={styles.modalLogOutSubtitle}>
-            Вы сможете зайти заново используя номер телефона и пароль
-          </Text>
-          <MyButton
-            onPress={logOutHandler}
-            buttonText="Выйти из аккаунта"
-            color="red"
-          />
-        </BottomSheetView>
-      </BottomSheetModal>
       <View style={styles.header}>
         <Text style={styles.headerText}>Настройки</Text>
       </View>
@@ -311,27 +275,10 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     justifyContent: "center",
-    // alignItems: "center",
   },
   logoutText: {
     fontFamily: fonts.semiBold,
     fontSize: 16,
     color: colors.red,
-  },
-  modalLogOut: {
-    flex: 1,
-    paddingVertical: 40,
-    paddingHorizontal: 20,
-    gap: 14,
-  },
-  modalLogOutTitle: {
-    fontFamily: fonts.semiBold,
-    fontSize: 20,
-    textAlign: "center",
-  },
-  modalLogOutSubtitle: {
-    fontFamily: fonts.regular,
-    fontSize: 16,
-    textAlign: "center",
   },
 });

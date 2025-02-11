@@ -13,14 +13,17 @@ import { icons } from "@/constants/icons";
 import { fonts, fontSizes } from "@/constants/styles";
 import Hyperlink from "react-native-hyperlink";
 import { getMetroColor } from "@/utils/getColorMetro";
+import copyToClipboard from "@/utils/copyToClipBoard";
 
 interface IAddressProps {
   address: IAddress;
   index: number;
   price: number;
+  isActive?: boolean;
 }
 
-const Address: FC<IAddressProps> = ({ address, index, price }) => {
+const Address: FC<IAddressProps> = (props) => {
+  const { address, index, price, isActive } = props;
   const handleOpenURL = async () => {
     try {
       const url = `https://yandex.ru/maps/?rtext=~${address.geoData.geoLat}%2C${address.geoData.geoLon}`;
@@ -40,15 +43,31 @@ const Address: FC<IAddressProps> = ({ address, index, price }) => {
   };
 
   return (
-    <View style={styles.address}>
-      <TouchableOpacity onPress={handleOpenURL}>
+    <View style={[styles.address, isActive && styles.active]}>
+      {isActive && (
+        <View style={styles.activeAddressTooltip}>
+          <Text>Активный адрес</Text>
+        </View>
+      )}
+      <TouchableOpacity
+        onPress={handleOpenURL}
+        onLongPress={() => {
+          copyToClipboard(address.address);
+        }}
+      >
         <View style={styles.addressTextContainer}>
           <Text style={styles.addressIndex}>{index + 1}</Text>
           <Text style={styles.addressText}>{address.address}</Text>
         </View>
       </TouchableOpacity>
       {address.phoneNumber && (
-        <TouchableOpacity onPress={handleCall} style={styles.phoneNumber}>
+        <TouchableOpacity
+          onPress={handleCall}
+          style={styles.phoneNumber}
+          onLongPress={() => {
+            copyToClipboard(address.phoneNumber);
+          }}
+        >
           <Text style={styles.phoneNumberLabel}>Номер телефона </Text>
           <Text style={styles.phoneNumberInfo}>
             {address.phoneNumber + "  " + address?.phoneName}
@@ -109,6 +128,19 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 20,
     gap: 10,
+  },
+  active: {
+    paddingTop: 30,
+  },
+  activeAddressTooltip: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    backgroundColor: colors.green,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderTopLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   addressTextContainer: {
     width: "100%",

@@ -1,4 +1,4 @@
-import { IOrder } from "@/types/order.interface";
+import { IOrder, IOrderActionType } from "@/types/order.interface";
 import React, {
   FC,
   useCallback,
@@ -9,7 +9,9 @@ import React, {
 } from "react";
 import {
   Animated,
+  Image,
   LayoutChangeEvent,
+  Linking,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -19,16 +21,26 @@ import { colors } from "@/constants/colors";
 import MyButton from "@/components/ui/Button/Button";
 import { useTakeOrderMutation } from "@/services/orders/orders.service";
 import Header from "@/components/shared/Header/Header";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import TakeOrderModal from "./components/TakeOrderModal";
 import { fonts, fontSizes } from "@/constants/styles";
-import { Action, CompleteActionModal } from "./components/Action";
 import Addresses from "./components/Addresses";
 import Actions from "./components/Actions";
+import { SheetManager } from "react-native-actions-sheet";
+
+import { icons } from "@/constants/icons";
 
 interface IProps {
   order: IOrder;
 }
+
+const ACTION_SNIPPETS = {
+  [IOrderActionType.GO_TO]: "✅ Выезжаю на адрес",
+  [IOrderActionType.ARRIVED_AT]: "📍 Я на месте",
+  [IOrderActionType.PICKUP]: "📦 Посылка получена",
+  [IOrderActionType.DELIVER]: "🏁 Доставлено",
+  [IOrderActionType.COLLECT_PAYMENT]: "💵 Получена оплата",
+  [IOrderActionType.PAY_COMMISION]: "📝 Оплатить комиссию",
+  [IOrderActionType.COMPLETE_ORDER]: "🎉 Завершить заказ",
+};
 
 const Order: FC<IProps> = ({ order }) => {
   const [activeTab, setActiveTab] = useState<"addresses" | "actions">(
@@ -37,21 +49,19 @@ const Order: FC<IProps> = ({ order }) => {
 
   const [takeOrder, { error }] = useTakeOrderMutation();
 
-  const TakeOrderModalRef = useRef<BottomSheetModal>(null);
-
   const takeOrderModalShow = () => {
-    TakeOrderModalRef.current.present();
+    SheetManager.show("take-order-sheet", {
+      payload: {
+        order: order,
+        error: error?.message,
+        takeOrder: takeOrderHandler,
+      },
+    });
   };
 
   const takeOrderHandler = async () => {
     await takeOrder({ orderId: order.id }).unwrap();
-    TakeOrderModalRef.current.close();
-  };
-
-  const CompleteActionModalRef = useRef<BottomSheetModal>(null);
-
-  const completeActionModalShow = () => {
-    CompleteActionModalRef.current.present();
+    SheetManager.hide("take-order-sheet");
   };
 
   const lastAction = order.actions.find((action) => !action.isCompleted);
@@ -59,6 +69,33 @@ const Order: FC<IProps> = ({ order }) => {
   const lastAddress = order.addresses.find(
     (address) => address.id == lastAction?.addressId
   );
+
+  const completeActionModalShow = () => {
+    SheetManager.show("complete-action-sheet", {
+      payload: {
+        address: lastAddress,
+        action: lastAction,
+      },
+    });
+  };
+
+  const openMaps = async () => {
+    try {
+      const url = `https://yandex.ru/maps/?rtext=~${lastAddress.geoData.geoLat}%2C${lastAddress.geoData.geoLon}`;
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      }
+    } catch (err) {
+      console.error("Ошибка при открытии URL:", err);
+    }
+  };
+
+  const callPhone = () => {
+    Linking.openURL(
+      `tel:${"phoneNumber" in lastAddress ? lastAddress.phoneNumber : ""}`
+    );
+  };
 
   //Анимации
   const [togglerWidth, setTogglerWidth] = useState(0);
@@ -129,19 +166,6 @@ const Order: FC<IProps> = ({ order }) => {
 
   return (
     <View style={styles.container}>
-      <TakeOrderModal
-        ref={TakeOrderModalRef}
-        order={order}
-        error={error?.message}
-        takeOrder={takeOrderHandler}
-      />
-
-      <CompleteActionModal
-        ref={CompleteActionModalRef}
-        action={lastAction}
-        address={lastAddress}
-      />
-
       <Header title={"Заказ № " + order.id} />
       <View style={styles.togglerTypeContainer}>
         <View style={styles.togglerType} onLayout={onTogglerLayout}>
@@ -194,7 +218,7 @@ const Order: FC<IProps> = ({ order }) => {
             },
           ]}
         >
-          <Addresses order={order} />
+          <Addresses order={order} activeAddressId={lastAction?.addressId} />
         </Animated.View>
 
         <Animated.View
@@ -214,15 +238,50 @@ const Order: FC<IProps> = ({ order }) => {
         <Text style={styles.footerInfo}>
           {order.price + "₽ · " + order.weight + " · " + order.parcelType}
         </Text>
-        {order.statusId == 3 && (
-          <MyButton buttonText="Взять заказ" onPress={takeOrderModalShow} />
-        )}
-        {order.statusId == 4 && (
-          <MyButton
-            buttonText={lastAction.description}
-            onPress={completeActionModalShow}
-          />
-        )}
+        <View style={styles.buttonsContainer}>
+          {order.statusId == 3 && (
+            <MyButton buttonText="Взять заказ" onPress={takeOrderModalShow} />
+          )}
+          {order.statusId == 4 && (
+            <>
+              <View style={{ flex: 1 }}>
+                <MyButton
+                  buttonText={ACTION_SNIPPETS[lastAction.actionType]}
+                  onPress={completeActionModalShow}
+                />
+              </View>
+
+              {lastAddress?.geoData && (
+                <View style={{ width: "20%" }}>
+                  <MyButton
+                    icon={
+                      <Image
+                        style={{ width: "100%", height: 20 }}
+                        source={icons.location}
+                      />
+                    }
+                    color="lightPurple"
+                    onPress={openMaps}
+                  />
+                </View>
+              )}
+              {lastAddress?.phoneNumber && (
+                <View style={{ width: "20%" }}>
+                  <MyButton
+                    icon={
+                      <Image
+                        style={{ width: 20, height: 20 }}
+                        source={icons.phone}
+                      />
+                    }
+                    color="lightPurple"
+                    onPress={callPhone}
+                  />
+                </View>
+              )}
+            </>
+          )}
+        </View>
       </View>
     </View>
   );
@@ -239,9 +298,9 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     height: "100%",
-    width: "50%", // Индикатор занимает половину ширины контейнера
+    width: "50%",
     backgroundColor: colors.purple,
-    zIndex: -1, // Помещаем индикатор под текст
+    zIndex: -1,
   },
   togglerTypeContainer: {
     paddingTop: 10,
@@ -297,5 +356,10 @@ const styles = StyleSheet.create({
     height: "100%",
     top: 0,
     left: 0,
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 10,
   },
 });

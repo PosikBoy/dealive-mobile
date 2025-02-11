@@ -6,25 +6,26 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StoreProvider } from "@/components/contexts/ReduxProvider";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import LocationProvider from "@/components/contexts/LocationProvider";
 import { colors } from "@/constants/colors";
+import { SheetProvider } from "react-native-actions-sheet";
+import "@/components/sheets/SheetsManager.tsx";
 
 const layout = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <GestureHandlerRootView>
-        <BottomSheetModalProvider>
-          <ConnectionCheck>
-            <StoreProvider>
+      <StoreProvider>
+        <SheetProvider>
+          <GestureHandlerRootView>
+            <ConnectionCheck>
               <LocationProvider>
                 <StatusBar style="dark" backgroundColor="white" />
                 <Slot />
               </LocationProvider>
-            </StoreProvider>
-          </ConnectionCheck>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
+            </ConnectionCheck>
+          </GestureHandlerRootView>
+        </SheetProvider>
+      </StoreProvider>
     </SafeAreaView>
   );
 };

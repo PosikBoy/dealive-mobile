@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useGetAvailableOrdersQueryWithSorting } from "@/services/orders/orders.service";
 import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
 import { colors } from "@/constants/colors";
@@ -15,18 +15,26 @@ import { icons } from "@/constants/icons";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import { borderRadiuses, fonts, fontSizes } from "@/constants/styles";
 import CustomBottomSheetModal from "@/components/shared/CustomBottomSheetModal/CustomBottomSheetModal";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
+import { ActionSheetRef } from "react-native-actions-sheet";
+
+type SortingRulesTypes = "lastDate" | "priceASC" | "priceDESC" | "distance";
 
 const AvailableOrders = () => {
   const location = useTypedSelector((state) => state.location);
 
-  const [sortingRules, setSortingRules] = useState<
-    "lastDate" | "priceASC" | "priceDESC" | "distance"
-  >("lastDate");
-  const ref = useRef<BottomSheetModal>(null);
+  const [sortingRules, setSortingRules] =
+    useState<SortingRulesTypes>("lastDate");
+
+  const sortingRulesModalRef = useRef<ActionSheetRef>(null);
+
   const { data, isLoading, refetch, isFetching } =
     useGetAvailableOrdersQueryWithSorting(sortingRules);
+
+  const handleSortingRulePress = (type: SortingRulesTypes) => {
+    setSortingRules(type);
+    sortingRulesModalRef.current.hide();
+  };
 
   if (location.error) {
     return (
@@ -70,21 +78,18 @@ const AvailableOrders = () => {
   return (
     <View style={styles.container}>
       <View>
+        <TouchableOpacity
+          onPress={() => sortingRulesModalRef.current.show()}
+          style={styles.sortButton}
+        >
+          <Text style={styles.sortButtonText}> Сортировка заказов</Text>
+        </TouchableOpacity>
         <FlatList
           data={data}
-          ListHeaderComponent={() => (
-            <TouchableOpacity
-              onPress={() => ref.current?.present()}
-              style={styles.sortButton}
-            >
-              <Text style={styles.sortButtonText}> Сортировка заказов</Text>
-            </TouchableOpacity>
-          )}
           renderItem={({ item }) => <OrderPreview order={item} />}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.flatListStyles}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
-          showsVerticalScrollIndicator={false}
         />
       </View>
       <TouchableOpacity style={styles.update} onPress={() => refetch()}>
@@ -97,14 +102,13 @@ const AvailableOrders = () => {
           />
         )}
       </TouchableOpacity>
-      <CustomBottomSheetModal ref={ref}>
-        <View>
+      <CustomBottomSheetModal ref={sortingRulesModalRef}>
+        <>
           <Text style={styles.modalHeaderText}>Как отсортировать?</Text>
           <TouchableOpacity
             style={styles.modalButton}
             onPress={() => {
-              setSortingRules("distance");
-              ref.current.close();
+              handleSortingRulePress("distance");
             }}
           >
             <Text style={styles.modalButtonText}>
@@ -114,8 +118,7 @@ const AvailableOrders = () => {
           <TouchableOpacity
             style={styles.modalButton}
             onPress={() => {
-              setSortingRules("lastDate");
-              ref.current.close();
+              handleSortingRulePress("lastDate");
             }}
           >
             <Text style={styles.modalButtonText}> По дате (сначала новые)</Text>
@@ -123,8 +126,7 @@ const AvailableOrders = () => {
           <TouchableOpacity
             style={styles.modalButton}
             onPress={() => {
-              setSortingRules("priceASC");
-              ref.current.close();
+              handleSortingRulePress("priceASC");
             }}
           >
             <Text style={styles.modalButtonText}>
@@ -134,15 +136,14 @@ const AvailableOrders = () => {
           <TouchableOpacity
             style={styles.modalButton}
             onPress={() => {
-              setSortingRules("priceDESC");
-              ref.current.close();
+              handleSortingRulePress("priceDESC");
             }}
           >
             <Text style={styles.modalButtonText}>
               По цене (от дорогих к дешевым)
             </Text>
           </TouchableOpacity>
-        </View>
+        </>
       </CustomBottomSheetModal>
     </View>
   );
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     paddingHorizontal: 5,
-    position: "relative",
+    // position: "relative",
   },
   loadingContainer: {
     marginTop: 16,

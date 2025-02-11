@@ -6,65 +6,106 @@ import {
   Text,
   StyleSheet,
   TouchableHighlightProps,
+  View,
+  ActivityIndicator,
 } from "react-native";
 
 interface IProps extends TouchableHighlightProps {
-  buttonText: string;
+  buttonText?: string;
   onPress: () => void;
-  color?: "purple" | "red";
+  color?: "purple" | "red" | "lightPurple";
   disabled?: boolean;
+  isLoading?: boolean;
+  icon?: React.ReactNode;
+  isIconOnly?: boolean;
 }
 
-const MyButton: React.FC<IProps> = ({
-  buttonText,
-  onPress,
-  color = "purple",
-  disabled,
-  ...props
-}) => {
-  const buttonStyles =
-    color === "purple" ? styles.buttonPurple : styles.buttonRed;
+const ACTIVE_COLOR_MAP = {
+  purple: colors.hoverPurple,
+  red: colors.hoverRed,
+  lightPurple: colors.hoverLightPurple, // Убедитесь что цвет есть в constants/colors
+};
+const MyButton: React.FC<IProps> = (props) => {
+  const {
+    buttonText,
+    onPress,
+    color = "purple",
+    disabled,
+    isLoading,
+    children,
+    icon,
+    isIconOnly = false,
+    ...rest
+  } = props;
 
-  const buttonActive =
-    color === "purple" ? colors.hoverPurple : colors.hoverRed;
+  const renderContent = () => {
+    return (
+      <View style={styles.contentWrapper}>
+        {icon && <View style={styles.iconSize}>{icon}</View>}
+        {!isIconOnly && buttonText && (
+          <Text style={styles.buttonText}>{buttonText}</Text>
+        )}
+      </View>
+    );
+  };
+
   return (
     <TouchableHighlight
-      style={buttonStyles}
+      style={[styles.baseButton, styles[color]]}
       onPress={onPress}
-      underlayColor={buttonActive}
-      disabled={disabled}
-      {...props}
+      underlayColor={ACTIVE_COLOR_MAP[color]}
+      disabled={disabled || isLoading}
+      accessibilityLabel={buttonText}
+      {...rest}
     >
-      <Text style={styles.buttonText}>{buttonText}</Text>
+      {renderContent()}
     </TouchableHighlight>
   );
 };
 
 const styles = StyleSheet.create({
-  buttonPurple: {
-    backgroundColor: colors.purple,
-    borderRadius: 100,
-    padding: 15,
+  baseButton: {
+    borderRadius: 20,
+    padding: 10,
     flexDirection: "row",
     justifyContent: "center",
+    alignItems: "center",
+    height: 56,
     width: "100%",
+    minWidth: 48, // Минимальный размер для иконки
+  },
+  iconOnly: {
+    padding: 12, // Меньшие отступы для компактности
+  },
+  buttonPurple: {
+    backgroundColor: colors.purple,
   },
   buttonRed: {
     backgroundColor: colors.red,
-    borderRadius: 100,
-    padding: 15,
-    flexDirection: "row",
-    justifyContent: "center",
-    width: "100%",
   },
   buttonText: {
     color: "#fff",
-    textAlign: "center",
     fontSize: 16,
     fontFamily: fonts.bold,
+    marginLeft: 8,
   },
-
-  // Дополнительные стили, которые вы хотите добавить
+  contentWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  iconSize: {
+    width: 24,
+    height: 24,
+  },
+  purple: {
+    backgroundColor: colors.purple,
+  },
+  red: {
+    backgroundColor: colors.red,
+  },
+  lightPurple: {
+    backgroundColor: colors.lightPurple,
+  },
 });
 
 export default MyButton;

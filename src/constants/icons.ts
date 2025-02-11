@@ -28,6 +28,8 @@ import chat from "assets/icons/chat.png";
 import settings from "assets/icons/settings.png";
 import send from "assets/icons/send.png";
 import add from "assets/icons/add.png";
+import location from "assets/icons/location.png";
+import phone from "assets/icons/phone.png";
 export const icons = {
   arrow,
   profile,
@@ -59,4 +61,6 @@ export const icons = {
   settings,
   send,
   add,
+  location,
+  phone,
 };

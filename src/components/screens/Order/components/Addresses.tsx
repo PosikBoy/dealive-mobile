@@ -5,44 +5,56 @@ import Address from "./Address";
 import { colors } from "@/constants/colors";
 import { fonts } from "@/constants/styles";
 import formatDate from "@/helpers/formatDate";
+import MyButton from "@/components/ui/Button/Button";
 
 type Props = {
   order: IOrder;
+  activeAddressId: number;
 };
 
 const Addresses = (props: Props) => {
-  const { order } = props;
+  const { order, activeAddressId } = props;
   return (
     <View style={styles.container}>
-      <View style={styles.addresses}>
-        <FlatList
-          data={order.addresses}
-          renderItem={({ item, index }) => (
-            <Address address={item} index={index} price={order.price} />
-          )}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{
-            gap: 20,
-            paddingBottom: 200,
-            paddingTop: 10,
-          }}
-        />
-      </View>
-      <View style={styles.creationDateContainer}>
-        <Text style={styles.creationDateText}>
-          {"Создан " + formatDate(order.date)}
-        </Text>
-      </View>
-      {order.statusId == 5 && (
-        <Text style={styles.orderCompleted}>Заказ завершен, спасибо!</Text>
-      )}
-      {/* {order.statusId == 4 && (
-						<MyButton
-							buttonText="Отменить заказ"
-							onPress={() => {}}
-							color="red"
-						/>
-					)} */}
+      <FlatList
+        data={order.addresses}
+        renderItem={({ item, index }) => (
+          <Address
+            address={item}
+            index={index}
+            price={order.price}
+            isActive={item.id == activeAddressId}
+          />
+        )}
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={{
+          gap: 10,
+          paddingTop: 10,
+          paddingBottom: 150,
+        }}
+        ListFooterComponent={
+          <>
+            <View style={styles.creationDateContainer}>
+              <Text style={styles.creationDateText}>
+                {"Создан " + formatDate(order.date)}
+              </Text>
+            </View>
+            {order.statusId == 5 && (
+              <Text style={styles.orderCompleted}>
+                Заказ завершен, спасибо!
+              </Text>
+            )}
+            {/* {order.statusId == 4 && (
+              <MyButton
+                buttonText="Отменить заказ"
+                onPress={() => {}}
+                color="red"
+              />
+            )} */}
+          </>
+        }
+        ListFooterComponentStyle={{ gap: 10 }}
+      />
     </View>
   );
 };
@@ -51,19 +63,13 @@ export default Addresses;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "column",
     width: "100%",
     gap: 10,
-  },
-  addresses: {
     paddingHorizontal: 10,
-    width: "100%",
-    gap: 20,
-    paddingBottom: 100,
   },
   creationDateContainer: {
-    paddingVertical: 20,
     backgroundColor: colors.white,
+    paddingVertical: 20,
     borderRadius: 20,
   },
   creationDateText: {

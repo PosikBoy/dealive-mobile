@@ -26,7 +26,7 @@ const Actions = (props: Props) => {
         contentContainerStyle={{
           gap: 10,
           paddingTop: 10,
-          paddingBottom: 130,
+          paddingBottom: 150,
         }}
       />
     </View>

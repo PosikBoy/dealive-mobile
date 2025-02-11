@@ -1,13 +1,7 @@
 import { colors } from "@/constants/colors";
-import React, {
-  FC,
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
-import { Control, Controller, useController } from "react-hook-form";
+import { fonts } from "@/constants/styles";
+import React, { FC, useEffect, useImperativeHandle, useRef } from "react";
+import { Control, useController } from "react-hook-form";
 import {
   View,
   TextInput,
@@ -194,7 +188,7 @@ const styles = StyleSheet.create({
     height: "100%",
     color: colors.black,
     fontSize: 14,
-    fontFamily: "Montserrat-Regular",
+    fontFamily: fonts.regular,
     paddingLeft: 15,
     paddingVertical: 11,
   },
@@ -205,7 +199,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   placeholder: {
-    fontFamily: "Montserrat-Medium",
+    fontFamily: fonts.medium,
     fontSize: 14,
   },
 });
