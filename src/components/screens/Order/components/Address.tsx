@@ -14,6 +14,7 @@ import { fonts, fontSizes } from "@/constants/styles";
 import Hyperlink from "react-native-hyperlink";
 import { getMetroColor } from "@/utils/getColorMetro";
 import copyToClipboard from "@/utils/copyToClipBoard";
+import yandexMaps from "@/utils/yandexMaps";
 
 interface IAddressProps {
   address: IAddress;
@@ -26,11 +27,10 @@ const Address: FC<IAddressProps> = (props) => {
   const { address, index, price, isActive } = props;
   const handleOpenURL = async () => {
     try {
-      const url = `https://yandex.ru/maps/?rtext=~${address.geoData.geoLat}%2C${address.geoData.geoLon}`;
-      const supported = await Linking.canOpenURL(url);
-      if (supported) {
-        await Linking.openURL(url);
-      }
+      yandexMaps.getRouteToPoint(
+        address.geoData.geoLat,
+        address.geoData.geoLon
+      );
     } catch (err) {
       console.error("Ошибка при открытии URL:", err);
     }

@@ -6,6 +6,7 @@ import { colors } from "@/constants/colors";
 import { fonts } from "@/constants/styles";
 import formatDate from "@/helpers/formatDate";
 import MyButton from "@/components/ui/Button/Button";
+import yandexMaps from "@/utils/yandexMaps";
 
 type Props = {
   order: IOrder;
@@ -14,6 +15,19 @@ type Props = {
 
 const Addresses = (props: Props) => {
   const { order, activeAddressId } = props;
+
+  const openRoute = async () => {
+    try {
+      const points = order.addresses.map((address) =>
+        yandexMaps.getPoint(address)
+      );
+
+      yandexMaps.getRoute(points);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -51,6 +65,11 @@ const Addresses = (props: Props) => {
                 color="red"
               />
             )} */}
+            <MyButton
+              buttonText="Открыть маршрут на карте"
+              onPress={openRoute}
+              color="purple"
+            />
           </>
         }
         ListFooterComponentStyle={{ gap: 10 }}

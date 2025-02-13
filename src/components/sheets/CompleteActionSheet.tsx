@@ -53,71 +53,74 @@ export interface ICompleteActionSheet {
   address: IAddress;
 }
 
-export const CompleteActionSheet = (
-  props: SheetProps<"complete-action-sheet">
-) => {
-  const { action, address } = props.payload;
-  const location = useTypedSelector((state) => state.location);
-  const snippet = ACTION_SNIPPETS[action.actionType];
-  const [completeAction, { isLoading }] = useCompleteActionMutation();
-  const [error, setError] = useState<string>();
+export const CompleteActionSheet = React.memo(
+  (props: SheetProps<"complete-action-sheet">) => {
+    const { action, address } = props.payload;
+    const location = useTypedSelector((state) => state.location);
+    const snippet = ACTION_SNIPPETS[action.actionType];
+    const [completeAction, { isLoading }] = useCompleteActionMutation();
+    const [error, setError] = useState<string>();
 
-  const validateLocation = useCallback(async () => {
-    try {
-      const distance = geodataService.calculateDistanceToAddress(
-        location,
-        address
-      );
-      return distance <= LOCATION_DISTANCE_THRESHOLD;
-    } catch (error) {
-      console.error("Location validation error:", error);
-      return false;
-    }
-  }, [location, address]);
-
-  const handleCompleteAction = useCallback(async () => {
-    try {
-      if (action.actionType === IOrderActionType.ARRIVED_AT) {
-        const isValidLocation = await validateLocation();
-        if (!isValidLocation) {
-          setError(ERROR_MESSAGES.location);
-          return;
-        }
+    const validateLocation = useCallback(async () => {
+      try {
+        const distance = geodataService.calculateDistanceToAddress(
+          location,
+          address
+        );
+        return distance <= LOCATION_DISTANCE_THRESHOLD;
+      } catch (error) {
+        console.error("Location validation error:", error);
+        return false;
       }
+    }, [location, address]);
 
-      await completeAction(action.id).unwrap();
-      SheetManager.hide("complete-action-sheet");
-      ToastAndroid.show("Действие подтверждено, спасибо!", ToastAndroid.SHORT);
-    } catch (error) {
-      setError(error.data?.message || ERROR_MESSAGES.default);
-    }
-  }, [action.id, action.actionType, validateLocation, completeAction]);
+    const handleCompleteAction = useCallback(async () => {
+      try {
+        if (action.actionType === IOrderActionType.ARRIVED_AT) {
+          const isValidLocation = await validateLocation();
+          if (!isValidLocation) {
+            setError(ERROR_MESSAGES.location);
+            return;
+          }
+        }
 
-  const renderAdditionalInfo = () => {
-    if (action.actionType === IOrderActionType.PAY_COMMISION) {
-      return <Text style={styles.sheetText}>{PAY_COMMISION_MESSAGE}</Text>;
-    }
-    return null;
-  };
-  return (
-    <ActionSheet gestureEnabled={true}>
-      <View style={styles.sheetContainer}>
-        <View style={styles.sheetTextGroup}>
-          <Text style={styles.sheetTitle}>Подтверждение выполнения</Text>
-          <Text style={styles.sheetText}>Пожалуйста, проверьте:</Text>
-          <Text style={styles.sheetText}>{action.description}</Text>
+        await completeAction(action.id).unwrap();
+        SheetManager.hide("complete-action-sheet");
+        ToastAndroid.show(
+          "Действие подтверждено, спасибо!",
+          ToastAndroid.SHORT
+        );
+      } catch (error) {
+        setError(error.data?.message || ERROR_MESSAGES.default);
+      }
+    }, [action.id, action.actionType, validateLocation, completeAction]);
+
+    const renderAdditionalInfo = () => {
+      if (action.actionType === IOrderActionType.PAY_COMMISION) {
+        return <Text style={styles.sheetText}>{PAY_COMMISION_MESSAGE}</Text>;
+      }
+      return null;
+    };
+    return (
+      <ActionSheet gestureEnabled={true} id={"complete-action-sheet"}>
+        <View style={styles.sheetContainer}>
+          <View style={styles.sheetTextGroup}>
+            <Text style={styles.sheetTitle}>Подтверждение выполнения</Text>
+            <Text style={styles.sheetText}>Пожалуйста, проверьте:</Text>
+            <Text style={styles.sheetText}>{action.description}</Text>
+          </View>
+          {renderAdditionalInfo()}
+          {error && <Text style={styles.errorText}>{error}</Text>}
+          <MyButton
+            onPress={handleCompleteAction}
+            buttonText={snippet}
+            disabled={isLoading}
+          />
         </View>
-        {renderAdditionalInfo()}
-        {error && <Text style={styles.errorText}>{error}</Text>}
-        <MyButton
-          onPress={handleCompleteAction}
-          buttonText={snippet}
-          disabled={isLoading}
-        />
-      </View>
-    </ActionSheet>
-  );
-};
+      </ActionSheet>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   sheetContainer: {

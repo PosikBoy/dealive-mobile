@@ -1,7 +1,7 @@
 import { useLocation } from "@/hooks/location.hook";
 import { useTypedDispatch } from "@/hooks/redux.hooks";
 import { pushError, pushLocation } from "@/store/location/location.slice";
-import { FC, useEffect } from "react";
+import React, { FC, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 
 interface IProps {
@@ -19,15 +19,7 @@ const LocationProvider: FC<IProps> = ({ children }) => {
     }
   }, [location, error, isLoading]);
 
-  return <View style={styles.container}>{children}</View>;
+  return <>{children}</>;
 };
 
 export default LocationProvider;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-  },
-});

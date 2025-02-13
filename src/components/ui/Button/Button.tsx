@@ -87,7 +87,8 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontFamily: fonts.bold,
-    marginLeft: 8,
+    width: "100%",
+    textAlign: "center",
   },
   contentWrapper: {
     flexDirection: "row",

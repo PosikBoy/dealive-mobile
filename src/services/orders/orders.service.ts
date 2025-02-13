@@ -7,6 +7,7 @@ import { useTypedSelector } from "@/hooks/redux.hooks";
 import { TypeRootState } from "@/store/store";
 import { ILocationInitialState } from "@/store/location/location.slice";
 import geodataService from "../geodata/geodata.service";
+import { useEffect } from "react";
 
 const axiosBaseQuery =
   ({ baseUrl } = { baseUrl: "" }) =>
@@ -35,11 +36,22 @@ export const ordersApi = createApi({
   baseQuery: axiosBaseQuery({ baseUrl: SERVER_URL }),
   tagTypes: ["completeAction", "takeOrder"],
   endpoints: (builder) => ({
-    getOrderById: builder.query<IOrder, number>({
-      query: (id: number) => ({
+    getOrderById: builder.query<
+      IOrder,
+      { id: number; location: ILocationInitialState }
+    >({
+      query: ({ id }) => ({
         url: `/order/${id}`,
         method: "GET",
       }),
+      transformResponse: (
+        order: IOrder,
+        meta,
+        { location }: { location: ILocationInitialState }
+      ) => {
+        if (!location || location.isLocationLoading) return order;
+        return geodataService.enrichOrder(order, location);
+      },
       providesTags: ["completeAction", "takeOrder"],
     }),
     getAllOrders: builder.query<IOrder[], void>({
@@ -100,55 +112,52 @@ export const ordersApi = createApi({
   }),
 });
 
-export const useGetAvailableOrdersQueryWithSorting = (
-  sortingRules: "priceASC" | "priceDESC" | "distance" | "lastDate"
-) => {
+export const useGetAvailableOrdersQuery = () => {
   const location = useTypedSelector((state: TypeRootState) => state.location);
 
   return ordersApi.useGetAvailableOrdersQuery(location, {
-    selectFromResult: ({ data, ...rest }) => {
-      const sortedData = data
-        ? [...data].sort((a, b) => {
-            switch (sortingRules) {
-              case "priceASC":
-                return a.price - b.price;
-              case "priceDESC":
-                return b.price - a.price;
-              case "distance":
-                return a.addresses[0].distance - b.addresses[0].distance;
-              case "lastDate":
-                return new Date(b.date).getTime() - new Date(a.date).getTime();
-              default:
-                return 0;
-            }
-          })
-        : [];
-      return {
-        ...rest,
-        data: sortedData,
-      };
-    },
     pollingInterval: 60 * 1000,
     refetchOnFocus: true,
     refetchOnReconnect: true,
   });
 };
 
-export const useGetActiveOrders = () => {
+export const useGetActiveOrdersQuery = () => {
   const location = useTypedSelector((state: TypeRootState) => state.location);
 
   return ordersApi.useGetActiveOrdersQuery(location, {
-    pollingInterval: 60 * 1000,
     refetchOnFocus: true,
     refetchOnReconnect: true,
   });
 };
+export const useGetOrderByIdQuery = (id: number) => {
+  const location = useTypedSelector((state: TypeRootState) => state.location);
 
+  const { data: cachedAvailableOrders } = useGetAvailableOrdersQuery();
+  const { data: cachedActiveOrders } = useGetActiveOrdersQuery();
+
+  // Ищем заказ в доступных или активных
+  const cachedOrder = [
+    ...(cachedAvailableOrders || []),
+    ...(cachedActiveOrders || []),
+  ].find((order) => order.id === id);
+
+  const { data, isError, isLoading } = ordersApi.useGetOrderByIdQuery(
+    { id, location },
+    {
+      skip: !!cachedOrder,
+      pollingInterval: 120 * 1000, // Каждые 60 секунд обновляем данные
+    }
+  );
+  let orderData = cachedOrder || data;
+  if (orderData && !location.isLocationLoading) {
+    orderData = geodataService.enrichOrder(orderData, location);
+  }
+
+  return { data: orderData, isError, isLoading };
+};
 export const {
-  useGetOrderByIdQuery,
   useGetAllOrdersQuery,
-  useGetActiveOrdersQuery,
   useTakeOrderMutation,
   useCompleteActionMutation,
-  useGetAvailableOrdersQuery,
 } = ordersApi;

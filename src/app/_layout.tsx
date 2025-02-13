@@ -7,7 +7,6 @@ import { StoreProvider } from "@/components/contexts/ReduxProvider";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import LocationProvider from "@/components/contexts/LocationProvider";
-import { colors } from "@/constants/colors";
 import { SheetProvider } from "react-native-actions-sheet";
 import "@/components/sheets/SheetsManager.tsx";
 

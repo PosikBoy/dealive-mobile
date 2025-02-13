@@ -27,6 +27,7 @@ import Actions from "./components/Actions";
 import { SheetManager } from "react-native-actions-sheet";
 
 import { icons } from "@/constants/icons";
+import yandexMaps from "@/utils/yandexMaps";
 
 interface IProps {
   order: IOrder;
@@ -70,22 +71,26 @@ const Order: FC<IProps> = ({ order }) => {
     (address) => address.id == lastAction?.addressId
   );
 
-  const completeActionModalShow = () => {
+  const completeActionPayload = useMemo(
+    () => ({
+      address: lastAddress,
+      action: lastAction,
+    }),
+    [lastAddress, lastAction]
+  );
+
+  const completeActionModalShow = useCallback(() => {
     SheetManager.show("complete-action-sheet", {
-      payload: {
-        address: lastAddress,
-        action: lastAction,
-      },
+      payload: completeActionPayload,
     });
-  };
+  }, [completeActionPayload]);
 
   const openMaps = async () => {
     try {
-      const url = `https://yandex.ru/maps/?rtext=~${lastAddress.geoData.geoLat}%2C${lastAddress.geoData.geoLon}`;
-      const supported = await Linking.canOpenURL(url);
-      if (supported) {
-        await Linking.openURL(url);
-      }
+      yandexMaps.getRouteToPoint(
+        lastAddress.geoData.geoLat,
+        lastAddress.geoData.geoLon
+      );
     } catch (err) {
       console.error("Ошибка при открытии URL:", err);
     }

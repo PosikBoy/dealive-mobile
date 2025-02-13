@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useMemo, useRef, useState } from "react";
-import { useGetAvailableOrdersQueryWithSorting } from "@/services/orders/orders.service";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useGetAvailableOrdersQuery } from "@/services/orders/orders.service";
 import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
@@ -17,6 +17,7 @@ import { borderRadiuses, fonts, fontSizes } from "@/constants/styles";
 import CustomBottomSheetModal from "@/components/shared/CustomBottomSheetModal/CustomBottomSheetModal";
 import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
 import { ActionSheetRef } from "react-native-actions-sheet";
+import { IOrder } from "@/types/order.interface";
 
 type SortingRulesTypes = "lastDate" | "priceASC" | "priceDESC" | "distance";
 
@@ -28,13 +29,31 @@ const AvailableOrders = () => {
 
   const sortingRulesModalRef = useRef<ActionSheetRef>(null);
 
-  const { data, isLoading, refetch, isFetching } =
-    useGetAvailableOrdersQueryWithSorting(sortingRules);
+  const { data, isLoading, refetch, isFetching } = useGetAvailableOrdersQuery();
 
   const handleSortingRulePress = (type: SortingRulesTypes) => {
     setSortingRules(type);
     sortingRulesModalRef.current.hide();
   };
+
+  const sortedOrders = useMemo(() => {
+    return data
+      ? [...data].sort((a, b) => {
+          switch (sortingRules) {
+            case "priceASC":
+              return a.price - b.price;
+            case "priceDESC":
+              return b.price - a.price;
+            case "distance":
+              return a.addresses[0].distance - b.addresses[0].distance;
+            case "lastDate":
+              return new Date(b.date).getTime() - new Date(a.date).getTime();
+            default:
+              return 0;
+          }
+        })
+      : [];
+  }, [data, sortingRules]);
 
   if (location.error) {
     return (
@@ -85,7 +104,7 @@ const AvailableOrders = () => {
           <Text style={styles.sortButtonText}> Сортировка заказов</Text>
         </TouchableOpacity>
         <FlatList
-          data={data}
+          data={sortedOrders}
           renderItem={({ item }) => <OrderPreview order={item} />}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.flatListStyles}
