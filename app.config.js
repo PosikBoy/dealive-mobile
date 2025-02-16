@@ -4,7 +4,7 @@ export default ({ config }) => ({
   splash: {
     image: "./assets/splash.png",
     backgroundColor: "#ffffff",
-    enableFullScreenImage_legacy: true,
+    imageWidth: 1024,
   },
   name: "Dealive",
   slug: "dealive-mobile",

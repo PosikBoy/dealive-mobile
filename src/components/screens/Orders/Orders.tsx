@@ -172,9 +172,10 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     backgroundColor: colors.white,
     paddingHorizontal: 20,
+    gap: 10,
   },
   ordersHeaderText: {
-    fontSize: fontSizes.big,
+    fontSize: fontSizes.medium,
     fontFamily: fonts.semiBold,
     textAlign: "center",
   },

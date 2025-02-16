@@ -30,6 +30,7 @@ import send from "assets/icons/send.png";
 import add from "assets/icons/add.png";
 import location from "assets/icons/location.png";
 import phone from "assets/icons/phone.png";
+
 export const icons = {
   arrow,
   profile,

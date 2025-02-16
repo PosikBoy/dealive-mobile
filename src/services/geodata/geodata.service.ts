@@ -1,9 +1,4 @@
-import {
-  IAddress,
-  IAddressWithoutSensitiveInfo,
-  IOrder,
-  IOrderWithoutSensitiveInfo,
-} from "@/types/order.interface";
+import { IAddress, IOrder } from "@/types/order.interface";
 
 interface ILocation {
   lon: number;
@@ -11,10 +6,7 @@ interface ILocation {
 }
 
 class GeodataService {
-  enrichOrders(
-    orders: IOrderWithoutSensitiveInfo[] | IOrder[],
-    location: ILocation
-  ) {
+  enrichOrders(orders: IOrder[], location: ILocation): IOrder[] {
     const enrichedOrders = orders?.map((order) => {
       const enrichedAddresses = order?.addresses.map((address) => {
         const distance = this.calculateDistanceToAddress(location, address);
@@ -26,7 +18,7 @@ class GeodataService {
     return enrichedOrders;
   }
 
-  enrichOrder(order: IOrder | IOrderWithoutSensitiveInfo, location: ILocation) {
+  enrichOrder(order: IOrder, location: ILocation) {
     const enrichedAddresses = order?.addresses.map((address) => {
       const distance = this.calculateDistanceToAddress(location, address);
       return { ...address, distance };
@@ -34,10 +26,7 @@ class GeodataService {
     return { ...order, addresses: enrichedAddresses };
   }
 
-  calculateDistanceToAddress(
-    location: ILocation,
-    address: IAddress | IAddressWithoutSensitiveInfo
-  ) {
+  calculateDistanceToAddress(location: ILocation, address: IAddress) {
     const { lon: lon1, lat: lat1 } = location;
     const lat2 = parseFloat(address.geoData?.geoLat || "0");
     const lon2 = parseFloat(address.geoData?.geoLon || "0");

@@ -1,7 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { SERVER_URL } from "@/constants/urls";
 import instance from "@/axios/interceptor";
-import { IOrder } from "@/types/order.interface";
+import { IOrder, IOrderActionType } from "@/types/order.interface";
 import { errorCatch } from "@/helpers/errorCatch";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import { TypeRootState } from "@/store/store";
@@ -73,7 +73,24 @@ export const ordersApi = createApi({
         location: ILocationInitialState
       ) => {
         if (!location || location.isLocationLoading) return orders;
-        return geodataService.enrichOrders(orders, location);
+
+        const ordersWithGeo = geodataService.enrichOrders(orders, location);
+
+        ordersWithGeo.forEach((order) => {
+          const addressMap = new Map(
+            order.addresses.map((addr) => [addr.id, addr])
+          );
+          order.actions.forEach(({ actionType, addressId }) => {
+            if (actionType == "PICKUP") {
+              addressMap.get(addressId).type = "PICKUP";
+            }
+            if (actionType == "DELIVER") {
+              addressMap.get(addressId).type = "DELIVER";
+            }
+          });
+        });
+
+        return ordersWithGeo;
       },
       providesTags: ["takeOrder"],
     }),
@@ -89,7 +106,25 @@ export const ordersApi = createApi({
         location: ILocationInitialState
       ) => {
         if (!location || location.isLocationLoading) return orders;
-        return geodataService.enrichOrders(orders, location);
+
+        const ordersWithGeo = geodataService.enrichOrders(orders, location);
+
+        ordersWithGeo.forEach((order) => {
+          const addressMap = new Map(
+            order.addresses.map((addr) => [addr.id, addr])
+          );
+
+          order.actions.forEach(({ actionType, addressId }) => {
+            if (actionType == "PICKUP") {
+              addressMap.get(addressId).type = "PICKUP";
+            }
+            if (actionType == "DELIVER") {
+              addressMap.get(addressId).type = "DELIVER";
+            }
+          });
+        });
+
+        return ordersWithGeo;
       },
       providesTags: ["takeOrder", "completeAction"],
     }),

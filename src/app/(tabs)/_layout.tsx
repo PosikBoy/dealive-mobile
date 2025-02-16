@@ -84,6 +84,20 @@ const TabsLayout = () => {
         }}
       />
       <Tabs.Screen
+        name="route"
+        options={{
+          headerShown: false,
+          title: "Маршрут",
+          tabBarIcon: ({ focused }) => (
+            <TabIcon
+              icon={icons.mapDot}
+              color={colors.purple}
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{
           headerShown: false,
