@@ -8,7 +8,7 @@ export default ({ config }) => ({
   },
   name: "Dealive",
   slug: "dealive-mobile",
-  version: "1.1.1",
+  version: "1.1.3",
   orientation: "portrait",
   icon: "./assets/icon.png",
   updates: {
