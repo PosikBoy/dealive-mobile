@@ -4,18 +4,22 @@ import geodataService from "../geodata/geodata.service";
 type Route = IPoint[];
 class RouteService {
   initialAddresses: IAddress[];
+
   getRoute(addresses: IAddress[]) {
     let initialTemperature = 1000;
     let endTemperature = 0.1;
     this.initialAddresses = addresses;
     let state = this.initialRoute(addresses);
     let currentDistance = this.calculateEnergy(state);
+
+    if (state.length == 2) {
+      return { route: this.restoreRoute(state), distance: currentDistance };
+    }
     let T = initialTemperature;
 
-    for (let i = 0; i < 10000; i++) {
+    for (let i = 0; i < addresses.length * addresses.length * 100; i++) {
       let stateCandidate = this.generateStateCandidate(state);
       let candidateEnergy = this.calculateEnergy(stateCandidate);
-
       if (
         candidateEnergy < currentDistance ||
         this.makeTransit(
@@ -26,13 +30,10 @@ class RouteService {
         state = stateCandidate;
       }
 
-      if (i % 10 === 0) {
-        console.log(i, currentDistance, T);
-      }
-
       T = this.decreaseTemperature(initialTemperature, i);
       if (T <= endTemperature) break;
     }
+
     return { route: this.restoreRoute(state), distance: currentDistance };
   }
 
@@ -58,33 +59,31 @@ class RouteService {
     return energy;
   }
 
-  generateStateCandidate(route) {
+  generateStateCandidate(route: Route) {
     let newState = [...route];
 
-    // Группируем точки по заказам
-    let orders = new Map();
-    newState.forEach((point) => {
-      if (!orders.has(point.orderId)) {
-        orders.set(point.orderId, []);
+    let i, j;
+    while (true) {
+      i = Math.floor(Math.random() * route.length);
+      j = Math.floor(Math.random() * route.length);
+      if (i === j) continue;
+      [newState[i], newState[j]] = [newState[j], newState[i]];
+      const firstPoint = newState.find(
+        (address) => address.orderId == newState[i].orderId
+      );
+
+      const secondPoint = newState.find(
+        (address) => address.orderId == newState[j].orderId
+      );
+
+      if (firstPoint.type == "DELIVER" || secondPoint.type == "DELIVER") {
+        [newState[i], newState[j]] = [newState[j], newState[i]];
+
+        continue;
+      } else {
+        return newState;
       }
-      orders.get(point.orderId).push(point);
-    });
-
-    // Преобразуем карту в массив заказов
-    let orderEntries = [...orders.values()];
-
-    // Перемешиваем заказы случайным образом
-    for (let i = orderEntries.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1));
-      [orderEntries[i], orderEntries[j]] = [orderEntries[j], orderEntries[i]];
     }
-
-    // Восстанавливаем новый маршрут, следя за порядком
-    newState = orderEntries.flatMap((addresses) =>
-      addresses.sort((a, b) => (a.type === "PICKUP" ? -1 : 1))
-    );
-
-    return newState;
   }
 
   getTransitionProbability(deltaE, T) {

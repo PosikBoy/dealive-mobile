@@ -19,12 +19,13 @@ import yandexMaps from "@/utils/yandexMaps";
 interface IAddressProps {
   address: IAddress;
   index: number;
-  price: number;
+  price?: number;
   isActive?: boolean;
+  isTypeShown?: boolean;
 }
 
 const Address: FC<IAddressProps> = (props) => {
-  const { address, index, price, isActive } = props;
+  const { address, index, price, isActive, isTypeShown = false } = props;
   const handleOpenURL = async () => {
     try {
       yandexMaps.getRouteToPoint(
@@ -114,6 +115,14 @@ const Address: FC<IAddressProps> = (props) => {
           </Text>
         </View>
       )}
+      {address.type && isTypeShown && (
+        <View style={styles.typeContainer}>
+          <Image source={icons.settings} style={styles.floorIcon} />
+          <Text style={styles.floorText}>
+            {address.type == "DELIVER" ? "Отдать заказ" : "Забрать заказ"}
+          </Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -124,7 +133,7 @@ const styles = StyleSheet.create({
   address: {
     width: "100%",
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingVertical: 30,
     backgroundColor: colors.white,
     borderRadius: 20,
     gap: 10,
@@ -238,5 +247,18 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontFamily: fonts.regular,
     fontSize: 14,
+  },
+  typeContainer: {
+    flexDirection: "row",
+    gap: 5,
+
+    position: "absolute",
+    top: 0,
+    left: 0,
+    backgroundColor: colors.green,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderTopLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
 });

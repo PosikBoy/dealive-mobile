@@ -12,4 +12,6 @@ export const colors = {
   hoverRed: "#FF0000",
   green: "#D0FF84",
   lightRed: "#D95A5A",
+
+  backgroundColor: "rgba(0, 0, 0, 0.05)",
 };

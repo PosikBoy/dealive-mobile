@@ -62,9 +62,8 @@ export const useLocation = () => {
             newLocation.lat,
             newLocation.lon
           );
-          console.log(distance);
           // Обновляем локацию только если она изменилась на 50 метров или больше
-          if (distance >= 0.05) {
+          if (distance > 0.05) {
             setLocation(newLocation);
             setError(null);
           }

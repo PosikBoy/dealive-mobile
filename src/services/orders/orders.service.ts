@@ -72,25 +72,30 @@ export const ordersApi = createApi({
         meta,
         location: ILocationInitialState
       ) => {
-        if (!location || location.isLocationLoading) return orders;
+        try {
+          if (!location || location.isLocationLoading) return orders;
 
-        const ordersWithGeo = geodataService.enrichOrders(orders, location);
+          const ordersWithGeo = geodataService.enrichOrders(orders, location);
 
-        ordersWithGeo.forEach((order) => {
-          const addressMap = new Map(
-            order.addresses.map((addr) => [addr.id, addr])
-          );
-          order.actions.forEach(({ actionType, addressId }) => {
-            if (actionType == "PICKUP") {
-              addressMap.get(addressId).type = "PICKUP";
-            }
-            if (actionType == "DELIVER") {
-              addressMap.get(addressId).type = "DELIVER";
-            }
+          ordersWithGeo.forEach((order) => {
+            const addressMap = new Map(
+              order.addresses.map((addr) => [addr.id, addr])
+            );
+
+            order.actions.forEach(({ actionType, addressId }) => {
+              if (actionType == "PICKUP") {
+                addressMap.get(addressId).type = "PICKUP";
+              }
+              if (actionType == "DELIVER") {
+                addressMap.get(addressId).type = "DELIVER";
+              }
+            });
           });
-        });
 
-        return ordersWithGeo;
+          return ordersWithGeo;
+        } catch (error) {
+          console.error(JSON.stringify(error.message));
+        }
       },
       providesTags: ["takeOrder"],
     }),

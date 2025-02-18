@@ -174,7 +174,6 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     paddingHorizontal: 5,
-    // position: "relative",
   },
   loadingContainer: {
     marginTop: 16,
@@ -186,7 +185,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.05)",
+    backgroundColor: colors.backgroundColor,
     justifyContent: "center",
     alignItems: "center",
   },
