@@ -12,13 +12,15 @@ import { icons } from "@/constants/icons";
 import { fonts } from "@/constants/styles";
 import { colors } from "@/constants/colors";
 
-const main = () => {
+const index = () => {
   const handleLogin = () => {
     router.push("/(auth)/login");
   };
+
   const handleRegister = () => {
     router.push("/(auth)/register");
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.textContainer}>
@@ -42,7 +44,7 @@ const main = () => {
   );
 };
 
-export default main;
+export default index;
 
 const styles = StyleSheet.create({
   container: {

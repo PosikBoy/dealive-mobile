@@ -15,9 +15,10 @@ class RouteService {
     if (state.length == 2) {
       return { route: this.restoreRoute(state), distance: currentDistance };
     }
+
     let T = initialTemperature;
 
-    for (let i = 0; i < addresses.length * addresses.length * 100; i++) {
+    for (let i = 0; i < Math.pow(addresses.length, 3) * 50; i++) {
       let stateCandidate = this.generateStateCandidate(state);
       let candidateEnergy = this.calculateEnergy(stateCandidate);
       if (
@@ -30,6 +31,9 @@ class RouteService {
         state = stateCandidate;
       }
 
+      if (i % 100 == 0) {
+        console.log(i);
+      }
       T = this.decreaseTemperature(initialTemperature, i);
       if (T <= endTemperature) break;
     }

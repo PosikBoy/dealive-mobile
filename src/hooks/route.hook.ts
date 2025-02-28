@@ -7,12 +7,7 @@ const useRoute = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [route, setRoute] = useState<IAddress[] | null>(null);
   const [distance, setDistance] = useState<number>(0);
-  const [isReroute, setIsReroute] = useState(false);
   const [sum, setSum] = useState(0);
-
-  const reroute = () => {
-    setIsReroute(!isReroute);
-  };
 
   const { data: orders, isLoading: isGetActiveOrdersLoading } =
     useGetActiveOrdersQuery();
@@ -37,8 +32,8 @@ const useRoute = () => {
       }
     }
     setIsLoading(isGetActiveOrdersLoading);
-  }, [isGetActiveOrdersLoading, orders, isReroute]);
-  return { route, isLoading, distance, reroute, sum };
+  }, [isGetActiveOrdersLoading, orders]);
+  return { route, isLoading, distance, sum };
 };
 
 export default useRoute;

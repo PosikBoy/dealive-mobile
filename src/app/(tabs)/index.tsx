@@ -1,20 +1,18 @@
-import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
-import React, { FC, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import Orders from "@/components/screens/Orders/Orders";
+import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import * as Font from "expo-font";
 import { fonts } from "@/constants/fonts";
-import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
+import authStorage from "@/helpers/authStorage";
 import {
   fetchAuthStatus,
   fetchIsApprovedStatus,
   logOut,
 } from "@/store/auth/auth.actions";
-import { Redirect, SplashScreen } from "expo-router";
-import { colors } from "@/constants/colors";
-import authStorage from "@/helpers/authStorage";
+import * as SplashScreen from "expo-splash-screen";
+import { Redirect } from "expo-router";
 
-SplashScreen.preventAutoHideAsync();
-
-const indexPage = () => {
+const TabsLayout = () => {
   const dispatch = useTypedDispatch();
   const { isAuth, isApproved, isLoading, error } = useTypedSelector(
     (state) => state.auth
@@ -40,43 +38,26 @@ const indexPage = () => {
     }
   };
 
-  useEffect(() => {
-    loadFonts();
-    checkAuthStatus();
-  }, []);
-
-  if (!isAppReady || isLoading) {
-    return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color={colors.purple} />
-      </View>
-    );
-  }
+  console.log(isAppReady, isAuth);
 
   if (error) {
     dispatch(logOut());
   }
 
-  if (!isAuth) {
+  if (!isAuth && isAppReady) {
     return <Redirect href={{ pathname: "/onBoarding" }} />;
   }
 
-  if (!isApproved) {
+  if (!isApproved && isAppReady) {
     return <Redirect href={{ pathname: "/waitForApproval" }} />;
   }
 
-  return <Redirect href={{ pathname: "/orders/main" }} />;
+  useEffect(() => {
+    loadFonts();
+    checkAuthStatus();
+  }, []);
+
+  return <Orders />;
 };
 
-const styles = StyleSheet.create({
-  loaderContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    height: "100%",
-    width: "100%",
-  },
-});
-
-export default indexPage;
+export default TabsLayout;

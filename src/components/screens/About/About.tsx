@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Header from "@/components/shared/Header/Header";
-import logo from "assets/adaptive-icon.png";
+import logo from "@/assets/adaptive-icon.png";
 
 import { colors } from "@/constants/colors";
 import { fonts, fontSizes } from "@/constants/styles";

@@ -11,7 +11,7 @@ import { colors } from "@/constants/colors";
 import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
 
 const Route = () => {
-  const { route, isLoading, distance, sum, reroute } = useRoute();
+  const { route, isLoading, distance, sum } = useRoute();
 
   const openRoute = async () => {
     try {
@@ -22,7 +22,6 @@ const Route = () => {
       console.log(error);
     }
   };
-  console.log("route", route, isLoading);
 
   if (isLoading) {
     return (

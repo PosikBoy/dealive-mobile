@@ -1,16 +1,11 @@
 export default ({ config }) => ({
   ...config,
-  icon: "./assets/icon.png",
-  splash: {
-    image: "./assets/splash.png",
-    backgroundColor: "#ffffff",
-    imageWidth: 1024,
-  },
+  icon: "./src/assets/icon.png",
   name: "Dealive",
   slug: "dealive-mobile",
   version: "1.1.1",
   orientation: "portrait",
-  icon: "./assets/icon.png",
+  icon: "./src/assets/icon.png",
   updates: {
     fallbackToCacheTimeout: 0,
   },

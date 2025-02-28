@@ -22,9 +22,11 @@ const OrdersScreen = () => {
   const [activeTab, setActiveTab] = useState<"available" | "active">(
     "available"
   );
+
   const tabAnimation = useRef(
     new Animated.Value(activeTab === "available" ? 0 : 1)
   ).current;
+
   const [togglerWidth, setTogglerWidth] = useState(0);
 
   useEffect(() => {

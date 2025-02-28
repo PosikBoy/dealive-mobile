@@ -170,6 +170,8 @@ export const useGetActiveOrdersQuery = () => {
     refetchOnReconnect: true,
   });
 };
+
+//Кастомный хук на плучение заказа по айди из активных или доступных
 export const useGetOrderByIdQuery = (id: number) => {
   const location = useTypedSelector((state: TypeRootState) => state.location);
 
@@ -185,17 +187,19 @@ export const useGetOrderByIdQuery = (id: number) => {
   const { data, isError, isLoading } = ordersApi.useGetOrderByIdQuery(
     { id, location },
     {
-      skip: !!cachedOrder,
+      // skip: !!cachedOrder,
       pollingInterval: 120 * 1000, // Каждые 60 секунд обновляем данные
     }
   );
-  let orderData = cachedOrder || data;
+  let orderData = data || cachedOrder;
+
   if (orderData && !location.isLocationLoading) {
     orderData = geodataService.enrichOrder(orderData, location);
   }
 
   return { data: orderData, isError, isLoading };
 };
+
 export const {
   useGetAllOrdersQuery,
   useTakeOrderMutation,
