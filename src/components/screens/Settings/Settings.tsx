@@ -39,7 +39,6 @@ const Settings = () => {
               </View>
               <Text style={styles.linkText}>Мой профиль</Text>
             </View>
-
             <View style={styles.iconContainer}>
               <Image
                 style={styles.arrowIcon}

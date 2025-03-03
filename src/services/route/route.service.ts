@@ -31,9 +31,6 @@ class RouteService {
         state = stateCandidate;
       }
 
-      if (i % 100 == 0) {
-        console.log(i);
-      }
       T = this.decreaseTemperature(initialTemperature, i);
       if (T <= endTemperature) break;
     }
@@ -72,6 +69,7 @@ class RouteService {
       j = Math.floor(Math.random() * route.length);
       if (i === j) continue;
       [newState[i], newState[j]] = [newState[j], newState[i]];
+
       const firstPoint = newState.find(
         (address) => address.orderId == newState[i].orderId
       );
@@ -90,7 +88,7 @@ class RouteService {
     }
   }
 
-  getTransitionProbability(deltaE, T) {
+  getTransitionProbability(deltaE: number, T: number) {
     return Math.exp(-deltaE / T);
   }
 

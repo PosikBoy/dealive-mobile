@@ -171,14 +171,12 @@ export const useGetActiveOrdersQuery = () => {
   });
 };
 
-//Кастомный хук на плучение заказа по айди из активных или доступных
 export const useGetOrderByIdQuery = (id: number) => {
   const location = useTypedSelector((state: TypeRootState) => state.location);
 
   const { data: cachedAvailableOrders } = useGetAvailableOrdersQuery();
   const { data: cachedActiveOrders } = useGetActiveOrdersQuery();
 
-  // Ищем заказ в доступных или активных
   const cachedOrder = [
     ...(cachedAvailableOrders || []),
     ...(cachedActiveOrders || []),
@@ -187,8 +185,7 @@ export const useGetOrderByIdQuery = (id: number) => {
   const { data, isError, isLoading } = ordersApi.useGetOrderByIdQuery(
     { id, location },
     {
-      // skip: !!cachedOrder,
-      pollingInterval: 120 * 1000, // Каждые 60 секунд обновляем данные
+      pollingInterval: 120 * 1000,
     }
   );
   let orderData = data || cachedOrder;

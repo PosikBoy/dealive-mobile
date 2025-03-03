@@ -11,7 +11,6 @@ const useRoute = () => {
 
   const { data: orders, isLoading: isGetActiveOrdersLoading } =
     useGetActiveOrdersQuery();
-  console.log("Use Effect");
 
   useEffect(() => {
     if (!isGetActiveOrdersLoading && orders.length > 0) {
