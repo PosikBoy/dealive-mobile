@@ -56,6 +56,7 @@ const Register1: FC<IProps> = (props) => {
     }
     try {
       setIsLoading(true);
+      setExistingError("");
 
       await authService.isUserExist({
         email: data.email,

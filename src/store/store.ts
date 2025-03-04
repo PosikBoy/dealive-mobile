@@ -5,6 +5,15 @@ import { ordersApi } from "@/services/orders/orders.service";
 import { profileApi } from "@/services/profile/profile.service";
 import { supportChatSlice } from "./supportChat/supportChat.slice";
 import { locationSlice } from "./location/location.slice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { persistStore, persistReducer } from "redux-persist";
+import routeReducer from "./route/route.slice";
+
+const persistConfig = {
+  key: "root",
+  storage: AsyncStorage,
+  whitelist: ["routeReducer"],
+};
 
 const rootReducer = combineReducers({
   [ordersApi.reducerPath]: ordersApi.reducer,
@@ -13,6 +22,7 @@ const rootReducer = combineReducers({
   auth: authSlice.reducer,
   supportChat: supportChatSlice.reducer,
   location: locationSlice.reducer,
+  routeReducer: persistReducer(persistConfig, routeReducer),
 });
 
 const store = configureStore({
@@ -24,6 +34,10 @@ const store = configureStore({
 });
 
 export default store;
+
+const persistor = persistStore(store);
+
+export { store, persistor };
 
 export type TypeRootState = ReturnType<typeof store.getState>;
 export type TypeDispatch = typeof store.dispatch;

@@ -14,9 +14,11 @@ import { Redirect } from "expo-router";
 
 const TabsLayout = () => {
   const dispatch = useTypedDispatch();
+
   const { isAuth, isApproved, isLoading, error } = useTypedSelector(
     (state) => state.auth
   );
+
   const [isAppReady, setIsAppReady] = useState(false);
 
   const loadFonts = async () => {
@@ -38,24 +40,22 @@ const TabsLayout = () => {
     }
   };
 
-  console.log(isAppReady, isAuth);
+  useEffect(() => {
+    loadFonts();
+    checkAuthStatus();
+  }, []);
 
   if (error) {
     dispatch(logOut());
   }
 
   if (!isAuth && isAppReady) {
-    return <Redirect href={{ pathname: "/onBoarding" }} />;
+    return <Redirect href={{ pathname: "/(special)/onBoarding" }} />;
   }
 
   if (!isApproved && isAppReady) {
-    return <Redirect href={{ pathname: "/waitForApproval" }} />;
+    return <Redirect href={{ pathname: "/(special)/waitForApproval" }} />;
   }
-
-  useEffect(() => {
-    loadFonts();
-    checkAuthStatus();
-  }, []);
 
   return <Orders />;
 };

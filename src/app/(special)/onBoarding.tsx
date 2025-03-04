@@ -13,6 +13,7 @@ import Paginator from "./components/Paginator";
 import MyButton from "@/components/ui/Button/Button";
 import { router } from "expo-router";
 import { icons } from "@/constants/icons";
+import { colors } from "@/constants/colors";
 
 const data = [
   {
@@ -47,8 +48,9 @@ const onBoarding = () => {
 
   const nextButtonClick = () => {
     if (currentPage == data.length - 1) {
-      router.push("/(auth)");
+      router.push("/(auth)/main");
     }
+
     if (currentPage < data.length - 1) {
       setCurrentPage((currentPage) => currentPage + 1);
       slidesRef.current.scrollToIndex({ index: currentPage + 1 });
@@ -56,7 +58,7 @@ const onBoarding = () => {
   };
 
   const navigateToLogin = () => {
-    router.push("/(auth)");
+    router.push("/(auth)/main");
   };
 
   return (
@@ -114,6 +116,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    backgroundColor: colors.white,
   },
   slider: {
     marginTop: 100,

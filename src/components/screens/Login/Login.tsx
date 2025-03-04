@@ -9,7 +9,6 @@ import MyButton from "@/components/ui/Button/Button";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import { login } from "@/store/auth/auth.actions";
 import { colors } from "@/constants/colors";
-import { SERVER_URL } from "@/constants/urls";
 import { fonts, fontSizes, paddings } from "@/constants/styles";
 
 interface IPhoneNumberPassword {
@@ -23,15 +22,17 @@ const Login = () => {
     formState: { errors },
     handleSubmit,
   } = useForm<IPhoneNumberPassword>();
+
   const state = useTypedSelector((state) => state.auth);
   const dispatch = useTypedDispatch();
 
   const onSubmit = async (data) => {
     try {
       await dispatch(login(data)).unwrap();
-      router.replace("/waitForApproval");
+      router.replace("/");
     } catch (error) {}
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Войдите в аккаунт</Text>

@@ -17,7 +17,6 @@ import { borderRadiuses, fonts, fontSizes } from "@/constants/styles";
 import CustomBottomSheetModal from "@/components/shared/CustomBottomSheetModal/CustomBottomSheetModal";
 import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
 import { ActionSheetRef } from "react-native-actions-sheet";
-import { IOrder } from "@/types/order.interface";
 
 type SortingRulesTypes = "lastDate" | "priceASC" | "priceDESC" | "distance";
 

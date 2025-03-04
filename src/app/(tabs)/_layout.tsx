@@ -22,11 +22,8 @@ const TabIcon = ({ icon, color, focused }) => {
 const CustomTabButton = (props) => (
   <Pressable
     {...props}
-    android_ripple={{ color: "transparent" }} // Отключаем ripple-эффект на Android
-    style={({ pressed }) => [
-      props.style,
-      { opacity: pressed ? 1 : 1 }, // Убираем изменение прозрачности при нажатии
-    ]}
+    android_ripple={{ color: "transparent" }}
+    style={({ pressed }) => [props.style, { opacity: pressed ? 1 : 1 }]}
   />
 );
 
@@ -69,6 +66,7 @@ const TabsLayout = () => {
           ),
         }}
       />
+
       <Tabs.Screen
         name="index"
         options={{
@@ -97,6 +95,7 @@ const TabsLayout = () => {
           ),
         }}
       />
+
       <Tabs.Screen
         name="settings"
         options={{

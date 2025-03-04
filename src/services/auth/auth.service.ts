@@ -23,7 +23,7 @@ class AuthService {
         { data: IAuthResponseData }
       >(LOGIN_URL, data);
       if (response?.data.accessToken) {
-        authHelper.saveAuthData(response.data);
+        await authHelper.saveAuthData(response.data);
       }
       return response.data;
     } catch (error: any) {
@@ -68,7 +68,6 @@ class AuthService {
       }
       return response?.data;
     } catch (error: any) {
-      console.log(error.response.data);
       throw Error(error.response.data.message);
     }
   }
@@ -118,7 +117,6 @@ class AuthService {
       >(IS_USER_EXIST_URL, data);
       return response;
     } catch (error: any) {
-      console.log(JSON.stringify(error));
       throw Error(error.response.data.message);
     }
   }

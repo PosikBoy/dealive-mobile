@@ -59,6 +59,7 @@ export interface IAddress {
   distance?: number;
   type?: "PICKUP" | "DELIVER";
 }
+
 export interface IOrder {
   id: number;
   clientId?: number;

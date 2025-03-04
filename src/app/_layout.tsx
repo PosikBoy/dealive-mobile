@@ -11,6 +11,8 @@ import LocationProvider from "@/components/contexts/LocationProvider";
 import { SheetProvider } from "react-native-actions-sheet";
 
 import "@/components/sheets/SheetsManager.tsx";
+import { persistor } from "@/store/store";
+import { PersistGate } from "redux-persist/integration/react";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -18,29 +20,26 @@ const layout = () => {
   return (
     <SafeAreaView style={StyleSheet.absoluteFill}>
       <StoreProvider>
-        <SheetProvider>
-          <GestureHandlerRootView>
-            <ConnectionCheck>
-              <LocationProvider>
-                <StatusBar style="dark" backgroundColor="white" />
-                <Stack initialRouteName="(tabs)">
-                  <Stack.Screen
-                    name="(tabs)"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen
-                    name="orders"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen
-                    name="settings"
-                    options={{ headerShown: false }}
-                  />
-                </Stack>
-              </LocationProvider>
-            </ConnectionCheck>
-          </GestureHandlerRootView>
-        </SheetProvider>
+        <PersistGate loading={null} persistor={persistor}>
+          <SheetProvider>
+            <GestureHandlerRootView>
+              <ConnectionCheck>
+                <LocationProvider>
+                  <StatusBar style="dark" backgroundColor="white" />
+                  <Stack
+                    initialRouteName="(tabs)"
+                    screenOptions={{ headerShown: false }}
+                  >
+                    <Stack.Screen name="(tabs)" />
+                    <Stack.Screen name="orders" />
+                    <Stack.Screen name="settings" />
+                    <Stack.Screen name="(auth)" />
+                  </Stack>
+                </LocationProvider>
+              </ConnectionCheck>
+            </GestureHandlerRootView>
+          </SheetProvider>
+        </PersistGate>
       </StoreProvider>
     </SafeAreaView>
   );

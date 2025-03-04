@@ -18,3 +18,4 @@ export const routeSlice = createSlice({
 });
 
 export const { pushRoute } = routeSlice.actions;
+export default routeSlice.reducer;

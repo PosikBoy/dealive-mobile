@@ -2,31 +2,11 @@ import { Stack } from "expo-router";
 
 const StackLayout = () => {
   return (
-    <Stack>
-      <Stack.Screen
-        name="profile"
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="notifications"
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="money"
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="about"
-        options={{
-          headerShown: false,
-        }}
-      />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="profile" />
+      <Stack.Screen name="notifications" />
+      <Stack.Screen name="money" />
+      <Stack.Screen name="about" />
     </Stack>
   );
 };
