@@ -7,12 +7,12 @@ import { supportChatSlice } from "./supportChat/supportChat.slice";
 import { locationSlice } from "./location/location.slice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persistStore, persistReducer } from "redux-persist";
-import routeReducer from "./route/route.slice";
+import routeSlice from "./route/route.slice";
 
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["routeReducer"],
+  whitelist: ["route"],
 };
 
 const rootReducer = combineReducers({
@@ -22,22 +22,24 @@ const rootReducer = combineReducers({
   auth: authSlice.reducer,
   supportChat: supportChatSlice.reducer,
   location: locationSlice.reducer,
-  routeReducer: persistReducer(persistConfig, routeReducer),
+  route: persistReducer(persistConfig, routeSlice.reducer),
 });
 
 const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware()
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["persist/PERSIST"], // Игнорируем ошибки сериализации для персистентных данных
+      },
+    })
       .concat(ordersApi.middleware)
       .concat(profileApi.middleware),
 });
 
 export default store;
 
-const persistor = persistStore(store);
-
-export { store, persistor };
+export const persistor = persistStore(store);
 
 export type TypeRootState = ReturnType<typeof store.getState>;
 export type TypeDispatch = typeof store.dispatch;

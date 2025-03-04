@@ -1,21 +1,30 @@
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { borderRadiuses, fonts, fontSizes } from "@/constants/styles";
-import useRoute from "@/hooks/route.hook";
 import MyButton from "@/components/ui/Button/Button";
 import yandexMaps from "@/utils/yandexMaps";
 import Address from "../Order/components/Address";
 import { FlatList } from "react-native-gesture-handler";
 import { colors } from "@/constants/colors";
-import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
+import { useTypedSelector } from "@/hooks/redux.hooks";
+import { useGetActiveOrdersQuery } from "@/services/orders/orders.service";
 
 const Route = () => {
-  const { route, isLoading, distance, sum } = useRoute();
-
+  const [sum, setSum] = useState<number>(0);
+  const routeData = useTypedSelector((state) => state.route);
+  const { data } = useGetActiveOrdersQuery();
+  useEffect(() => {
+    const sum = data.reduce((sum, order) => {
+      return sum + order.price;
+    }, 0);
+    setSum(sum);
+  }, [data]);
   const openRoute = async () => {
     try {
-      const points = route.map((address) => yandexMaps.getPoint(address));
+      const points = routeData.route.map((address) =>
+        yandexMaps.getPoint(address)
+      );
 
       yandexMaps.getRoute(points);
     } catch (error) {
@@ -23,22 +32,7 @@ const Route = () => {
     }
   };
 
-  if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <OrderPreviewSkeleton />
-        <OrderPreviewSkeleton />
-        <OrderPreviewSkeleton />
-        <View style={styles.loadingTextContainer}>
-          <View style={styles.loadingModal}>
-            <ActivityIndicator size={"large"} color={colors.purple} />
-          </View>
-        </View>
-      </View>
-    );
-  }
-
-  if (route?.length === 0 || route === null) {
+  if (routeData.route?.length === 0) {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -58,7 +52,7 @@ const Route = () => {
         <Text style={styles.ordersHeaderText}>Маршрут</Text>
       </View>
       <FlatList
-        data={route}
+        data={routeData.route}
         renderItem={(address) => (
           <Address
             address={address.item}
@@ -82,7 +76,7 @@ const Route = () => {
       <View style={styles.footer}>
         <Text style={styles.footerText}>
           {"Расстояние " +
-            distance.toFixed(2) +
+            routeData.distance.toFixed(2) +
             " км | Доход " +
             sum.toFixed(0) +
             " ₽"}

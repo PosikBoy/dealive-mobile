@@ -1,22 +1,6 @@
-import { IOrder, IOrderActionType } from "@/types/order.interface";
-import React, {
-  FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import {
-  Animated,
-  Image,
-  LayoutChangeEvent,
-  Linking,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { IAddress, IOrder, IOrderActionType } from "@/types/order.interface";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { Image, Linking, StyleSheet, Text, View } from "react-native";
 import { colors } from "@/constants/colors";
 import MyButton from "@/components/ui/Button/Button";
 import { useTakeOrderMutation } from "@/services/orders/orders.service";
@@ -28,6 +12,17 @@ import { SheetManager } from "react-native-actions-sheet";
 
 import { icons } from "@/constants/icons";
 import yandexMaps from "@/utils/yandexMaps";
+import Toggler from "@/components/ui/HorizontalToggler/HorizontalToggler";
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import Route from "./components/Route";
+import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
+import routeService from "@/services/route/route.service";
+import { pushRoute } from "@/store/route/route.slice";
 
 interface IProps {
   order: IOrder;
@@ -42,11 +37,23 @@ const ACTION_SNIPPETS = {
   [IOrderActionType.PAY_COMMISION]: "📝 Оплатить комиссию",
   [IOrderActionType.COMPLETE_ORDER]: "🎉 Завершить заказ",
 };
+const options = ["Адреса", "Действия", "Маршрут"];
+
+interface IRouteState {
+  distance: number;
+  route: IAddress[];
+}
 
 const Order: FC<IProps> = ({ order }) => {
-  const [activeTab, setActiveTab] = useState<"addresses" | "actions">(
-    "addresses"
-  );
+  const [activeTab, setActiveTab] = useState<string>("Адреса");
+  const [route, setRoute] = useState<IRouteState>({ distance: 0, route: [] });
+  const routeState = useTypedSelector((state) => state.route.route);
+  const dispatch = useTypedDispatch();
+
+  useEffect(() => {
+    const route = routeService.getRouteWithNewOrder(routeState, order);
+    setRoute(route);
+  }, []);
 
   const [takeOrder, { error }] = useTakeOrderMutation();
 
@@ -61,8 +68,13 @@ const Order: FC<IProps> = ({ order }) => {
   };
 
   const takeOrderHandler = async () => {
-    await takeOrder({ orderId: order.id }).unwrap();
-    SheetManager.hide("take-order-sheet");
+    try {
+      await takeOrder({ orderId: order.id }).unwrap();
+      dispatch(pushRoute(route));
+      SheetManager.hide("take-order-sheet");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const lastAction = order.actions.find((action) => !action.isCompleted);
@@ -102,125 +114,79 @@ const Order: FC<IProps> = ({ order }) => {
     );
   };
 
-  //Анимации
-  const [togglerWidth, setTogglerWidth] = useState(0);
-
-  const tabAnimation = useRef(
-    new Animated.Value(activeTab === "addresses" ? 0 : 1)
-  ).current;
+  const tabAnimation = useSharedValue(0);
 
   useEffect(() => {
-    Animated.spring(tabAnimation, {
-      toValue: activeTab === "addresses" ? 0 : 1,
-      useNativeDriver: true,
-      bounciness: 5,
-      speed: 12,
-    }).start();
+    const index = options.indexOf(activeTab);
+    tabAnimation.value = withTiming(index, { duration: 300 });
   }, [activeTab, tabAnimation]);
 
-  const availableTranslate = useMemo(
-    () =>
-      tabAnimation.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, -20],
-      }),
-    [tabAnimation]
-  );
+  const addressesTabStyle = useAnimatedStyle(() => {
+    const addressesTranslate = interpolate(
+      tabAnimation.value,
+      [0, 1, 2],
+      [0, -20, -20]
+    );
+    const addressesOpacity = interpolate(
+      tabAnimation.value,
+      [0, 1, 2],
+      [1, 0, 0]
+    );
+    return {
+      transform: [{ translateX: addressesTranslate }],
+      opacity: addressesOpacity,
+    };
+  });
 
-  const activeTranslate = useMemo(
-    () =>
-      tabAnimation.interpolate({
-        inputRange: [0, 1],
-        outputRange: [20, 0],
-      }),
-    [tabAnimation]
-  );
+  const actionsTabStyle = useAnimatedStyle(() => {
+    const actionsTranslate = interpolate(
+      tabAnimation.value,
+      [0, 1, 2],
+      [20, 0, -20]
+    );
+    const actionsOpacity = interpolate(
+      tabAnimation.value,
+      [0, 1, 2],
+      [0, 1, 0]
+    );
 
-  const availableOpacity = useMemo(
-    () =>
-      tabAnimation.interpolate({
-        inputRange: [0, 1],
-        outputRange: [1, 0],
-      }),
-    [tabAnimation]
-  );
+    return {
+      transform: [{ translateX: actionsTranslate }],
+      opacity: actionsOpacity,
+    };
+  });
 
-  const activeOpacity = useMemo(
-    () =>
-      tabAnimation.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, 1],
-      }),
-    [tabAnimation]
-  );
+  const routeTabStyle = useAnimatedStyle(() => {
+    const routeTranslate = interpolate(
+      tabAnimation.value,
+      [0, 1, 2],
+      [-20, -20, 0]
+    );
 
-  const indicatorTranslateX = useMemo(() => {
-    return tabAnimation.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, togglerWidth / 2],
-    });
-  }, [tabAnimation, togglerWidth]);
+    const routeOpacity = interpolate(tabAnimation.value, [0, 1, 2], [0, 0, 1]);
 
-  const handleAddressesPress = useCallback(() => setActiveTab("addresses"), []);
-  const handleActionsPress = useCallback(() => setActiveTab("actions"), []);
-
-  const onTogglerLayout = (event: LayoutChangeEvent) => {
-    const { width } = event.nativeEvent.layout;
-    setTogglerWidth(width);
-  };
+    return {
+      transform: [{ translateX: routeTranslate }],
+      opacity: routeOpacity,
+    };
+  });
 
   return (
     <View style={styles.container}>
       <Header title={"Заказ № " + order.id} />
       <View style={styles.togglerTypeContainer}>
-        <View style={styles.togglerType} onLayout={onTogglerLayout}>
-          <Animated.View
-            style={[
-              styles.indicator,
-              { transform: [{ translateX: indicatorTranslateX }] },
-            ]}
-          />
-          <TouchableOpacity
-            accessible={true}
-            accessibilityLabel="Показать адреса заказа"
-            onPress={handleAddressesPress}
-            style={[styles.togglerOption]}
-          >
-            <Text
-              style={[
-                styles.togglerText,
-                activeTab === "addresses" && styles.activeTogglerText,
-              ]}
-            >
-              Адреса
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            accessible={true}
-            accessibilityLabel="Показать действия заказа"
-            onPress={handleActionsPress}
-            style={[styles.togglerOption]}
-          >
-            <Text
-              style={[
-                styles.togglerText,
-                activeTab === "actions" && styles.activeTogglerText,
-              ]}
-            >
-              Действия
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <Toggler
+          activeTab={activeTab}
+          options={options}
+          onChange={setActiveTab}
+        />
       </View>
       <View style={styles.orderContainer}>
         <Animated.View
           style={[
             styles.tabContent,
-            {
-              opacity: availableOpacity,
-              transform: [{ translateX: availableTranslate }],
-              pointerEvents: activeTab === "addresses" ? "auto" : "none",
-            },
+            addressesTabStyle,
+            activeTab === "Адреса" ? styles.activeTab : styles.inactiveTab,
           ]}
         >
           <Addresses order={order} activeAddressId={lastAction?.addressId} />
@@ -229,14 +195,20 @@ const Order: FC<IProps> = ({ order }) => {
         <Animated.View
           style={[
             styles.tabContent,
-            {
-              opacity: activeOpacity,
-              transform: [{ translateX: activeTranslate }],
-              pointerEvents: activeTab === "actions" ? "auto" : "none",
-            },
+            actionsTabStyle,
+            activeTab === "Действия" ? styles.activeTab : styles.inactiveTab,
           ]}
         >
           <Actions order={order} />
+        </Animated.View>
+        <Animated.View
+          style={[
+            styles.tabContent,
+            routeTabStyle,
+            activeTab === "Маршрут" ? styles.activeTab : styles.inactiveTab,
+          ]}
+        >
+          <Route route={route.route} />
         </Animated.View>
       </View>
       <View style={styles.footer}>
@@ -298,46 +270,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  indicator: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    height: "100%",
-    width: "50%",
-    backgroundColor: colors.purple,
-    zIndex: -1,
-  },
+
   togglerTypeContainer: {
     paddingTop: 10,
     paddingHorizontal: 10,
   },
-  togglerType: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    position: "relative",
-    width: "100%",
-    borderRadius: 40,
-    backgroundColor: colors.lightGray,
-    overflow: "hidden",
-  },
-  togglerText: {
-    fontSize: fontSizes.medium,
-    fontFamily: fonts.regular,
-    color: colors.black,
-  },
-  togglerOption: {
-    padding: 7,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "50%",
-  },
-  activeTogglerText: {
-    color: colors.white,
-  },
+
   orderContainer: {
     flex: 1,
-    position: "relative",
   },
   footer: {
     position: "absolute",
@@ -366,5 +306,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 10,
+  },
+  activeTab: {
+    pointerEvents: "auto",
+  },
+  inactiveTab: {
+    pointerEvents: "none",
   },
 });

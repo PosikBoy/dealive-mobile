@@ -1,113 +1,79 @@
-import { IAddress, IGeoData } from "@/types/order.interface";
+import { IAddress, IGeoData, IOrder } from "@/types/order.interface";
 import geodataService from "../geodata/geodata.service";
 
 type Route = IPoint[];
 class RouteService {
   initialAddresses: IAddress[];
 
-  getRoute(addresses: IAddress[]) {
-    let initialTemperature = 1000;
-    let endTemperature = 0.1;
-    this.initialAddresses = addresses;
-    let state = this.initialRoute(addresses);
-    let currentDistance = this.calculateEnergy(state);
+  // Генерирует все возможные способы вставить массив `newAddresses` в `route`, сохраняя их порядок
+  generateInsertions = (
+    route: IAddress[],
+    newAddresses: IAddress[]
+  ): IAddress[][] => {
+    const results: IAddress[][] = [];
 
-    if (state.length == 2) {
-      return { route: this.restoreRoute(state), distance: currentDistance };
-    }
-
-    let T = initialTemperature;
-
-    for (let i = 0; i < Math.pow(addresses.length, 3) * 50; i++) {
-      let stateCandidate = this.generateStateCandidate(state);
-      let candidateEnergy = this.calculateEnergy(stateCandidate);
-      if (
-        candidateEnergy < currentDistance ||
-        this.makeTransit(
-          this.getTransitionProbability(candidateEnergy - currentDistance, T)
-        )
-      ) {
-        currentDistance = candidateEnergy;
-        state = stateCandidate;
+    // Рекурсивная функция для генерации всех вариантов вставки
+    const insertRecursively = (
+      currentRoute: IAddress[],
+      remaining: IAddress[],
+      index: number
+    ) => {
+      if (remaining.length === 0) {
+        results.push(currentRoute);
+        return;
       }
 
-      T = this.decreaseTemperature(initialTemperature, i);
-      if (T <= endTemperature) break;
+      for (let i = index; i <= currentRoute.length; i++) {
+        const newRoute = [
+          ...currentRoute.slice(0, i),
+          remaining[0],
+          ...currentRoute.slice(i),
+        ];
+        insertRecursively(newRoute, remaining.slice(1), i + 1);
+      }
+    };
+
+    insertRecursively(route, newAddresses, 0);
+    return results;
+  };
+
+  getRouteWithNewOrder = (route: IAddress[], newOrder: IOrder) => {
+    if (!route)
+      return {
+        distance: this.calculateRouteDistance(newOrder.addresses),
+        route: newOrder.addresses,
+      };
+
+    const insertions = this.generateInsertions(route, newOrder.addresses);
+    let bestRoute = insertions[0];
+    let minDistance = Infinity;
+
+    for (const option of insertions) {
+      const totalDistance = this.calculateRouteDistance(option);
+
+      if (totalDistance < minDistance) {
+        minDistance = totalDistance;
+        bestRoute = option;
+      }
     }
 
-    return { route: this.restoreRoute(state), distance: currentDistance };
-  }
+    return { route: bestRoute, distance: minDistance };
+  };
 
-  initialRoute(addresses: IAddress[]) {
-    let pickups = addresses.filter((p) => p.type === "PICKUP");
-    let deliveries = addresses.filter((p) => p.type === "DELIVER");
-    const route = [...pickups, ...deliveries].map(
-      (address) => new IPoint(address)
-    );
-    return route;
-  }
+  calculateRouteDistance = (route: IAddress[]) => {
+    let distance = 0;
 
-  calculateEnergy(route: Route) {
-    let energy = 0;
     for (let i = 0; i < route.length - 1; i++) {
-      energy += geodataService.calculateDistance(
-        +route[i].geoLat,
-        +route[i].geoLon,
-        +route[i + 1].geoLat,
-        +route[i + 1].geoLon
+      distance += geodataService.calculateDistance(
+        +route[i].geoData.geoLat,
+        +route[i].geoData.geoLon,
+        +route[i + 1].geoData.geoLat,
+        +route[i + 1].geoData.geoLon
       );
     }
-    return energy;
-  }
 
-  generateStateCandidate(route: Route) {
-    let newState = [...route];
-
-    let i, j;
-    while (true) {
-      i = Math.floor(Math.random() * route.length);
-      j = Math.floor(Math.random() * route.length);
-      if (i === j) continue;
-      [newState[i], newState[j]] = [newState[j], newState[i]];
-
-      const firstPoint = newState.find(
-        (address) => address.orderId == newState[i].orderId
-      );
-
-      const secondPoint = newState.find(
-        (address) => address.orderId == newState[j].orderId
-      );
-
-      if (firstPoint.type == "DELIVER" || secondPoint.type == "DELIVER") {
-        [newState[i], newState[j]] = [newState[j], newState[i]];
-
-        continue;
-      } else {
-        return newState;
-      }
-    }
-  }
-
-  getTransitionProbability(deltaE: number, T: number) {
-    return Math.exp(-deltaE / T);
-  }
-
-  makeTransit(probability: number) {
-    return Math.random() < probability;
-  }
-
-  decreaseTemperature(initialTemperature: number, iteration: number) {
-    return initialTemperature / (1 + iteration);
-  }
-
-  restoreRoute(route: Route) {
-    const addresses = route.map((routeAddress) => {
-      return this.initialAddresses.find(
-        (address) => address.id === routeAddress.id
-      );
-    });
-    return addresses;
-  }
+    return distance;
+  };
 }
 
 class IPoint {

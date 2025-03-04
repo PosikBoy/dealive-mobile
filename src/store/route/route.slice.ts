@@ -3,9 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export interface IInitialState {
   route: IAddress[];
+  distance: number;
 }
 
-const initialState: IInitialState = { route: [] };
+const initialState: IInitialState = { route: [], distance: 0 };
 
 export const routeSlice = createSlice({
   name: "routeSlice",
@@ -18,4 +19,4 @@ export const routeSlice = createSlice({
 });
 
 export const { pushRoute } = routeSlice.actions;
-export default routeSlice.reducer;
+export default routeSlice;

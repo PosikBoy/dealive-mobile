@@ -15,7 +15,14 @@ const TakeOrderSheet = (props: SheetProps<"take-order-sheet">) => {
   const { order, takeOrder, error } = props.payload;
 
   return (
-    <ActionSheet gestureEnabled={true}>
+    <ActionSheet
+      gestureEnabled={true}
+      containerStyle={{
+        flex: 1, // Убедитесь, что оно занимает весь экран
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <View style={styles.container}>
         <View style={styles.textContainer}>
           <Text style={styles.title}>Информация о заказе</Text>

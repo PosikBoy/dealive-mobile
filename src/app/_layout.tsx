@@ -21,8 +21,8 @@ const layout = () => {
     <SafeAreaView style={StyleSheet.absoluteFill}>
       <StoreProvider>
         <PersistGate loading={null} persistor={persistor}>
-          <SheetProvider>
-            <GestureHandlerRootView>
+          <GestureHandlerRootView>
+            <SheetProvider>
               <ConnectionCheck>
                 <LocationProvider>
                   <StatusBar style="dark" backgroundColor="white" />
@@ -37,8 +37,8 @@ const layout = () => {
                   </Stack>
                 </LocationProvider>
               </ConnectionCheck>
-            </GestureHandlerRootView>
-          </SheetProvider>
+            </SheetProvider>
+          </GestureHandlerRootView>
         </PersistGate>
       </StoreProvider>
     </SafeAreaView>
