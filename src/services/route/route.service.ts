@@ -44,6 +44,12 @@ class RouteService {
         route: newOrder.addresses,
       };
 
+    if (newOrder.statusId == 4) {
+      return {
+        distance: this.calculateRouteDistance(route),
+        route: route,
+      };
+    }
     const insertions = this.generateInsertions(route, newOrder.addresses);
     let bestRoute = insertions[0];
     let minDistance = Infinity;

@@ -58,12 +58,17 @@ const Order: FC<IProps> = ({ order }) => {
   const [activeTab, setActiveTab] = useState<string>("Адреса");
   const [route, setRoute] = useState<IRouteState>({ distance: 0, route: [] });
   const [takeOrder, { error }] = useTakeOrderMutation();
-  const routeState = useTypedSelector((state) => state.route.route);
+  const routeState = useTypedSelector((state) => state.route);
   const dispatch = useTypedDispatch();
 
   useEffect(() => {
-    const route = routeService.getRouteWithNewOrder(routeState, order);
-    setRoute(route);
+    if (order.statusId == 4) {
+      setRoute(routeState);
+    }
+    if (order.statusId == 3) {
+      const route = routeService.getRouteWithNewOrder(routeState.route, order);
+      setRoute(route);
+    }
   }, []);
 
   const takeOrderModalShow = () => {
@@ -360,6 +365,7 @@ export default Order;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.backgroundColor,
   },
   indicator: {
     position: "absolute",

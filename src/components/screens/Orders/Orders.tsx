@@ -216,7 +216,6 @@ const styles = StyleSheet.create({
   },
   ordersContainer: {
     flex: 1,
-    // position: "relative",
   },
   tabContent: {
     position: "absolute",

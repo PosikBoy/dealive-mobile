@@ -1,7 +1,9 @@
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, Text } from "react-native";
 import React from "react";
 import { IAddress } from "@/types/order.interface";
 import Address from "./Address";
+import { colors } from "@/constants/colors";
+import { fonts } from "@/constants/styles";
 
 interface IProps {
   route: IAddress[];
@@ -10,16 +12,30 @@ interface IProps {
 const Route = (props: IProps) => {
   const { route } = props;
   console.log(route);
+
+  if (route.length === 0)
+    return (
+      <View style={styles.container}>
+        <Text style={styles.noRouteText}>Маршрут пуст</Text>
+      </View>
+    );
   return (
     <View style={styles.container}>
       <FlatList
         data={route}
-        renderItem={(address) => (
-          <Address
-            address={address.item}
-            index={address.item.orderId - 1}
-            isTypeShown={true}
-          />
+        renderItem={({ item, index }) => (
+          <View style={styles.addressContainer}>
+            <View style={styles.addressIndexContainer}>
+              <Text style={styles.addressIndexText}>{index + 1}</Text>
+            </View>
+            <View style={styles.address}>
+              <Address
+                address={item}
+                index={item.orderId - 1}
+                isTypeShown={true}
+              />
+            </View>
+          </View>
         )}
         contentContainerStyle={{
           gap: 10,
@@ -39,6 +55,34 @@ const Route = (props: IProps) => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 10,
+  },
+  addressContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  addressIndexContainer: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: colors.purple,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  addressIndexText: {
+    color: colors.white,
+    fontSize: 16,
+    fontFamily: fonts.semiBold,
+  },
+  address: {
+    flex: 1,
+  },
+  noRouteText: {
+    marginTop: 20,
+    textAlign: "center",
+    color: colors.black,
+    fontSize: 16,
+    fontFamily: fonts.semiBold,
   },
 });
 

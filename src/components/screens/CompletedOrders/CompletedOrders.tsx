@@ -8,6 +8,7 @@ import { icons } from "@/constants/icons";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import geodataService from "@/services/geodata/geodata.service";
 import { IOrder } from "@/types/order.interface";
+import { colors } from "@/constants/colors";
 
 const CompletedOrders = () => {
   const [orders, setOrders] = useState<IOrder[]>([]);
@@ -79,6 +80,7 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     position: "relative",
+    backgroundColor: colors.backgroundColor,
   },
   flatListStyles: {
     paddingTop: 16,
