@@ -18,7 +18,6 @@ const TakeOrderSheet = (props: SheetProps<"take-order-sheet">) => {
     <ActionSheet
       gestureEnabled={true}
       containerStyle={{
-        flex: 1, // Убедитесь, что оно занимает весь экран
         justifyContent: "center",
         alignItems: "center",
       }}

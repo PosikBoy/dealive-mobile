@@ -20,6 +20,7 @@ const Route = () => {
     }, 0);
     setSum(sum);
   }, [data]);
+
   const openRoute = async () => {
     try {
       const points = routeData.route.map((address) =>
@@ -53,12 +54,19 @@ const Route = () => {
       </View>
       <FlatList
         data={routeData.route}
-        renderItem={(address) => (
-          <Address
-            address={address.item}
-            index={address.item.orderId}
-            isTypeShown={true}
-          />
+        renderItem={({ item, index }) => (
+          <View style={styles.addressContainer}>
+            <View style={styles.addressIndexContainer}>
+              <Text style={styles.addressIndexText}>{index + 1}</Text>
+            </View>
+            <View style={styles.address}>
+              <Address
+                address={item}
+                index={item.orderId - 1}
+                isTypeShown={true}
+              />
+            </View>
+          </View>
         )}
         contentContainerStyle={{
           gap: 10,
@@ -158,5 +166,26 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontFamily: fonts.medium,
     fontSize: 16,
+  },
+  addressContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  addressIndexContainer: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: colors.purple,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  addressIndexText: {
+    color: colors.white,
+    fontSize: 16,
+    fontFamily: fonts.semiBold,
+  },
+  address: {
+    flex: 1,
   },
 });

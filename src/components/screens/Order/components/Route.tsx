@@ -9,7 +9,7 @@ interface IProps {
 
 const Route = (props: IProps) => {
   const { route } = props;
-
+  console.log(route);
   return (
     <View style={styles.container}>
       <FlatList
