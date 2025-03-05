@@ -2,7 +2,6 @@ import { useLocation } from "@/hooks/location.hook";
 import { useTypedDispatch } from "@/hooks/redux.hooks";
 import { pushError, pushLocation } from "@/store/location/location.slice";
 import React, { FC, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
 
 interface IProps {
   children: React.ReactNode;

@@ -1,5 +1,5 @@
-import React from "react";
-import { Stack } from "expo-router";
+import React, { useEffect } from "react";
+import { Slot, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import ConnectionCheck from "@/components/contexts/ConnectionCheck";
 import { StyleSheet } from "react-native";
@@ -16,33 +16,25 @@ import { PersistGate } from "redux-persist/integration/react";
 
 SplashScreen.preventAutoHideAsync();
 
-const layout = () => {
+const Layout = () => {
   return (
-    <SafeAreaView style={StyleSheet.absoluteFill}>
-      <StoreProvider>
-        <PersistGate loading={null} persistor={persistor}>
-          <GestureHandlerRootView>
+    <GestureHandlerRootView>
+      <SafeAreaView style={{ flex: 1 }}>
+        <StoreProvider>
+          <PersistGate loading={null} persistor={persistor}>
             <SheetProvider>
               <ConnectionCheck>
                 <LocationProvider>
                   <StatusBar style="dark" backgroundColor="white" />
-                  <Stack
-                    initialRouteName="(tabs)"
-                    screenOptions={{ headerShown: false }}
-                  >
-                    <Stack.Screen name="(tabs)" />
-                    <Stack.Screen name="orders" />
-                    <Stack.Screen name="settings" />
-                    <Stack.Screen name="(auth)" />
-                  </Stack>
+                  <Slot />
                 </LocationProvider>
               </ConnectionCheck>
             </SheetProvider>
-          </GestureHandlerRootView>
-        </PersistGate>
-      </StoreProvider>
-    </SafeAreaView>
+          </PersistGate>
+        </StoreProvider>
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 };
 
-export default layout;
+export default Layout;
