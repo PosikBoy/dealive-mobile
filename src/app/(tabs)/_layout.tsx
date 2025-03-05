@@ -81,6 +81,7 @@ const TabsLayout = () => {
           ),
         }}
       />
+
       <Tabs.Screen
         name="route"
         options={{

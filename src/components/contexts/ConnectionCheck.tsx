@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import { router } from "expo-router";
 
@@ -17,13 +16,5 @@ export default function ConnectionCheck({ children }) {
     router.replace("/offline");
   }
 
-  return <View style={styles.container}>{children}</View>;
+  return <>{children}</>;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-  },
-});

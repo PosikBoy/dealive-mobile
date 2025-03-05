@@ -33,9 +33,9 @@ const LogOutSheet = () => {
     }
   }, [dispatch]);
 
-  const handleCancel = useCallback(() => {
-    SheetManager.hide("log-out-sheet");
-  }, []);
+  // const handleCancel = useCallback(() => {
+  //   SheetManager.hide("log-out-sheet");
+  // }, []);
 
   return (
     <ActionSheet gestureEnabled={true}>
