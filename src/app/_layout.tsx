@@ -26,7 +26,12 @@ const Layout = () => {
               <ConnectionCheck>
                 <LocationProvider>
                   <StatusBar style="dark" backgroundColor="white" />
-                  <Slot />
+                  <Stack
+                    screenOptions={{
+                      headerShown: false,
+                      animation: "fade_from_bottom",
+                    }}
+                  />
                 </LocationProvider>
               </ConnectionCheck>
             </SheetProvider>

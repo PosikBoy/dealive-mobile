@@ -36,6 +36,7 @@ const TabsLayout = () => {
 
   return (
     <Tabs
+      initialRouteName="index"
       screenOptions={{
         tabBarShowLabel: false,
         tabBarActiveTintColor: colors.purple,

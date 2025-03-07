@@ -28,11 +28,11 @@ import { SheetManager } from "react-native-actions-sheet";
 
 import { icons } from "@/constants/icons";
 import yandexMaps from "@/utils/yandexMaps";
-import Toggler from "@/components/ui/HorizontalToggler/HorizontalToggler";
 import Route from "./components/Route";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import routeService from "@/services/route/route.service";
 import { pushRoute } from "@/store/route/route.slice";
+import Toggler from "@/components/ui/HorizontalToggler/HorizontalToggler";
 
 interface IProps {
   order: IOrder;
@@ -65,6 +65,7 @@ const Order: FC<IProps> = ({ order }) => {
     if (order.statusId == 4) {
       setRoute(routeState);
     }
+
     if (order.statusId == 3) {
       const route = routeService.getRouteWithNewOrder(routeState.route, order);
       setRoute(route);
@@ -125,7 +126,6 @@ const Order: FC<IProps> = ({ order }) => {
   };
 
   //Анимации
-  const [togglerWidth, setTogglerWidth] = useState(0);
 
   const tabAnimation = useRef(
     new Animated.Value(options.indexOf(activeTab))
@@ -194,80 +194,14 @@ const Order: FC<IProps> = ({ order }) => {
     [tabAnimation]
   );
 
-  const indicatorTranslateX = useMemo(() => {
-    return tabAnimation.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, togglerWidth / 3],
-    });
-  }, [tabAnimation, togglerWidth]);
-
-  const handleAddressesPress = useCallback(() => setActiveTab("Адреса"), []);
-  const handleActionsPress = useCallback(() => setActiveTab("Действия"), []);
-  const handleRoutePress = useCallback(() => setActiveTab("Маршрут"), []);
-
-  const onTogglerLayout = (event: LayoutChangeEvent) => {
-    const { width } = event.nativeEvent.layout;
-    setTogglerWidth(width);
-  };
-
   return (
     <View style={styles.container}>
       <Header title={"Заказ № " + order.id} />
-      <View style={styles.togglerTypeContainer}>
-        <View style={styles.togglerType} onLayout={onTogglerLayout}>
-          <Animated.View
-            style={[
-              styles.indicator,
-              { transform: [{ translateX: indicatorTranslateX }] },
-            ]}
-          />
-          <TouchableOpacity
-            accessible={true}
-            accessibilityLabel="Показать адреса заказа"
-            onPress={handleAddressesPress}
-            style={[styles.togglerOption]}
-          >
-            <Text
-              style={[
-                styles.togglerText,
-                activeTab === "Адреса" && styles.activeTogglerText,
-              ]}
-            >
-              Адреса
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            accessible={true}
-            accessibilityLabel="Показать действия заказа"
-            onPress={handleActionsPress}
-            style={[styles.togglerOption]}
-          >
-            <Text
-              style={[
-                styles.togglerText,
-                activeTab === "Действия" && styles.activeTogglerText,
-              ]}
-            >
-              Действия
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            accessible={true}
-            accessibilityLabel="Показать адреса заказа"
-            onPress={handleRoutePress}
-            style={[styles.togglerOption]}
-          >
-            <Text
-              style={[
-                styles.togglerText,
-                activeTab === "Маршрут" && styles.activeTogglerText,
-              ]}
-            >
-              Маршрут
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <Toggler
+        options={options}
+        activeTab={activeTab}
+        onChange={setActiveTab}
+      />
       <View style={styles.orderContainer}>
         <Animated.View
           style={[
@@ -304,7 +238,7 @@ const Order: FC<IProps> = ({ order }) => {
             },
           ]}
         >
-          <Route route={route.route} />
+          <Route route={route.route} orderId={order.id} />
         </Animated.View>
       </View>
       <View style={styles.footer}>
@@ -367,43 +301,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.backgroundColor,
   },
-  indicator: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    height: "100%",
-    width: "33%",
-    backgroundColor: colors.purple,
-    zIndex: -1,
-  },
-  togglerTypeContainer: {
-    paddingTop: 10,
-    paddingHorizontal: 10,
-  },
-  togglerType: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    position: "relative",
-    width: "100%",
-    borderRadius: 40,
-    backgroundColor: colors.lightGray,
-    overflow: "hidden",
-  },
-  togglerText: {
-    fontSize: fontSizes.medium,
-    fontFamily: fonts.regular,
-    color: colors.black,
-  },
-  togglerOption: {
-    padding: 7,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "33%",
-  },
-  activeTogglerText: {
-    color: colors.white,
-  },
+
   orderContainer: {
     flex: 1,
   },

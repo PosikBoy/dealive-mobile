@@ -1,3 +1,5 @@
+import { colors } from "@/constants/colors";
+
 const metroColors = {
   "Таганско-Краснопресненская": "#8A4298",
   Кольцевая: "#905C4E",
@@ -21,5 +23,5 @@ const metroColors = {
 } as const;
 
 export const getMetroColor = (line: string): string => {
-  return metroColors[line] || "#fff";
+  return metroColors[line] || colors.purple;
 };

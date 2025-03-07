@@ -1,11 +1,15 @@
 import { IAddress, IGeoData, IOrder } from "@/types/order.interface";
 import geodataService from "../geodata/geodata.service";
+import { current } from "@reduxjs/toolkit";
 
-type Route = IPoint[];
+interface IUserLocation {
+  lat: number;
+  lon: number;
+}
+
 class RouteService {
   initialAddresses: IAddress[];
 
-  // Генерирует все возможные способы вставить массив `newAddresses` в `route`, сохраняя их порядок
   generateInsertions = (
     route: IAddress[],
     newAddresses: IAddress[]
@@ -37,24 +41,55 @@ class RouteService {
     return results;
   };
 
-  getRouteWithNewOrder = (route: IAddress[], newOrder: IOrder) => {
+  getRouteWithNewOrder = (
+    route: IAddress[],
+    newOrder: IOrder,
+    currentUserLocation?: IUserLocation
+  ) => {
     if (!route)
       return {
         distance: this.calculateRouteDistance(newOrder.addresses),
         route: newOrder.addresses,
       };
 
-    if (newOrder.statusId == 4) {
+    if (newOrder?.statusId == 4) {
       return {
         distance: this.calculateRouteDistance(route),
         route: route,
       };
     }
+
+    if (currentUserLocation) {
+      route.unshift({
+        id: 0,
+        orderId: 0,
+        address: "Ваше местоположение",
+        floor: "",
+        apartment: "",
+        info: "",
+        geoData: {
+          geoLat: currentUserLocation.lat.toString(),
+          geoLon: currentUserLocation.lon.toString(),
+          qcGeo: 0,
+          address: "Ваше местоположение",
+        },
+      });
+    }
+
     const insertions = this.generateInsertions(route, newOrder.addresses);
-    let bestRoute = insertions[0];
+
+    let filteredInsertions = insertions;
+
+    if (currentUserLocation) {
+      filteredInsertions = insertions.filter(
+        (route) => route[0].address === "Ваше местоположение"
+      );
+    }
+
+    let bestRoute = filteredInsertions[0];
     let minDistance = Infinity;
 
-    for (const option of insertions) {
+    for (const option of filteredInsertions) {
       const totalDistance = this.calculateRouteDistance(option);
 
       if (totalDistance < minDistance) {
@@ -82,21 +117,6 @@ class RouteService {
   };
 }
 
-class IPoint {
-  id: number;
-  orderId: number;
-  geoLat: number;
-  geoLon: number;
-  type: "PICKUP" | "DELIVER";
-
-  constructor(address: IAddress) {
-    this.id = address.id;
-    this.orderId = address.orderId;
-    this.geoLat = +address.geoData.geoLat;
-    this.geoLon = +address.geoData.geoLon;
-    this.type = address.type;
-  }
-}
 const routeService = new RouteService();
 
 export default routeService;

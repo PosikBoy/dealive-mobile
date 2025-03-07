@@ -3,7 +3,7 @@
     "name": "Dealive",
     "slug": "dealive-mobile",
     "scheme": "dealive",
-    "version": "1.1.3",
+    "version": "1.2.0",
     "jsEngine": "hermes",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -28,8 +28,8 @@
         "expo-splash-screen",
         {
           "image": "./src/assets/splash.png",
-          "resizeMode": "cover",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#E5CCFF",
+          "imageWidth": 200
         }
       ]
     ],

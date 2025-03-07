@@ -1,19 +1,14 @@
 import { colors } from "@/constants/colors";
 import { fonts, fontSizes } from "@/constants/styles";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import {
   TouchableOpacity,
   Text,
   View,
   StyleSheet,
   LayoutChangeEvent,
+  Animated,
 } from "react-native";
-import Animated, {
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
 
 interface ITogglerProps {
   options: string[]; // Массив опций
@@ -22,64 +17,65 @@ interface ITogglerProps {
 }
 
 const Toggler: FC<ITogglerProps> = ({ options, activeTab, onChange }) => {
-  const [togglerWidth, setTogglerWidth] = useState(options.indexOf(activeTab));
-  const animation = useSharedValue(0);
+  const [togglerWidth, setTogglerWidth] = useState(0);
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: interpolate(
-            animation.value,
-            [0, options.length],
-            [0, togglerWidth]
-          ),
-        },
-      ],
-    };
-  });
+  const tabAnimation = useRef(
+    new Animated.Value(options.indexOf(activeTab))
+  ).current;
 
-  const handleLayout = (event: LayoutChangeEvent) => {
+  useEffect(() => {
+    Animated.spring(tabAnimation, {
+      toValue: options.indexOf(activeTab),
+      useNativeDriver: true,
+      bounciness: 5,
+      speed: 12,
+    }).start();
+  }, [activeTab, tabAnimation]);
+
+  const onTogglerLayout = (event: LayoutChangeEvent) => {
     const { width } = event.nativeEvent.layout;
     setTogglerWidth(width);
   };
 
+  const handlePress = (tab: string) => {
+    onChange(tab);
+  };
+
+  const indicatorTranslateX = useMemo(() => {
+    return tabAnimation.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, togglerWidth / options.length],
+    });
+  }, [tabAnimation, togglerWidth]);
+
   return (
     <View style={styles.togglerTypeContainer}>
-      <View style={styles.togglerType} onLayout={handleLayout}>
+      <View style={styles.togglerType} onLayout={onTogglerLayout}>
         <Animated.View
           style={[
             styles.indicator,
-            animatedStyle,
+            { transform: [{ translateX: indicatorTranslateX }] },
             { width: togglerWidth / options.length },
           ]}
         />
-        {options.map((option, index) => (
-          <TouchableOpacity
-            key={index}
-            accessible={true}
-            accessibilityLabel={`Показать ${option}`}
-            onPress={() => {
-              if (activeTab !== option) {
-                animation.value = withTiming(index, { duration: 200 });
-                onChange(option);
-              }
-            }}
-            style={[
-              styles.togglerOption,
-              { width: togglerWidth / options.length },
-            ]}
-          >
-            <Text
-              style={[
-                styles.togglerText,
-                activeTab === option && styles.activeTogglerText,
-              ]}
+        {options.map((option, index) => {
+          return (
+            <TouchableOpacity
+              key={option}
+              style={styles.togglerOption}
+              onPress={() => handlePress(option)}
             >
-              {option}
-            </Text>
-          </TouchableOpacity>
-        ))}
+              <Text
+                style={[
+                  styles.togglerText,
+                  option === activeTab && styles.activeTogglerText,
+                ]}
+              >
+                {option}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
     </View>
   );
@@ -95,19 +91,12 @@ const styles = StyleSheet.create({
   togglerType: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     position: "relative",
     width: "100%",
     borderRadius: 40,
-    backgroundColor: "#e0e0e0", // Цвет фона
+    backgroundColor: colors.lightGray,
     overflow: "hidden",
-  },
-  indicator: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    height: "100%",
-    backgroundColor: "#7c4dff", // Цвет индикатора
   },
   togglerText: {
     fontSize: fontSizes.medium,
@@ -118,8 +107,17 @@ const styles = StyleSheet.create({
     padding: 7,
     alignItems: "center",
     justifyContent: "center",
+    width: "33%",
   },
   activeTogglerText: {
-    color: "#fff", // Цвет текста для активной опции
+    color: colors.white,
+  },
+  indicator: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: "100%",
+    backgroundColor: colors.purple,
+    zIndex: -1,
   },
 });

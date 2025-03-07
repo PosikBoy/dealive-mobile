@@ -30,7 +30,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ["persist/PERSIST"], // Игнорируем ошибки сериализации для персистентных данных
+        ignoredActions: ["persist/PERSIST"],
       },
     })
       .concat(ordersApi.middleware)

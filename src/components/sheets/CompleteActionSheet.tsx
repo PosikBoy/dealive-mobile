@@ -10,12 +10,13 @@ import { useCompleteActionMutation } from "@/services/orders/orders.service";
 import MyButton from "@/components/ui/Button/Button";
 
 import { fonts } from "@/constants/styles";
-import { useTypedSelector } from "@/hooks/redux.hooks";
+import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import geodataService from "@/services/geodata/geodata.service";
 import ActionSheet, {
   SheetManager,
   SheetProps,
 } from "react-native-actions-sheet";
+import { removeAddressFromRoute } from "@/store/route/route.slice";
 
 const ACTION_SNIPPETS = {
   [IOrderActionType.GO_TO]: "✅ Выезжаю на адрес",
@@ -60,6 +61,7 @@ export const CompleteActionSheet = React.memo(
     const snippet = ACTION_SNIPPETS[action.actionType];
     const [completeAction, { isLoading }] = useCompleteActionMutation();
     const [error, setError] = useState<string>();
+    const dispatch = useTypedDispatch();
 
     const validateLocation = useCallback(async () => {
       try {
@@ -85,6 +87,10 @@ export const CompleteActionSheet = React.memo(
         }
 
         await completeAction(action.id).unwrap();
+        if (action.actionType == IOrderActionType.ARRIVED_AT) {
+          dispatch(removeAddressFromRoute(address.id));
+        }
+
         SheetManager.hide("complete-action-sheet");
         ToastAndroid.show(
           "Действие подтверждено, спасибо!",

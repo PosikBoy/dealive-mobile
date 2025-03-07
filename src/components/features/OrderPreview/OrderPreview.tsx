@@ -15,9 +15,10 @@ import { IOrder } from "@/types/order.interface";
 
 interface OrderDetailsProps {
   order: IOrder;
+  incomePerHour?: number;
 }
 
-const OrderPreview: FC<OrderDetailsProps> = ({ order }) => {
+const OrderPreview: FC<OrderDetailsProps> = ({ order, incomePerHour }) => {
   const { id, date, parcelType, weight, price, addresses } = order;
   const createdAtString = formatDate(date);
 
@@ -29,7 +30,10 @@ const OrderPreview: FC<OrderDetailsProps> = ({ order }) => {
       <TouchableOpacity activeOpacity={0.8} onPress={navigateToOrder}>
         <View style={styles.innerContainer}>
           <Text style={styles.headerText}>
-            {order.addresses.length + " адреса | № " + id}
+            {order.addresses.length +
+              " адреса | № " +
+              id +
+              (incomePerHour ? " | +" + incomePerHour.toFixed(0) + "₽/ч" : "")}
           </Text>
           <View style={styles.addresses}>
             {addresses.map((address, index) => {

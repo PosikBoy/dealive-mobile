@@ -1,8 +1,15 @@
-import { Slot } from "expo-router";
+import { Stack } from "expo-router";
 import React from "react";
 
 const StackLayout = () => {
-  return <Slot />;
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        animation: "fade_from_bottom",
+      }}
+    />
+  );
 };
 
 export default StackLayout;

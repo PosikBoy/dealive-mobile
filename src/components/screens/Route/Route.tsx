@@ -4,11 +4,11 @@ import React, { useEffect, useState } from "react";
 import { borderRadiuses, fonts, fontSizes } from "@/constants/styles";
 import MyButton from "@/components/ui/Button/Button";
 import yandexMaps from "@/utils/yandexMaps";
-import Address from "../Order/components/Address";
 import { FlatList } from "react-native-gesture-handler";
 import { colors } from "@/constants/colors";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import { useGetActiveOrdersQuery } from "@/services/orders/orders.service";
+import RouteItem from "@/components/shared/RouteItem";
 
 const Route = () => {
   const [sum, setSum] = useState<number>(0);
@@ -55,18 +55,7 @@ const Route = () => {
       <FlatList
         data={routeData.route}
         renderItem={({ item, index }) => (
-          <View style={styles.addressContainer}>
-            <View style={styles.addressIndexContainer}>
-              <Text style={styles.addressIndexText}>{index + 1}</Text>
-            </View>
-            <View style={styles.address}>
-              <Address
-                address={item}
-                index={item.orderId - 1}
-                isTypeShown={true}
-              />
-            </View>
-          </View>
+          <RouteItem address={item} index={index} isTypeShown={true} />
         )}
         contentContainerStyle={{
           gap: 10,
@@ -75,7 +64,6 @@ const Route = () => {
         }}
         keyExtractor={(item) => item.id.toString()}
         style={{
-          backgroundColor: colors.backgroundColor,
           paddingTop: 10,
           paddingHorizontal: 5,
           width: "100%",
@@ -95,11 +83,6 @@ const Route = () => {
           color="purple"
         />
       </View>
-      {/* <MyButton
-        buttonText="Пересчитать маршрут"
-        onPress={reroute}
-        color="red"
-      /> */}
     </View>
   );
 };
@@ -108,7 +91,6 @@ export default Route;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
     flex: 1,
     alignItems: "center",
     width: "100%",
@@ -124,6 +106,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   headerText: {
     fontFamily: fonts.semiBold,
@@ -166,26 +150,5 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontFamily: fonts.medium,
     fontSize: 16,
-  },
-  addressContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  addressIndexContainer: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: colors.purple,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  addressIndexText: {
-    color: colors.white,
-    fontSize: 16,
-    fontFamily: fonts.semiBold,
-  },
-  address: {
-    flex: 1,
   },
 });

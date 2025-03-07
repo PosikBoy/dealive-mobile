@@ -4,14 +4,27 @@ import { IAddress } from "@/types/order.interface";
 import Address from "./Address";
 import { colors } from "@/constants/colors";
 import { fonts } from "@/constants/styles";
+import RouteItem from "@/components/shared/RouteItem";
+import yandexMaps from "@/utils/yandexMaps";
+import MyButton from "@/components/ui/Button/Button";
 
 interface IProps {
   route: IAddress[];
+  orderId: number;
 }
 
 const Route = (props: IProps) => {
-  const { route } = props;
-  console.log(route);
+  const { route, orderId } = props;
+
+  const openRoute = async () => {
+    try {
+      const points = route.map((address) => yandexMaps.getPoint(address));
+
+      yandexMaps.getRoute(points);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (route.length === 0)
     return (
@@ -19,23 +32,17 @@ const Route = (props: IProps) => {
         <Text style={styles.noRouteText}>Маршрут пуст</Text>
       </View>
     );
+
   return (
     <View style={styles.container}>
       <FlatList
         data={route}
         renderItem={({ item, index }) => (
-          <View style={styles.addressContainer}>
-            <View style={styles.addressIndexContainer}>
-              <Text style={styles.addressIndexText}>{index + 1}</Text>
-            </View>
-            <View style={styles.address}>
-              <Address
-                address={item}
-                index={item.orderId - 1}
-                isTypeShown={true}
-              />
-            </View>
-          </View>
+          <RouteItem
+            address={item}
+            index={index}
+            isHighlighted={item.orderId == orderId}
+          />
         )}
         contentContainerStyle={{
           gap: 10,
@@ -47,6 +54,15 @@ const Route = (props: IProps) => {
           paddingTop: 10,
           width: "100%",
         }}
+        ListFooterComponent={
+          <>
+            <MyButton
+              buttonText="Открыть маршрут на карте"
+              onPress={openRoute}
+              color="purple"
+            />
+          </>
+        }
       />
     </View>
   );
