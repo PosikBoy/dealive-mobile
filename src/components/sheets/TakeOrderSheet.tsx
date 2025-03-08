@@ -21,6 +21,11 @@ const TakeOrderSheet = (props: SheetProps<"take-order-sheet">) => {
         justifyContent: "center",
         alignItems: "center",
       }}
+      openAnimationConfig={{
+        stiffness: 1000, // Уменьшаем жесткость
+        damping: 100000, // Увеличиваем затухание
+        mass: 1, // Масса (оставляем по умолчанию)
+      }}
     >
       <View style={styles.container}>
         <View style={styles.textContainer}>

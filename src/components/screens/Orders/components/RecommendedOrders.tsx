@@ -1,16 +1,13 @@
 import {
   ActivityIndicator,
   FlatList,
-  Image,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import React from "react";
 import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
 import { colors } from "@/constants/colors";
-import { icons } from "@/constants/icons";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import { fonts } from "@/constants/styles";
 import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";

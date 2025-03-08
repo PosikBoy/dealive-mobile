@@ -28,7 +28,7 @@ const ACTION_SNIPPETS = {
   [IOrderActionType.COMPLETE_ORDER]: "🎉 Завершить заказ",
 };
 
-const LOCATION_DISTANCE_THRESHOLD = 1; // km
+const LOCATION_DISTANCE_THRESHOLD = 0.5; // km
 
 const PAY_COMMISION_MESSAGE = `После подтверждения:
 1. Диспетчер свяжется с вами в течение 5 минут
@@ -108,7 +108,15 @@ export const CompleteActionSheet = React.memo(
       return null;
     };
     return (
-      <ActionSheet gestureEnabled={true} id={"complete-action-sheet"}>
+      <ActionSheet
+        gestureEnabled={true}
+        id={"complete-action-sheet"}
+        openAnimationConfig={{
+          stiffness: 1000, // Уменьшаем жесткость
+          damping: 100000, // Увеличиваем затухание
+          mass: 1, // Масса (оставляем по умолчанию)
+        }}
+      >
         <View style={styles.sheetContainer}>
           <View style={styles.sheetTextGroup}>
             <Text style={styles.sheetTitle}>Подтверждение выполнения</Text>

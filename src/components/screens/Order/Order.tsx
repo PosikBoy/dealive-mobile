@@ -7,21 +7,12 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  Animated,
-  Image,
-  LayoutChangeEvent,
-  Linking,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Animated, Image, Linking, StyleSheet, Text, View } from "react-native";
 import { colors } from "@/constants/colors";
 import MyButton from "@/components/ui/Button/Button";
 import { useTakeOrderMutation } from "@/services/orders/orders.service";
 import Header from "@/components/shared/Header/Header";
-import { fonts, fontSizes } from "@/constants/styles";
+import { fonts } from "@/constants/styles";
 import Addresses from "./components/Addresses";
 import Actions from "./components/Actions";
 import { SheetManager } from "react-native-actions-sheet";

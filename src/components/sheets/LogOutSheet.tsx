@@ -38,7 +38,14 @@ const LogOutSheet = () => {
   // }, []);
 
   return (
-    <ActionSheet gestureEnabled={true}>
+    <ActionSheet
+      gestureEnabled={true}
+      openAnimationConfig={{
+        stiffness: 1000, // Уменьшаем жесткость
+        damping: 100000, // Увеличиваем затухание
+        mass: 1, // Масса (оставляем по умолчанию)
+      }}
+    >
       <View style={styles.container}>
         <Text style={styles.title}>{STRINGS.TITLE}</Text>
         <Text style={styles.subtitle}>{STRINGS.SUBTITLE}</Text>

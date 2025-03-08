@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from "react-native";
+import { View, FlatList } from "react-native";
 import React from "react";
 import { IOrder } from "@/types/order.interface";
 import { Action } from "./Action";
@@ -9,6 +9,7 @@ type Props = {
 
 const Actions = (props: Props) => {
   const { order } = props;
+
   return (
     <View>
       <FlatList

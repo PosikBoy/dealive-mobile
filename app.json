@@ -12,14 +12,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "ru.dealive.mobile",
-      "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
-    },
-    "web": {
-      "favicon": "./src/assets/favicon.png"
+      "package": "ru.dealive.mobile"
     },
     "plugins": [
       "expo-router",
@@ -29,7 +22,7 @@
         {
           "image": "./src/assets/splash.png",
           "backgroundColor": "#E5CCFF",
-          "imageWidth": 200
+          "imageWidth": 300
         }
       ]
     ],

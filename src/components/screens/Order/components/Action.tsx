@@ -28,6 +28,7 @@ const actionIcons = {
 export const Action = (props: Props) => {
   const { action, disabled } = props;
   const icon = actionIcons[action.actionType];
+
   return (
     <View style={styles.actionContainer}>
       <TouchableOpacity

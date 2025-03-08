@@ -9,10 +9,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persistStore, persistReducer } from "redux-persist";
 import routeSlice from "./route/route.slice";
 
-const persistConfig = {
+const persistRouteConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["route"],
+  whitelist: ["route", "distance"],
 };
 
 const rootReducer = combineReducers({
@@ -22,7 +22,7 @@ const rootReducer = combineReducers({
   auth: authSlice.reducer,
   supportChat: supportChatSlice.reducer,
   location: locationSlice.reducer,
-  route: persistReducer(persistConfig, routeSlice.reducer),
+  route: persistReducer(persistRouteConfig, routeSlice.reducer),
 });
 
 const store = configureStore({

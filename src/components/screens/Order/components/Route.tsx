@@ -1,7 +1,6 @@
 import { View, StyleSheet, FlatList, Text } from "react-native";
 import React from "react";
 import { IAddress } from "@/types/order.interface";
-import Address from "./Address";
 import { colors } from "@/constants/colors";
 import { fonts } from "@/constants/styles";
 import RouteItem from "@/components/shared/RouteItem";
