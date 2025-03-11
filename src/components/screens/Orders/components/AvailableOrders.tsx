@@ -16,7 +16,6 @@ import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/Or
 import { ActionSheetRef } from "react-native-actions-sheet";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
 import { borderRadiuses } from "@/constants/styles";
-import Animated, { FadeInRight } from "react-native-reanimated";
 import { FlashList } from "@shopify/flash-list";
 
 const sortingRuleOptions = [
@@ -123,11 +122,7 @@ const AvailableOrders = () => {
           data={sortedOrders}
           estimatedItemSize={150} // 🔥 ВАЖНО: FlashList требует указанного размера элемента
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <Animated.View entering={FadeInRight.duration(500)}>
-              <OrderPreview order={item} />
-            </Animated.View>
-          )}
+          renderItem={({ item }) => <OrderPreview order={item} />}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
@@ -209,7 +204,7 @@ const styles = StyleSheet.create({
     width: 256,
   },
   separator: {
-    height: 20,
+    height: 5,
   },
   update: {
     position: "absolute",

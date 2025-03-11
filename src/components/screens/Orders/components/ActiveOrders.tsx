@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   separator: {
-    height: 20,
+    height: 5,
     backgroundColor: "transparent",
   },
   update: {

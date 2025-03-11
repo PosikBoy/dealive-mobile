@@ -7,7 +7,6 @@ import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/Or
 import AvailableOrders from "./AvailableOrders";
 import useRecommendedOrders from "@/hooks/recommendation.hook";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
-import Animated, { FadeInRight } from "react-native-reanimated";
 import { FlashList } from "@shopify/flash-list";
 
 const RecommendedOrders = () => {
@@ -54,14 +53,9 @@ const RecommendedOrders = () => {
         estimatedItemSize={150} // 🔥 ВАЖНО: FlashList требует указанного размера элемента
         keyExtractor={(item) => item.order.id.toString()}
         renderItem={({ item }) => (
-          <Animated.View entering={FadeInRight.duration(500)}>
-            <OrderPreview
-              order={item.order}
-              incomePerHour={item.incomePerHour}
-            />
-          </Animated.View>
+          <OrderPreview order={item.order} incomePerHour={item.incomePerHour} />
         )}
-        showsVerticalScrollIndicator={true}
+        showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         contentContainerStyle={styles.flatListStyles}
       />
@@ -106,7 +100,7 @@ const styles = StyleSheet.create({
   },
 
   separator: {
-    height: 20,
+    height: 5,
     backgroundColor: "transparent",
   },
   update: {
