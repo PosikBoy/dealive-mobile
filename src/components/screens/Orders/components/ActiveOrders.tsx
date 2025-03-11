@@ -16,6 +16,7 @@ import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/Or
 import AvailableOrders from "./AvailableOrders";
 import { useGetActiveOrdersQuery } from "@/services/orders/orders.service";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import Animated, { LinearTransition } from "react-native-reanimated";
 
 const ActiveOrders = () => {
   const location = useTypedSelector((state) => state.location);
@@ -60,7 +61,8 @@ const ActiveOrders = () => {
   return (
     <View style={styles.container}>
       <View>
-        <FlatList
+        <Animated.FlatList
+          itemLayoutAnimation={LinearTransition}
           data={data}
           renderItem={({ item }) => <OrderPreview order={item} />}
           keyExtractor={(item) => item.id.toString()}

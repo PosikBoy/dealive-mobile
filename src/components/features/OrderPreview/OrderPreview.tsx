@@ -1,5 +1,5 @@
 import { colors } from "@/constants/colors";
-import { FC } from "react";
+import { FC, memo } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import formatDate from "@/helpers/formatDate";
 import { router } from "expo-router";
@@ -22,14 +22,15 @@ const getOrderHeaderText = (length, id, income) => {
     (income ? " | +" + income.toFixed(0) + "₽/ч" : "")
   );
 };
-
-const OrderPreview: FC<OrderDetailsProps> = ({ order, incomePerHour }) => {
+// Оборачиваем в memo для оптимизации
+const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
   const { id, date, parcelType, weight, price, addresses } = order;
   const createdAtString = formatDate(date);
 
   const navigateToOrder = () => {
     router.push(`/orders/${id}`);
   };
+
   return (
     <Animated.View entering={FadeInLeft.duration(500)} style={styles.container}>
       <TouchableOpacity activeOpacity={0.8} onPress={navigateToOrder}>
@@ -100,8 +101,9 @@ const OrderPreview: FC<OrderDetailsProps> = ({ order, incomePerHour }) => {
       </TouchableOpacity>
     </Animated.View>
   );
-};
+});
 
+// Экспортируем уже обернутый компонент
 export default OrderPreview;
 
 const styles = StyleSheet.create({

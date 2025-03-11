@@ -1,4 +1,4 @@
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import React from "react";
 import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
 import { colors } from "@/constants/colors";
@@ -7,6 +7,8 @@ import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/Or
 import AvailableOrders from "./AvailableOrders";
 import useRecommendedOrders from "@/hooks/recommendation.hook";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import Animated, { FadeInRight } from "react-native-reanimated";
+import { FlashList } from "@shopify/flash-list";
 
 const RecommendedOrders = () => {
   const location = useTypedSelector((state) => state.location);
@@ -38,7 +40,7 @@ const RecommendedOrders = () => {
     return (
       <View style={styles.container}>
         <ThemedText weight="medium" type="mediumText">
-          Похоже, что сейчас мы не можем порекоммендовать вам заказы
+          Похоже, что сейчас мы не можем порекомендовать вам заказы
         </ThemedText>
         <AvailableOrders />
       </View>
@@ -47,21 +49,22 @@ const RecommendedOrders = () => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <FlatList
-          data={recommendedOrders}
-          renderItem={({ item }) => (
+      <FlashList
+        data={recommendedOrders}
+        estimatedItemSize={150} // 🔥 ВАЖНО: FlashList требует указанного размера элемента
+        keyExtractor={(item) => item.order.id.toString()}
+        renderItem={({ item }) => (
+          <Animated.View entering={FadeInRight.duration(500)}>
             <OrderPreview
               order={item.order}
               incomePerHour={item.incomePerHour}
             />
-          )}
-          keyExtractor={(item) => item.order.id.toString()}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          contentContainerStyle={styles.flatListStyles}
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
+          </Animated.View>
+        )}
+        showsVerticalScrollIndicator={true}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        contentContainerStyle={styles.flatListStyles}
+      />
     </View>
   );
 };
@@ -70,9 +73,9 @@ export default RecommendedOrders;
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
-    paddingHorizontal: 5,
+    flex: 1,
     position: "relative",
+    paddingHorizontal: 5,
   },
   flatListStyles: {
     paddingTop: 16,

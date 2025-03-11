@@ -1,13 +1,11 @@
 import {
   ActivityIndicator,
-  FlatList,
   Image,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useGetAvailableOrdersQuery } from "@/services/orders/orders.service";
 import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
 import { colors } from "@/constants/colors";
@@ -17,7 +15,9 @@ import CustomBottomSheetModal from "@/components/shared/CustomBottomSheetModal/C
 import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
 import { ActionSheetRef } from "react-native-actions-sheet";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
-import { borderRadiuses, fontSizes } from "@/constants/styles";
+import { borderRadiuses } from "@/constants/styles";
+import Animated, { FadeInRight } from "react-native-reanimated";
+import { FlashList } from "@shopify/flash-list";
 
 const sortingRuleOptions = [
   "lastDate",
@@ -110,7 +110,7 @@ const AvailableOrders = () => {
 
   return (
     <View style={styles.container}>
-      <View>
+      <View style={{ flex: 1 }}>
         <TouchableOpacity
           onPress={() => sortingRulesModalRef.current.show()}
           style={styles.sortButton}
@@ -119,11 +119,17 @@ const AvailableOrders = () => {
             Сортировка заказов
           </ThemedText>
         </TouchableOpacity>
-        <FlatList
+        <FlashList
           data={sortedOrders}
-          renderItem={({ item }) => <OrderPreview order={item} />}
+          estimatedItemSize={150} // 🔥 ВАЖНО: FlashList требует указанного размера элемента
           keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.flatListStyles}
+          renderItem={({ item }) => (
+            <Animated.View entering={FadeInRight.duration(500)}>
+              <OrderPreview order={item} />
+            </Animated.View>
+          )}
+          showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
       </View>
       <TouchableOpacity style={styles.update} onPress={() => refetch()}>
@@ -166,6 +172,8 @@ export default AvailableOrders;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    position: "relative",
     paddingHorizontal: 5,
   },
   loadingContainer: {
@@ -191,7 +199,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   flatListStyles: {
-    paddingBottom: 60,
+    paddingBottom: 120,
     gap: 20,
   },
   searchOrderContainer: {
@@ -200,10 +208,12 @@ const styles = StyleSheet.create({
     height: 256,
     width: 256,
   },
-
+  separator: {
+    height: 20,
+  },
   update: {
     position: "absolute",
-    bottom: 130,
+    bottom: 50,
     right: 20,
     width: 40,
     height: 40,

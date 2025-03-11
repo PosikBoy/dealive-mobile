@@ -111,7 +111,7 @@ const OrdersScreen = () => {
             {
               opacity: recommendedOpacity,
               transform: [{ translateX: recommendedTranslate }],
-              pointerEvents: activeTab === "Рекоменд." ? "auto" : "none",
+              pointerEvents: activeTab === "Рекомендация" ? "auto" : "none",
             },
           ]}
         >

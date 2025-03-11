@@ -151,7 +151,7 @@ const Settings = () => {
                   resizeMode="contain"
                   style={{ width: 20, height: 20 }}
                 />
-              </View>{" "}
+              </View>
               <ThemedText
                 weight="bold"
                 type="mediumText"
