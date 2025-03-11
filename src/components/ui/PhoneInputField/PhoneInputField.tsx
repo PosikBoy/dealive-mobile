@@ -14,6 +14,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import ThemedText from "../ThemedText/ThemedText";
 
 export interface PhoneInputFieldRef {
   focus: () => void;
@@ -162,7 +163,7 @@ const PhoneInputField: FC<IField> = (props) => {
           </Animated.Text>
         </TouchableWithoutFeedback>
       </Animated.View>
-      {error && <Text style={{ color: colors.red }}>{error?.message}</Text>}
+      {error && <ThemedText color="red">{error?.message}</ThemedText>}
     </View>
   );
 };

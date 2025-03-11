@@ -1,6 +1,6 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { useForm } from "react-hook-form";
 import MyButton from "@/components/ui/Button/Button";
 import ImagePicker from "@/components/ui/ImagePicker/ImagePicker";
@@ -13,7 +13,7 @@ import { colors } from "@/constants/colors";
 import store from "@/store/store";
 import { router } from "expo-router";
 import Header from "@/components/shared/Header/Header";
-import { fonts } from "@/constants/styles";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 interface IProps {
   nextPage: () => void;
@@ -76,7 +76,9 @@ const Register3: FC<IProps> = (props) => {
     <View style={styles.container}>
       <Header title="Регистрация" onPressBack={previousPage} />
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите серию и номер паспорта</Text>
+        <ThemedText type="mediumText" align="left">
+          Введите серию и номер паспорта
+        </ThemedText>
         <View style={styles.inputField}>
           <InputFieldWithHandler
             control={control}
@@ -96,9 +98,9 @@ const Register3: FC<IProps> = (props) => {
           />
         </View>
         {errors?.documentNumber?.message && (
-          <Text style={styles.errorText}>
+          <ThemedText color="red" type="hint" align="left">
             {errors?.documentNumber?.message}
-          </Text>
+          </ThemedText>
         )}
       </View>
 
@@ -111,9 +113,9 @@ const Register3: FC<IProps> = (props) => {
           rules={{ required: "Загрузите селфи с паспортом" }}
         />
         {errors?.selfieWithPassportImage?.message && (
-          <Text style={styles.errorText}>
+          <ThemedText color="red" type="hint" align="left">
             {errors?.selfieWithPassportImage?.message}
-          </Text>
+          </ThemedText>
         )}
       </View>
 
@@ -126,9 +128,9 @@ const Register3: FC<IProps> = (props) => {
           rules={{ required: "Загрузите фото паспорта" }}
         />
         {errors?.passportPhotoImage?.message && (
-          <Text style={styles.errorText}>
+          <ThemedText color="red" type="hint" align="left">
             {errors?.passportPhotoImage?.message}
-          </Text>
+          </ThemedText>
         )}
       </View>
 
@@ -141,7 +143,9 @@ const Register3: FC<IProps> = (props) => {
 
         {error && (
           <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{error}</Text>
+            <ThemedText color="red" type="hint" align="left">
+              {error}
+            </ThemedText>
           </View>
         )}
       </View>
@@ -181,35 +185,19 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
   },
-  headerText: {
-    fontSize: 20,
-    fontFamily: fonts.semiBold,
-  },
-  title: {
-    marginTop: 90,
-    fontFamily: fonts.semiBold,
-    fontSize: 24,
-  },
+
   fieldContainer: {
     height: 80,
     width: "100%",
     marginTop: 10,
   },
-  fieldLabel: {
-    fontFamily: fonts.regular,
-    fontSize: 16,
-  },
+
   inputField: {
     marginTop: 10,
     height: 40,
     width: "100%",
   },
 
-  errorText: {
-    color: "red",
-    fontFamily: fonts.bold,
-    fontSize: 12,
-  },
   buttonContainer: {
     position: "absolute",
     bottom: 20,
@@ -224,12 +212,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  loadingText: {
-    marginTop: 20,
-    fontSize: 16,
-    fontFamily: fonts.regular,
-    color: "#000",
-  },
+
   errorContainer: {
     justifyContent: "center",
     alignItems: "center",

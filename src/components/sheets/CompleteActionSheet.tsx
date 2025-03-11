@@ -1,4 +1,4 @@
-import { StyleSheet, Text, ToastAndroid, View } from "react-native";
+import { StyleSheet, ToastAndroid, View } from "react-native";
 import React, { useCallback, useState } from "react";
 import {
   IAddress,
@@ -17,6 +17,7 @@ import ActionSheet, {
   SheetProps,
 } from "react-native-actions-sheet";
 import { removeAddressFromRoute } from "@/store/route/route.slice";
+import ThemedText from "../ui/ThemedText/ThemedText";
 
 const ACTION_SNIPPETS = {
   [IOrderActionType.GO_TO]: "✅ Выезжаю на адрес",
@@ -103,7 +104,11 @@ export const CompleteActionSheet = React.memo(
 
     const renderAdditionalInfo = () => {
       if (action.actionType === IOrderActionType.PAY_COMMISION) {
-        return <Text style={styles.sheetText}>{PAY_COMMISION_MESSAGE}</Text>;
+        return (
+          <ThemedText type="mediumText" weight="bold">
+            {PAY_COMMISION_MESSAGE}
+          </ThemedText>
+        );
       }
       return null;
     };
@@ -119,12 +124,18 @@ export const CompleteActionSheet = React.memo(
       >
         <View style={styles.sheetContainer}>
           <View style={styles.sheetTextGroup}>
-            <Text style={styles.sheetTitle}>Подтверждение выполнения</Text>
-            <Text style={styles.sheetText}>Пожалуйста, проверьте:</Text>
-            <Text style={styles.sheetText}>{action.description}</Text>
+            <ThemedText type="subtitle" weight="medium">
+              Подтверждение выполнения
+            </ThemedText>
+            <ThemedText type="mediumText">Пожалуйста, проверьте:</ThemedText>
+            <ThemedText type="mediumText">{action.description} </ThemedText>
           </View>
           {renderAdditionalInfo()}
-          {error && <Text style={styles.errorText}>{error}</Text>}
+          {error && (
+            <ThemedText type="hint" color="red">
+              {error}
+            </ThemedText>
+          )}
           <MyButton
             onPress={handleCompleteAction}
             buttonText={snippet}
@@ -149,20 +160,5 @@ const styles = StyleSheet.create({
     width: "100%",
     gap: 5,
     alignItems: "center",
-  },
-  sheetTitle: {
-    fontFamily: fonts.medium,
-    fontSize: 20,
-  },
-  sheetText: {
-    fontFamily: fonts.regular,
-    fontSize: 16,
-    textAlign: "center",
-  },
-  errorText: {
-    fontFamily: fonts.medium,
-    fontSize: 12,
-    color: colors.red,
-    textAlign: "center",
   },
 });

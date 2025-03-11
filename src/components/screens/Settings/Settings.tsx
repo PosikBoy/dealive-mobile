@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   StyleSheet,
   Image,
   TouchableOpacity,
@@ -9,12 +8,11 @@ import {
 } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
-import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 
-import { fonts } from "@/constants/styles";
-
 import { SheetManager } from "react-native-actions-sheet";
+import Header from "@/components/shared/Header/Header";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 const Settings = () => {
   const logoutButtonHandler = async () => {
@@ -23,9 +21,7 @@ const Settings = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Настройки</Text>
-      </View>
+      <Header title="Настройки" isButtonBackShown={false} />
       <View style={styles.content}>
         <Link href="/settings/profile">
           <View style={styles.linkContainer}>
@@ -37,7 +33,14 @@ const Settings = () => {
                   style={{ width: 20, height: 20 }}
                 />
               </View>
-              <Text style={styles.linkText}>Мой профиль</Text>
+              <ThemedText
+                weight="bold"
+                type="mediumText"
+                style={{ flex: 1 }}
+                align="left"
+              >
+                Мой профиль
+              </ThemedText>
             </View>
             <View style={styles.iconContainer}>
               <Image
@@ -58,7 +61,14 @@ const Settings = () => {
                   style={{ width: 20, height: 20 }}
                 />
               </View>
-              <Text style={styles.linkText}>Выполненные заказы</Text>
+              <ThemedText
+                weight="bold"
+                type="mediumText"
+                style={{ flex: 1 }}
+                align="left"
+              >
+                Выполненные заказы
+              </ThemedText>
             </View>
 
             <View style={styles.iconContainer}>
@@ -70,50 +80,6 @@ const Settings = () => {
             </View>
           </View>
         </Link>
-        {/* <Link href="/settings/notifications">
-          <View style={styles.linkContainer}>
-            <View style={styles.linkTextContainer}>
-              <View style={styles.iconContainer}>
-                <Image
-                  source={icons.notifications}
-                  resizeMode="contain"
-                  style={{ width: 20, height: 20 }}
-                />
-              </View>
-              <Text style={styles.linkText}>Уведомления</Text>
-            </View>
-
-            <View style={styles.iconContainer}>
-              <Image
-                style={styles.arrowIcon}
-                source={icons.arrow}
-                resizeMode="contain"
-              />
-            </View>
-          </View>
-        </Link> */}
-        {/* <Link href="/settings/money">
-          <View style={styles.linkContainer}>
-            <View style={styles.linkTextContainer}>
-              <View style={styles.iconContainer}>
-                <Image
-                  source={moneyIcon}
-                  resizeMode="contain"
-                  style={{ width: 20, height: 20 }}
-                />
-              </View>
-              <Text style={styles.linkText}>Мой доход</Text>
-            </View>
-
-            <View style={styles.iconContainer}>
-              <Image
-                style={styles.arrowIcon}
-                source={arrowIcon}
-                resizeMode="contain"
-              />
-            </View>
-          </View>
-        </Link> */}
         <Pressable
           onPress={() => Linking.openURL("https://dealive.ru/courier/faq")}
         >
@@ -126,7 +92,14 @@ const Settings = () => {
                   style={{ width: 20, height: 20 }}
                 />
               </View>
-              <Text style={styles.linkText}>FAQ</Text>
+              <ThemedText
+                weight="bold"
+                type="mediumText"
+                style={{ flex: 1 }}
+                align="left"
+              >
+                FAQ
+              </ThemedText>
             </View>
 
             <View style={styles.iconContainer}>
@@ -138,28 +111,7 @@ const Settings = () => {
             </View>
           </View>
         </Pressable>
-        {/* <Link href="/settings/invite">
-          <View style={styles.linkContainer}>
-            <View style={styles.linkTextContainer}>
-              <View style={styles.iconContainer}>
-                <Image
-                  source={icons.invite}
-                  resizeMode="contain"
-                  style={{ width: 20, height: 20 }}
-                />
-              </View>
-              <Text style={styles.linkText}>Пригласить друга</Text>
-            </View>
 
-            <View style={styles.iconContainer}>
-              <Image
-                style={styles.arrowIcon}
-                source={icons.arrow}
-                resizeMode="contain"
-              />
-            </View>
-          </View>
-        </Link> */}
         <Link href="/settings/about">
           <View style={styles.linkContainer}>
             <View style={styles.linkTextContainer}>
@@ -170,7 +122,14 @@ const Settings = () => {
                   style={{ width: 20, height: 20 }}
                 />
               </View>
-              <Text style={styles.linkText}>О приложении</Text>
+              <ThemedText
+                weight="bold"
+                type="mediumText"
+                style={{ flex: 1 }}
+                align="left"
+              >
+                О приложении
+              </ThemedText>
             </View>
             <View style={styles.iconContainer}>
               <Image
@@ -192,8 +151,15 @@ const Settings = () => {
                   resizeMode="contain"
                   style={{ width: 20, height: 20 }}
                 />
-              </View>
-              <Text style={styles.linkText}>Техподдержка в Telegram</Text>
+              </View>{" "}
+              <ThemedText
+                weight="bold"
+                type="mediumText"
+                style={{ flex: 1 }}
+                align="left"
+              >
+                Техподдержка в Telegram
+              </ThemedText>
             </View>
 
             <View style={styles.iconContainer}>
@@ -209,7 +175,9 @@ const Settings = () => {
           onPress={logoutButtonHandler}
           style={styles.logoutButton}
         >
-          <Text style={styles.logoutText}> Выйти из профиля</Text>
+          <ThemedText weight="bold" type="mediumText" color="red" align="left">
+            Выйти из профиля
+          </ThemedText>
         </TouchableOpacity>
       </View>
     </View>
@@ -231,10 +199,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  headerText: {
-    fontFamily: fonts.semiBold,
-    fontSize: 16,
-  },
   content: {
     width: "100%",
     height: "100%",
@@ -243,16 +207,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     height: 56,
     width: "100%",
-
     justifyContent: "center",
     flexDirection: "row",
     alignItems: "center",
   },
-  linkText: {
-    fontFamily: fonts.semiBold,
-    fontSize: 16,
-    flex: 1,
-  },
+
   iconContainer: {
     alignItems: "flex-end",
     width: 20,
@@ -274,10 +233,5 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     justifyContent: "center",
-  },
-  logoutText: {
-    fontFamily: fonts.semiBold,
-    fontSize: 16,
-    color: colors.red,
   },
 });

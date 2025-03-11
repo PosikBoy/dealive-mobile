@@ -1,12 +1,12 @@
 import { IOrder } from "@/types/order.interface";
 import React from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import Address from "./Address";
 import { colors } from "@/constants/colors";
-import { fonts } from "@/constants/styles";
 import formatDate from "@/helpers/formatDate";
 import MyButton from "@/components/ui/Button/Button";
 import yandexMaps from "@/utils/yandexMaps";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 type Props = {
   order: IOrder;
@@ -49,22 +49,14 @@ const Addresses = (props: Props) => {
         ListFooterComponent={
           <>
             <View style={styles.creationDateContainer}>
-              <Text style={styles.creationDateText}>
-                {"Создан " + formatDate(order.date)}
-              </Text>
+              <ThemedText type="mediumText" weight="medium">
+                {`Создан ${formatDate(order.date)}`}
+              </ThemedText>
             </View>
             {order.statusId == 5 && (
-              <Text style={styles.orderCompleted}>
-                Заказ завершен, спасибо!
-              </Text>
+              <ThemedText type="title">Заказ завершен, спасибо!</ThemedText>
             )}
-            {/* {order.statusId == 4 && (
-              <MyButton
-                buttonText="Отменить заказ"
-                onPress={() => {}}
-                color="red"
-              />
-            )} */}
+
             <MyButton
               buttonText="Открыть маршрут на карте"
               onPress={openRoute}
@@ -90,18 +82,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     paddingVertical: 20,
     borderRadius: 20,
-  },
-  creationDateText: {
-    fontSize: 14,
-    color: colors.black,
-    fontFamily: fonts.semiBold,
-    textAlign: "center",
-  },
-  orderCompleted: {
-    fontSize: 24,
-    color: colors.black,
-    fontFamily: fonts.bold,
-    textAlign: "center",
-    marginTop: 30,
   },
 });

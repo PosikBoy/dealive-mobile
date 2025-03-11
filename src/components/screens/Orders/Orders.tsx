@@ -3,11 +3,11 @@ import { StyleSheet, Text, View, Animated } from "react-native";
 import { colors } from "@/constants/colors";
 import AvailableOrders from "./components/AvailableOrders";
 import ActiveOrders from "./components/ActiveOrders";
-import { fonts, fontSizes } from "@/constants/styles";
 import Toggler from "@/components/ui/HorizontalToggler/HorizontalToggler";
 import RecommendedOrders from "./components/RecommendedOrders";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
-const options = ["Доступные", "Рекоменд.", "Активные"];
+const options = ["Доступные", "Рекомендация", "Активные"];
 
 const OrdersScreen = () => {
   const [activeTab, setActiveTab] = useState<string>("Доступные");
@@ -82,7 +82,9 @@ const OrdersScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.ordersHeader}>
-        <Text style={styles.ordersHeaderText}>Заказы</Text>
+        <ThemedText weight="bold" type="heading">
+          Заказы
+        </ThemedText>
         <Toggler
           options={options}
           activeTab={activeTab}
@@ -140,14 +142,8 @@ const styles = StyleSheet.create({
   ordersHeader: {
     paddingVertical: 20,
     backgroundColor: colors.white,
-    gap: 10,
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
-  },
-  ordersHeaderText: {
-    fontSize: fontSizes.medium,
-    fontFamily: fonts.semiBold,
-    textAlign: "center",
   },
   ordersContainer: {
     flex: 1,

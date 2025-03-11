@@ -1,9 +1,10 @@
 import { IOrder } from "@/types/order.interface";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import ActionSheet, { SheetProps } from "react-native-actions-sheet";
 import MyButton from "../ui/Button/Button";
-import { fonts, fontSizes, gaps, paddings } from "@/constants/styles";
+import { gaps, paddings } from "@/constants/styles";
 import { colors } from "@/constants/colors";
+import ThemedText from "../ui/ThemedText/ThemedText";
 
 export interface ITakeOrderSheet {
   order: IOrder;
@@ -29,32 +30,38 @@ const TakeOrderSheet = (props: SheetProps<"take-order-sheet">) => {
     >
       <View style={styles.container}>
         <View style={styles.textContainer}>
-          <Text style={styles.title}>Информация о заказе</Text>
-          <View style={styles.propertiesGroup}>
+          <ThemedText type="subtitle" weight="bold">
+            Информация о заказе
+          </ThemedText>
+          <View>
             <View style={styles.property}>
-              <Text style={styles.propertyText}>Вес посылки</Text>
-              <Text style={styles.propertyText}>{order?.weight}</Text>
+              <ThemedText type="mediumText">Вес посылки</ThemedText>
+              <ThemedText type="mediumText">{order?.weight}</ThemedText>
             </View>
             <View style={styles.property}>
-              <Text style={styles.propertyText}>Цена заказа</Text>
-              <Text style={styles.propertyText}>{order?.price} ₽</Text>
+              <ThemedText type="mediumText">Цена заказа</ThemedText>
+              <ThemedText type="mediumText">{order?.price}</ThemedText>
             </View>
             <View style={styles.property}>
-              <Text style={styles.propertyText}>Количество действий</Text>
-              <Text style={styles.propertyText}>{order?.actions?.length}</Text>
+              <ThemedText type="mediumText">Количество действий</ThemedText>
+              <ThemedText type="mediumText">
+                {order?.actions?.length}
+              </ThemedText>
             </View>
             <View style={styles.property}>
-              <Text style={styles.propertyText}>Посылка</Text>
-              <Text style={styles.propertyText}>{order?.parcelType}</Text>
+              <ThemedText type="mediumText">Посылка</ThemedText>
+              <ThemedText type="mediumText">{order?.parcelType}</ThemedText>
             </View>
           </View>
         </View>
         {error ? (
-          <Text style={styles.bottomText}>{error}</Text>
+          <ThemedText type="hint" color="red">
+            {error}
+          </ThemedText>
         ) : (
-          <Text style={styles.bottomText}>
+          <ThemedText type="mediumText" weight="bold">
             Ознакомьтесь с деталями заказа перед тем, как взять его!
-          </Text>
+          </ThemedText>
         )}
         <MyButton onPress={takeOrder} buttonText="Взять заказ" />
       </View>
@@ -74,17 +81,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: gaps.small,
   },
-  title: {
-    fontFamily: fonts.medium,
-    fontSize: 20,
-    textAlign: "center",
-  },
-  subtitle: {
-    fontFamily: fonts.regular,
-    fontSize: 16,
-    textAlign: "center",
-  },
-  propertiesGroup: {},
   property: {
     width: "100%",
     flexDirection: "row",
@@ -92,14 +88,5 @@ const styles = StyleSheet.create({
     borderColor: colors.inputGray,
     borderBottomWidth: 1,
     paddingVertical: paddings.small,
-  },
-  propertyText: {
-    fontSize: fontSizes.medium,
-    fontFamily: fonts.regular,
-  },
-  bottomText: {
-    fontSize: fontSizes.medium,
-    fontFamily: fonts.medium,
-    textAlign: "center",
   },
 });

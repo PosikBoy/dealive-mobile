@@ -14,7 +14,6 @@
     "@react-native-community/hooks": "^3.0.0",
     "@react-native-community/netinfo": "^11.4.1",
     "@reduxjs/toolkit": "^2.2.7",
-    "@shopify/flash-list": "^1.7.3",
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
     "expo": "^52.0.14",

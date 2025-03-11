@@ -1,22 +1,27 @@
 import { colors } from "@/constants/colors";
 import { FC } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import formatDate from "@/helpers/formatDate";
 import { router } from "expo-router";
-import {
-  borderRadiuses,
-  fonts,
-  fontSizes,
-  gaps,
-  paddings,
-} from "@/constants/styles";
+import { borderRadiuses, gaps, paddings } from "@/constants/styles";
 import { getMetroColor } from "@/utils/getColorMetro";
 import { IOrder } from "@/types/order.interface";
+import Animated, { FadeInLeft } from "react-native-reanimated";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 interface OrderDetailsProps {
   order: IOrder;
   incomePerHour?: number;
 }
+
+const getOrderHeaderText = (length, id, income) => {
+  return (
+    length +
+    " адреса | № " +
+    id +
+    (income ? " | +" + income.toFixed(0) + "₽/ч" : "")
+  );
+};
 
 const OrderPreview: FC<OrderDetailsProps> = ({ order, incomePerHour }) => {
   const { id, date, parcelType, weight, price, addresses } = order;
@@ -26,24 +31,35 @@ const OrderPreview: FC<OrderDetailsProps> = ({ order, incomePerHour }) => {
     router.push(`/orders/${id}`);
   };
   return (
-    <View style={styles.container}>
+    <Animated.View entering={FadeInLeft.duration(500)} style={styles.container}>
       <TouchableOpacity activeOpacity={0.8} onPress={navigateToOrder}>
         <View style={styles.innerContainer}>
-          <Text style={styles.headerText}>
-            {order.addresses.length +
-              " адреса | № " +
-              id +
-              (incomePerHour ? " | +" + incomePerHour.toFixed(0) + "₽/ч" : "")}
-          </Text>
+          <ThemedText weight="bold" type="heading">
+            {getOrderHeaderText(order.addresses.length, id, incomePerHour)}
+          </ThemedText>
           <View style={styles.addresses}>
             {addresses.map((address, index) => {
+              const metroString = address.geoData?.metro?.[0]?.name
+                ? address.geoData?.metro?.[0]?.name + " |"
+                : "";
+              const distance = address.distance?.toFixed(1) || "";
+
               return (
                 <View key={address.id} style={styles.address}>
                   <View style={styles.addressIndexContainer}>
-                    <Text style={styles.addressIndexText}>{index + 1}</Text>
+                    <ThemedText weight="medium" type="title">
+                      {index + 1}
+                    </ThemedText>
                   </View>
                   <View style={styles.addressTextContainer}>
-                    <Text style={styles.addressText}>{address.address}</Text>
+                    <ThemedText
+                      type="mediumText"
+                      weight="medium"
+                      style={{ textAlign: "left" }}
+                    >
+                      {address.address}
+                    </ThemedText>
+
                     <View
                       style={[
                         styles.locationInfo,
@@ -54,14 +70,7 @@ const OrderPreview: FC<OrderDetailsProps> = ({ order, incomePerHour }) => {
                         },
                       ]}
                     >
-                      {address.geoData?.metro && (
-                        <Text style={styles.locationInfoText}>
-                          {address.geoData?.metro[0]?.name + " |"}
-                        </Text>
-                      )}
-                      <Text style={styles.locationInfoText}>
-                        {address.distance?.toFixed(1) + " км от вас"}
-                      </Text>
+                      <ThemedText color="white">{`${metroString} ${distance} км от вас`}</ThemedText>
                     </View>
                   </View>
                 </View>
@@ -70,22 +79,26 @@ const OrderPreview: FC<OrderDetailsProps> = ({ order, incomePerHour }) => {
           </View>
           <View style={styles.footer}>
             <View style={styles.info}>
-              <Text style={styles.parcelTypeText}>
-                {parcelType + " · " + weight}
-              </Text>
+              <ThemedText weight="semiBold" type="mediumText">
+                {`${parcelType} · ${weight}`}
+              </ThemedText>
               <View style={styles.price}>
-                <Text style={styles.priceText}>{price + "₽"}</Text>
+                <ThemedText
+                  color="white"
+                  type="mediumText"
+                  weight="medium"
+                >{`${price} ₽`}</ThemedText>
               </View>
             </View>
             <View style={styles.meta}>
-              <Text style={styles.createdAtText}>
-                {"Заказ создан " + createdAtString}
-              </Text>
+              <ThemedText color="gray" type="hint">
+                {`Заказ создан ${createdAtString}`}
+              </ThemedText>
             </View>
           </View>
         </View>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -103,54 +116,28 @@ const styles = StyleSheet.create({
     gap: gaps.medium,
     justifyContent: "center",
   },
-  headerText: {
-    color: colors.black,
-    fontFamily: fonts.semiBold,
-    fontSize: 18,
-    textAlign: "center",
-  },
+
   addresses: {
-    gap: 8,
+    gap: 5,
   },
   address: {
     flexDirection: "row",
-    gap: 20,
+    gap: 10,
   },
   addressTextContainer: {
     flex: 1,
     gap: 5,
   },
-  addressText: {
-    color: colors.black,
-    fontFamily: fonts.medium,
-    fontSize: fontSizes.medium,
-    flex: 1,
-  },
   addressIndexContainer: {
-    width: "auto",
-    justifyContent: "center",
-  },
-  addressIndexText: {
-    width: "auto",
-    color: colors.black,
-    fontFamily: fonts.medium,
-    fontSize: fontSizes.extraBig,
+    width: 30,
   },
   locationInfo: {
-    flexGrow: 0,
-    flexWrap: "wrap",
-    flexDirection: "row",
     alignSelf: "flex-start",
     gap: 5,
     backgroundColor: colors.purple,
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 20,
-  },
-  locationInfoText: {
-    color: colors.white,
-    fontFamily: fonts.regular,
-    fontSize: 14,
   },
   footer: {
     width: "100%",
@@ -160,30 +147,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  parcelTypeText: {
-    color: colors.black,
-    fontFamily: fonts.semiBold,
-    fontSize: fontSizes.medium,
-  },
   price: {
     backgroundColor: colors.purple,
     borderRadius: 20,
-    padding: 5,
+    padding: 2,
     paddingHorizontal: 10,
-  },
-  priceText: {
-    color: colors.white,
-    fontFamily: fonts.medium,
-    fontSize: fontSizes.medium,
   },
   meta: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-  },
-  createdAtText: {
-    color: colors.gray,
-    fontFamily: fonts.regular,
-    fontSize: 14,
   },
 });

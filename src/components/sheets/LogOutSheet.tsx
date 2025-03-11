@@ -6,8 +6,8 @@ import { fonts, fontSizes } from "@/constants/styles";
 import { useTypedDispatch } from "@/hooks/redux.hooks";
 import { logOut } from "@/store/auth/auth.actions";
 import { router } from "expo-router";
+import ThemedText from "../ui/ThemedText/ThemedText";
 
-// Выносим текстовые константы
 const STRINGS = {
   TITLE: "Вы уверены, что хотите выйти из аккаунта?",
   SUBTITLE: "Вы сможете зайти снова, используя номер телефона и пароль",
@@ -27,15 +27,10 @@ const LogOutSheet = () => {
       SheetManager.hide("log-out-sheet");
     } catch (error) {
       console.error("Logout failed:", error);
-      // Здесь можно добавить отображение ошибки пользователю
     } finally {
       setIsLoading(false);
     }
   }, [dispatch]);
-
-  // const handleCancel = useCallback(() => {
-  //   SheetManager.hide("log-out-sheet");
-  // }, []);
 
   return (
     <ActionSheet
@@ -47,8 +42,10 @@ const LogOutSheet = () => {
       }}
     >
       <View style={styles.container}>
-        <Text style={styles.title}>{STRINGS.TITLE}</Text>
-        <Text style={styles.subtitle}>{STRINGS.SUBTITLE}</Text>
+        <ThemedText type="subtitle" weight="bold">
+          {STRINGS.TITLE}
+        </ThemedText>
+        <ThemedText type="mediumText">{STRINGS.SUBTITLE}</ThemedText>
 
         <MyButton
           onPress={handleLogOut}
@@ -69,17 +66,5 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     gap: 10,
-  },
-  title: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSizes.big,
-    textAlign: "center",
-    lineHeight: 28,
-  },
-  subtitle: {
-    fontFamily: fonts.regular,
-    fontSize: 16,
-    textAlign: "center",
-    lineHeight: 22,
   },
 });

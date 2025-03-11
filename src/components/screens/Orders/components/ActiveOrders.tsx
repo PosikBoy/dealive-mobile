@@ -12,10 +12,10 @@ import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 import { useTypedSelector } from "@/hooks/redux.hooks";
-import { fonts } from "@/constants/styles";
 import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
 import AvailableOrders from "./AvailableOrders";
 import { useGetActiveOrdersQuery } from "@/services/orders/orders.service";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 const ActiveOrders = () => {
   const location = useTypedSelector((state) => state.location);
@@ -32,11 +32,11 @@ const ActiveOrders = () => {
         <View style={styles.loadingTextContainer}>
           <View style={styles.loadingModal}>
             <ActivityIndicator size={"large"} color={colors.purple} />
-            <Text style={styles.text}>
+            <ThemedText type="big" weight="medium">
               {location.isLocationLoading
                 ? "Пытаемся определить ваше местоположение"
                 : "Запрашиваем заказы с сервера"}
-            </Text>
+            </ThemedText>
           </View>
         </View>
       </View>
@@ -46,10 +46,12 @@ const ActiveOrders = () => {
   if (data.length === 0) {
     return (
       <View style={styles.container}>
-        <Text style={styles.noOrdersText}>
-          Похоже, что у вас нет активных заказов на данный момент. Вы можете
-          выбрать подходящий из списка ниже!
-        </Text>
+        <View style={styles.noOrdersTextContainer}>
+          <ThemedText weight="medium">
+            Похоже, что у вас нет активных заказов на данный момент. Вы можете
+            выбрать подходящий из списка ниже!
+          </ThemedText>
+        </View>
         <AvailableOrders />
       </View>
     );
@@ -111,12 +113,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  noOrdersText: {
+  noOrdersTextContainer: {
     margin: 20,
-    textAlign: "center",
-    color: colors.black,
-    fontFamily: fonts.medium,
-    fontSize: 16,
   },
   loadingModal: {
     transform: [{ translateY: -60 }],
@@ -125,12 +123,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
-  },
-  text: {
-    color: colors.black,
-    fontSize: 18,
-    textAlign: "center",
-    fontFamily: fonts.medium,
   },
   separator: {
     height: 20,

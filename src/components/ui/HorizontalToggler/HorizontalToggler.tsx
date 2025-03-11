@@ -9,6 +9,7 @@ import {
   LayoutChangeEvent,
   Animated,
 } from "react-native";
+import ThemedText from "../ThemedText/ThemedText";
 
 interface ITogglerProps {
   options: string[]; // Массив опций
@@ -65,14 +66,12 @@ const Toggler: FC<ITogglerProps> = ({ options, activeTab, onChange }) => {
               style={styles.togglerOption}
               onPress={() => handlePress(option)}
             >
-              <Text
-                style={[
-                  styles.togglerText,
-                  option === activeTab && styles.activeTogglerText,
-                ]}
+              <ThemedText
+                type="default"
+                style={[option === activeTab && styles.activeTogglerText]}
               >
                 {option}
-              </Text>
+              </ThemedText>
             </TouchableOpacity>
           );
         })}
@@ -98,11 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGray,
     overflow: "hidden",
   },
-  togglerText: {
-    fontSize: fontSizes.medium,
-    fontFamily: fonts.regular,
-    color: colors.black,
-  },
+
   togglerOption: {
     padding: 7,
     alignItems: "center",

@@ -3,7 +3,6 @@ import {
   Image,
   Linking,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import MyButton from "@/components/ui/Button/Button";
@@ -12,11 +11,11 @@ import { colors } from "@/constants/colors";
 import { router } from "expo-router";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import { icons } from "@/constants/icons";
-import { fonts } from "@/constants/styles";
 import {
   fetchAuthStatus,
   fetchIsApprovedStatus,
 } from "@/store/auth/auth.actions";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 const waitForApproval = () => {
   const { isApproved, isLoading, error } = useTypedSelector(
@@ -39,7 +38,9 @@ const waitForApproval = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Вы успешно зарегистрировались</Text>
+        <ThemedText type="title" weight="bold">
+          Вы успешно зарегистрировались
+        </ThemedText>
       </View>
       <View style={styles.imageContainer}>
         <Image
@@ -49,22 +50,24 @@ const waitForApproval = () => {
         />
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.title}>Поздравляем!</Text>
-        <Text style={styles.subtitle}>
+        <ThemedText type="title" weight="bold">
+          Поздравляем!
+        </ThemedText>
+        <ThemedText type="subtitle">
           Вы успешно зарегистрировались. Обработка ваших персональных данных
           займет около двух часов. Спасибо за ожидание.
-        </Text>
+        </ThemedText>
       </View>
 
-      {error && <Text style={styles.subtitle}>{error}</Text>}
+      {error && <ThemedText color="red">{error}</ThemedText>}
       {}
       {isLoading ? (
         <ActivityIndicator size="large" color={colors.purple} />
       ) : (
         !isApproved && (
-          <Text style={styles.approvalText}>
+          <ThemedText type="subtitle">
             Мы все еще проверяем ваш аккаунт{" "}
-          </Text>
+          </ThemedText>
         )
       )}
 
@@ -99,24 +102,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
-  title: {
-    width: "100%",
-    textAlign: "center",
-    fontSize: 24,
-    fontFamily: fonts.semiBold,
-  },
-  subtitle: {
-    width: "100%",
-    fontSize: 16,
-    textAlign: "center",
-    fontFamily: fonts.regular,
-  },
-  approvalText: {
-    width: "100%",
-    fontSize: 18,
-    textAlign: "center",
-    fontFamily: fonts.bold,
-  },
+
   imageContainer: {
     marginTop: 50,
     height: 200,

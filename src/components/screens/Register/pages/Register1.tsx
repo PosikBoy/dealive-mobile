@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import React, { FC, useState } from "react";
 import InputField from "@/components/ui/InputField/InputField";
 import { useForm } from "react-hook-form";
@@ -9,6 +9,7 @@ import { useTypedSelector, useTypedDispatch } from "@/hooks/redux.hooks";
 import { addFirstPageData } from "@/store/signupForm/signupForm.slice";
 import authService from "@/services/auth/auth.service";
 import Header from "@/components/shared/Header/Header";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 interface IProps {
   nextPage: () => void;
@@ -77,7 +78,9 @@ const Register1: FC<IProps> = (props) => {
     <View style={styles.container}>
       <Header title="Регистрация" onPressBack={previousPage} />
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите номер телефона</Text>
+        <ThemedText type="mediumText" align="left">
+          Введите номер телефона
+        </ThemedText>
         <View style={[styles.inputField, styles.phoneNumberField]}>
           <PhoneInputField
             control={control}
@@ -86,11 +89,16 @@ const Register1: FC<IProps> = (props) => {
           />
         </View>
         {errors?.phoneNumber?.message && (
-          <Text style={styles.errorText}>{errors?.phoneNumber?.message}</Text>
+          <ThemedText type="hint" color="red" align="left">
+            {errors?.phoneNumber?.message}
+          </ThemedText>
         )}
       </View>
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите почту</Text>
+        <ThemedText type="mediumText" align="left">
+          Введите почту
+        </ThemedText>
+
         <View style={styles.inputField}>
           <InputField
             control={control}
@@ -107,12 +115,17 @@ const Register1: FC<IProps> = (props) => {
           />
         </View>
         {errors?.email?.message && (
-          <Text style={styles.errorText}>{errors?.email?.message}</Text>
+          <ThemedText type="hint" color="red" align="left">
+            {errors?.email?.message}
+          </ThemedText>
         )}
       </View>
 
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите пароль</Text>
+        <ThemedText type="mediumText" align="left">
+          Введите пароль
+        </ThemedText>
+
         <View style={styles.inputField}>
           <InputField
             control={control}
@@ -140,11 +153,16 @@ const Register1: FC<IProps> = (props) => {
           />
         </View>
         {errors?.password?.message && (
-          <Text style={styles.errorText}>{errors?.password?.message}</Text>
+          <ThemedText type="hint" color="red" align="left">
+            {errors?.password?.message}
+          </ThemedText>
         )}
       </View>
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите пароль повторно</Text>
+        <ThemedText type="mediumText" align="left">
+          Введите пароль повторно
+        </ThemedText>
+
         <View style={styles.inputField}>
           <InputField
             control={control}
@@ -157,9 +175,9 @@ const Register1: FC<IProps> = (props) => {
           />
         </View>
         {errors?.repeatPassword?.message && (
-          <Text style={styles.errorText}>
+          <ThemedText type="hint" color="red" align="left">
             {errors?.repeatPassword?.message}
-          </Text>
+          </ThemedText>
         )}
       </View>
 
@@ -171,7 +189,9 @@ const Register1: FC<IProps> = (props) => {
         )}
         {existingError && (
           <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{existingError}</Text>
+            <ThemedText type="hint" color="red">
+              {existingError}
+            </ThemedText>
           </View>
         )}
       </View>
@@ -211,24 +231,13 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
   },
-  headerText: {
-    fontSize: 20,
-    fontFamily: "Montserrat-SemiBold",
-  },
-  title: {
-    marginTop: 90,
-    fontFamily: "Montserrat-SemiBold",
-    fontSize: 24,
-  },
+
   fieldContainer: {
     height: 80,
     width: "100%",
     marginTop: 10,
   },
-  fieldLabel: {
-    fontFamily: "Montserrat-Regular",
-    fontSize: 16,
-  },
+
   inputField: {
     marginTop: 10,
     height: 40,
@@ -236,37 +245,6 @@ const styles = StyleSheet.create({
   },
   phoneNumberField: {
     position: "relative",
-  },
-  sendCodeButtonContainer: {
-    position: "absolute",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    right: 5,
-  },
-  sendCodeButton: {
-    paddingVertical: 5,
-    paddingHorizontal: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    width: 120,
-    borderRadius: 20,
-    backgroundColor: colors.purple,
-  },
-  sendCodeButtonText: {
-    color: "white",
-    fontFamily: "Montserrat-Bold",
-    fontSize: 14,
-  },
-  codeSentText: {
-    color: "green",
-    fontFamily: "Montserrat-Bold",
-    fontSize: 12,
-  },
-  errorText: {
-    color: "red",
-    fontFamily: "Montserrat-Bold",
-    fontSize: 12,
   },
   repeat: {},
   buttonContainer: {
@@ -278,12 +256,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  loadingText: {
-    marginTop: 20,
-    fontSize: 16,
-    fontFamily: "Montserrat-Regular",
-    color: "#000",
-  },
+
   errorContainer: {
     justifyContent: "center",
     alignItems: "center",

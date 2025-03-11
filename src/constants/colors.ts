@@ -14,4 +14,20 @@ export const colors = {
   lightRed: "#D95A5A",
 
   backgroundColor: "rgba(0, 0, 0, 0.05)",
+  dark: {
+    gray: "#D1D1D1",
+    lightGray: "#D9D9D9",
+    red: "#EE2400",
+    green: "#D0FF84",
+    white: "#000000",
+    black: "#ffffff",
+  },
+  light: {
+    gray: "#808080",
+    lightGray: "#D9D9D9",
+    red: "#EE2400",
+    green: "#D0FF84",
+    black: "#000000",
+    white: "#ffffff",
+  },
 };

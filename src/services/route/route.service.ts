@@ -46,12 +46,14 @@ class RouteService {
     newOrder: IOrder,
     currentUserLocation?: IUserLocation
   ) => {
+    //Если нет маршрута, то считаем просто расстояние между точками, так как не надо встраивать в маршрут
     if (!route)
       return {
         distance: this.calculateRouteDistance(newOrder.addresses),
         route: newOrder.addresses,
       };
 
+    //если статсу заказа - в доставке, то возвращаем просто расстояние внутри маршрута, так как заказ там уже есть
     if (newOrder?.statusId == 4) {
       return {
         distance: this.calculateRouteDistance(route),

@@ -16,8 +16,10 @@ interface IRecommendedOrders {
 
 const useRecommendedOrders = () => {
   const { data: orders = [], isLoading } = useGetAvailableOrdersQuery();
+
   const routeState = useTypedSelector((state) => state.route);
   const location = useTypedSelector((state) => state.location);
+
   const [recommendedOrders, setRecommendedOrders] = useState<
     IRecommendedOrders[]
   >([]);
@@ -41,6 +43,7 @@ const useRecommendedOrders = () => {
       const timeHours = safeDelta / AVERAGE_SPEED_KMH;
       const safeTime = Math.max(timeHours, 0.167);
       const incomePerHour = Number((order.price / safeTime).toFixed(2));
+
       return {
         order,
         weight: order.price / safeDelta,
@@ -54,7 +57,7 @@ const useRecommendedOrders = () => {
       (a, b) => b.incomePerHour - a.incomePerHour
     );
     setRecommendedOrders(sorted);
-  }, [orders, routeState, location, isLoading]);
+  }, [orders, routeState, location]);
 
   return {
     recommendedOrders,

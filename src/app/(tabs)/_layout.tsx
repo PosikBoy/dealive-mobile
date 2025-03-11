@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 import React from "react";
 import { Tabs, useSegments } from "expo-router";
 import { colors } from "@/constants/colors";
@@ -28,12 +28,6 @@ const CustomTabButton = (props) => (
 );
 
 const TabsLayout = () => {
-  const segments = useSegments();
-
-  const hideTabs =
-    segments.includes("[id]") ||
-    segments.some((segment) => segment === "completed");
-
   return (
     <Tabs
       initialRouteName="index"
@@ -48,7 +42,6 @@ const TabsLayout = () => {
           shadowOpacity: 2,
           height: 60,
           alignItems: "center",
-          display: hideTabs ? "none" : "flex",
         },
         animation: "shift",
       }}

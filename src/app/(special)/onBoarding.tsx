@@ -14,6 +14,7 @@ import MyButton from "@/components/ui/Button/Button";
 import { router } from "expo-router";
 import { icons } from "@/constants/icons";
 import { colors } from "@/constants/colors";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 const data = [
   {
@@ -68,7 +69,7 @@ const onBoarding = () => {
         onPress={navigateToLogin}
         underlayColor="#fff"
       >
-        <Text style={styles.skipText}>Пропустить</Text>
+        <ThemedText>Пропустить</ThemedText>
       </TouchableHighlight>
       <View style={styles.slider}>
         <FlatList
@@ -142,9 +143,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginRight: 20,
-  },
-  skipText: {
-    fontFamily: "Montserrat-SemiBold",
-    fontSize: 14,
   },
 });

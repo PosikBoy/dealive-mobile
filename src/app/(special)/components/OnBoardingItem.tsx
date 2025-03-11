@@ -1,13 +1,7 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { Image, StyleSheet, useWindowDimensions, View } from "react-native";
 import React from "react";
 import { colors } from "@/constants/colors";
-import { fonts } from "@/constants/styles";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 const OnBoardingItem = ({ title, subtitle, iconUri }) => {
   const { width } = useWindowDimensions();
@@ -18,8 +12,12 @@ const OnBoardingItem = ({ title, subtitle, iconUri }) => {
         style={[styles.image, { width, resizeMode: "contain" }]}
       />
       <View style={styles.textContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subtitle}>{subtitle}</Text>
+        <ThemedText type="title" weight="bold" style={{ textAlign: "left" }}>
+          {title}
+        </ThemedText>
+        <ThemedText type="mediumText" style={{ textAlign: "left" }}>
+          {subtitle}
+        </ThemedText>
       </View>
     </View>
   );
@@ -40,15 +38,5 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     gap: 15,
-  },
-  title: {
-    fontFamily: fonts.semiBold,
-    color: colors.black,
-    fontSize: 24,
-  },
-  subtitle: {
-    fontFamily: fonts.regular,
-    color: colors.black,
-    fontSize: 14,
   },
 });

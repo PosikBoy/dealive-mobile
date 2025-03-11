@@ -1,11 +1,10 @@
-import { View, Text, StyleSheet, Image, ToastAndroid } from "react-native";
+import { View, StyleSheet, Image, ToastAndroid } from "react-native";
 import React from "react";
 import NetInfo from "@react-native-community/netinfo";
-import { colors } from "@/constants/colors";
 import MyButton from "@/components/ui/Button/Button";
 import { router } from "expo-router";
 import { icons } from "@/constants/icons";
-import { fonts } from "@/constants/styles";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 const index = () => {
   const handleCheckConnection = () => {
@@ -21,10 +20,12 @@ const index = () => {
   return (
     <View style={styles.container}>
       <Image source={icons.noConnection} style={styles.image} />
-      <Text style={styles.title}>Нет подключения к интернету</Text>
-      <Text style={styles.subtitle}>
+      <ThemedText type="title" weight="bold">
+        Нет подключения к интернету
+      </ThemedText>
+      <ThemedText type="subtitle" weight="bold" color="gray">
         Проверьте соединение и попробуйте еще раз
-      </Text>
+      </ThemedText>
       <View style={styles.buttonContainer}>
         <MyButton
           buttonText="Проверить соединение"
@@ -47,21 +48,6 @@ const styles = StyleSheet.create({
   image: {
     width: 200,
     height: 200,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "semibold",
-    color: colors.black,
-    fontFamily: fonts.bold,
-    textAlign: "center",
-    marginTop: 20,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: colors.gray,
-    textAlign: "center",
-    fontFamily: fonts.regular,
-    marginTop: 10,
   },
   buttonContainer: {
     width: "100%",

@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { View, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 
-import { borderRadiuses, fonts, fontSizes } from "@/constants/styles";
+import { borderRadiuses } from "@/constants/styles";
 import MyButton from "@/components/ui/Button/Button";
 import yandexMaps from "@/utils/yandexMaps";
 import { FlatList } from "react-native-gesture-handler";
@@ -9,11 +9,15 @@ import { colors } from "@/constants/colors";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import { useGetActiveOrdersQuery } from "@/services/orders/orders.service";
 import RouteItem from "@/components/shared/RouteItem";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 const Route = () => {
   const [sum, setSum] = useState<number>(0);
   const routeData = useTypedSelector((state) => state.route);
   const { data } = useGetActiveOrdersQuery();
+  const footerText = `Расстояние ${routeData.distance.toFixed(
+    2
+  )} км | Доход ${sum.toFixed(0)}₽`;
   useEffect(() => {
     const sum = data.reduce((sum, order) => {
       return sum + order.price;
@@ -37,12 +41,14 @@ const Route = () => {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.ordersHeaderText}>Маршрут</Text>
+          <ThemedText weight="bold" type="heading">
+            Маршрут
+          </ThemedText>
         </View>
-        <Text style={styles.noOrdersText}>
+        <ThemedText type="mediumText" weight="medium" style={{ margin: 20 }}>
           Похоже, что у вас нет активных заказов на данный момент. Вы можете
           выбрать подходящий на вкладке "Заказы"
-        </Text>
+        </ThemedText>
       </View>
     );
   }
@@ -50,7 +56,9 @@ const Route = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.ordersHeaderText}>Маршрут</Text>
+        <ThemedText weight="bold" type="heading">
+          Маршрут
+        </ThemedText>
       </View>
       <FlatList
         data={routeData.route}
@@ -70,13 +78,9 @@ const Route = () => {
         }}
       />
       <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          {"Расстояние " +
-            routeData.distance.toFixed(2) +
-            " км | Доход " +
-            sum.toFixed(0) +
-            " ₽"}
-        </Text>
+        <ThemedText weight="medium" type="mediumText">
+          {footerText}
+        </ThemedText>
         <MyButton
           buttonText="Открыть маршрут на карте"
           onPress={openRoute}
@@ -95,11 +99,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
-  ordersHeaderText: {
-    fontSize: fontSizes.medium,
-    fontFamily: fonts.semiBold,
-    textAlign: "center",
-  },
+
   header: {
     paddingVertical: 20,
     width: "100%",
@@ -109,10 +109,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
-  headerText: {
-    fontFamily: fonts.semiBold,
-    fontSize: 16,
-  },
+
   footer: {
     alignItems: "center",
     position: "absolute",
@@ -122,10 +119,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: borderRadiuses.medium,
     borderTopRightRadius: borderRadiuses.medium,
   },
-  footerText: {
-    fontFamily: fonts.semiBold,
-    fontSize: 16,
-  },
+
   loadingTextContainer: {
     position: "absolute",
     top: 0,
@@ -143,12 +137,5 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
-  },
-  noOrdersText: {
-    margin: 20,
-    textAlign: "center",
-    color: colors.black,
-    fontFamily: fonts.medium,
-    fontSize: 16,
   },
 });

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React, { FC } from "react";
 import InputField from "@/components/ui/InputField/InputField";
 import { useForm } from "react-hook-form";
@@ -8,7 +8,7 @@ import DataInputField from "@/components/ui/DataInputField/DataInputField";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import { addSecondPageData } from "@/store/signupForm/signupForm.slice";
 import Header from "@/components/shared/Header/Header";
-import { fonts } from "@/constants/styles";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 interface IProps {
   nextPage: () => void;
@@ -74,7 +74,10 @@ const Register2: FC<IProps> = (props) => {
     <View style={styles.container}>
       <Header title="Регистрация" onPressBack={previousPage} />
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите фамилию</Text>
+        <ThemedText type="mediumText" align="left">
+          Введите фамилию
+        </ThemedText>
+
         <View style={[styles.inputField, styles.phoneNumberField]}>
           <InputField
             control={control}
@@ -84,11 +87,15 @@ const Register2: FC<IProps> = (props) => {
           />
         </View>
         {errors?.secondName?.message && (
-          <Text style={styles.errorText}>{errors?.secondName?.message}</Text>
+          <ThemedText color="red" type="hint" align="left">
+            {errors?.secondName?.message}
+          </ThemedText>
         )}
       </View>
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите имя</Text>
+        <ThemedText type="mediumText" align="left">
+          Введите имя
+        </ThemedText>
         <View style={styles.inputField}>
           <InputField
             control={control}
@@ -98,11 +105,15 @@ const Register2: FC<IProps> = (props) => {
           />
         </View>
         {errors?.name?.message && (
-          <Text style={styles.errorText}>{errors?.name?.message}</Text>
+          <ThemedText color="red" type="hint" align="left">
+            {errors?.name?.message}
+          </ThemedText>
         )}
       </View>
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите отчество</Text>
+        <ThemedText type="mediumText" align="left">
+          Введите отчество
+        </ThemedText>
         <View style={styles.inputField}>
           <InputField
             control={control}
@@ -112,11 +123,15 @@ const Register2: FC<IProps> = (props) => {
           />
         </View>
         {errors?.lastName?.message && (
-          <Text style={styles.errorText}>{errors?.lastName?.message}</Text>
+          <ThemedText color="red" type="hint" align="left">
+            {errors?.lastName?.message}
+          </ThemedText>
         )}
       </View>
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите дату рождения</Text>
+        <ThemedText type="mediumText" align="left">
+          Введите дату рождения
+        </ThemedText>
         <View style={styles.inputField}>
           <DataInputField
             control={control}
@@ -125,7 +140,9 @@ const Register2: FC<IProps> = (props) => {
           />
         </View>
         {errors?.birthDate?.message && (
-          <Text style={styles.errorText}>{errors?.birthDate?.message}</Text>
+          <ThemedText color="red" type="hint" align="left">
+            {errors?.birthDate?.message}
+          </ThemedText>
         )}
       </View>
       <View style={styles.buttonContainer}>
@@ -159,23 +176,10 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
   },
-  headerText: {
-    fontSize: 20,
-    fontFamily: fonts.semiBold,
-  },
-  title: {
-    marginTop: 90,
-    fontFamily: fonts.semiBold,
-    fontSize: 24,
-  },
   fieldContainer: {
     height: 80,
     width: "100%",
     marginTop: 10,
-  },
-  fieldLabel: {
-    fontFamily: fonts.regular,
-    fontSize: 16,
   },
   inputField: {
     marginTop: 10,
@@ -185,37 +189,6 @@ const styles = StyleSheet.create({
   phoneNumberField: {
     position: "relative",
   },
-  sendCodeButtonContainer: {
-    position: "absolute",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    right: 5,
-  },
-  sendCodeButton: {
-    paddingVertical: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    width: 100,
-    borderRadius: 20,
-    backgroundColor: colors.purple,
-  },
-  sendCodeButtonText: {
-    color: "white",
-    fontFamily: fonts.bold,
-    fontSize: 14,
-  },
-  codeSentText: {
-    color: "green",
-    fontFamily: fonts.bold,
-    fontSize: 12,
-  },
-  errorText: {
-    color: "red",
-    fontFamily: fonts.bold,
-    fontSize: 12,
-  },
-  repeat: {},
   buttonContainer: {
     position: "absolute",
     bottom: 20,

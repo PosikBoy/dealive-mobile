@@ -1,11 +1,11 @@
-import { View, StyleSheet, FlatList, Text } from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 import React from "react";
 import { IAddress } from "@/types/order.interface";
 import { colors } from "@/constants/colors";
-import { fonts } from "@/constants/styles";
 import RouteItem from "@/components/shared/RouteItem";
 import yandexMaps from "@/utils/yandexMaps";
 import MyButton from "@/components/ui/Button/Button";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 interface IProps {
   route: IAddress[];
@@ -28,7 +28,9 @@ const Route = (props: IProps) => {
   if (route.length === 0)
     return (
       <View style={styles.container}>
-        <Text style={styles.noRouteText}>Маршрут пуст</Text>
+        <ThemedText weight="medium" type="mediumText">
+          Маршрут пуст
+        </ThemedText>
       </View>
     );
 
@@ -54,13 +56,11 @@ const Route = (props: IProps) => {
           width: "100%",
         }}
         ListFooterComponent={
-          <>
-            <MyButton
-              buttonText="Открыть маршрут на карте"
-              onPress={openRoute}
-              color="purple"
-            />
-          </>
+          <MyButton
+            buttonText="Открыть маршрут на карте"
+            onPress={openRoute}
+            color="purple"
+          />
         }
       />
     </View>
@@ -84,20 +84,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  addressIndexText: {
-    color: colors.white,
-    fontSize: 16,
-    fontFamily: fonts.semiBold,
-  },
   address: {
     flex: 1,
-  },
-  noRouteText: {
-    marginTop: 20,
-    textAlign: "center",
-    color: colors.black,
-    fontSize: 16,
-    fontFamily: fonts.semiBold,
   },
 });
 

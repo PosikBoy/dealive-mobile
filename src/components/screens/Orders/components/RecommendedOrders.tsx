@@ -1,18 +1,12 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import React from "react";
 import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
 import { colors } from "@/constants/colors";
 import { useTypedSelector } from "@/hooks/redux.hooks";
-import { fonts } from "@/constants/styles";
 import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
 import AvailableOrders from "./AvailableOrders";
 import useRecommendedOrders from "@/hooks/recommendation.hook";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 const RecommendedOrders = () => {
   const location = useTypedSelector((state) => state.location);
@@ -29,11 +23,11 @@ const RecommendedOrders = () => {
         <View style={styles.loadingTextContainer}>
           <View style={styles.loadingModal}>
             <ActivityIndicator size={"large"} color={colors.purple} />
-            <Text style={styles.text}>
+            <ThemedText type="big" weight="medium">
               {location.isLocationLoading
                 ? "Пытаемся определить ваше местоположение"
                 : "Запрашиваем заказы с сервера"}
-            </Text>
+            </ThemedText>
           </View>
         </View>
       </View>
@@ -43,9 +37,9 @@ const RecommendedOrders = () => {
   if (recommendedOrders.length === 0) {
     return (
       <View style={styles.container}>
-        <Text style={styles.noOrdersText}>
+        <ThemedText weight="medium" type="mediumText">
           Похоже, что сейчас мы не можем порекоммендовать вам заказы
-        </Text>
+        </ThemedText>
         <AvailableOrders />
       </View>
     );
@@ -98,13 +92,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  noOrdersText: {
-    margin: 20,
-    textAlign: "center",
-    color: colors.black,
-    fontFamily: fonts.medium,
-    fontSize: 16,
-  },
+
   loadingModal: {
     transform: [{ translateY: -60 }],
     backgroundColor: colors.white,
@@ -113,12 +101,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  text: {
-    color: colors.black,
-    fontSize: 18,
-    textAlign: "center",
-    fontFamily: fonts.medium,
-  },
+
   separator: {
     height: 20,
     backgroundColor: "transparent",

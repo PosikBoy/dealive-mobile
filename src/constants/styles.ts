@@ -4,6 +4,7 @@ export const fonts = {
   bold: "CeraRoundPro-Bold",
   semiBold: "CeraRoundPro-SemiBold",
 };
+
 export const gaps = {
   small: 12,
   medium: 16,

@@ -7,7 +7,7 @@ import {
 
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
-import { fonts } from "@/constants/styles";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 type Props = {
   action: IOrderAction;
@@ -39,7 +39,13 @@ export const Action = (props: Props) => {
         <View style={styles.iconContainer}>
           <Image source={icon} style={{ width: 20, height: 20 }} />
         </View>
-        <Text style={styles.actionText}>{action.description}</Text>
+        <ThemedText
+          type="mediumText"
+          weight="medium"
+          style={{ textAlign: "left" }}
+        >
+          {action.description}
+        </ThemedText>
       </TouchableOpacity>
     </View>
   );
@@ -56,12 +62,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     flexDirection: "row",
     alignItems: "center",
-  },
-  actionText: {
-    flex: 1,
-    fontSize: 16,
-    fontFamily: fonts.medium,
-    color: colors.black,
   },
   actionCompleted: {
     backgroundColor: colors.green,

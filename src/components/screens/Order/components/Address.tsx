@@ -4,17 +4,16 @@ import {
   Image,
   Linking,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
-import { fonts, fontSizes } from "@/constants/styles";
 import Hyperlink from "react-native-hyperlink";
 import { getMetroColor } from "@/utils/getColorMetro";
 import copyToClipboard from "@/utils/copyToClipBoard";
 import yandexMaps from "@/utils/yandexMaps";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 interface IAddressProps {
   address: IAddress;
@@ -26,6 +25,7 @@ interface IAddressProps {
 
 const Address: FC<IAddressProps> = (props) => {
   const { address, index, price, isActive, isTypeShown = false } = props;
+
   const handleOpenURL = async () => {
     try {
       yandexMaps.getRouteToPoint(
@@ -43,11 +43,16 @@ const Address: FC<IAddressProps> = (props) => {
     );
   };
 
+  const metroString = address.geoData?.metro?.[0]?.name
+    ? address.geoData?.metro?.[0]?.name + " |"
+    : "";
+  const distance = address.distance?.toFixed(1) || "";
+
   return (
     <View style={[styles.address, isActive && styles.active]}>
       {isActive && (
         <View style={styles.activeAddressTooltip}>
-          <Text>Активный адрес</Text>
+          <ThemedText>Активный адрес</ThemedText>
         </View>
       )}
       <TouchableOpacity
@@ -57,8 +62,14 @@ const Address: FC<IAddressProps> = (props) => {
         }}
       >
         <View style={styles.addressTextContainer}>
-          <Text style={styles.addressIndex}>{index + 1}</Text>
-          <Text style={styles.addressText}>{address.address}</Text>
+          <ThemedText type="title">{index + 1}</ThemedText>
+          <ThemedText
+            type="mediumText"
+            weight="bold"
+            style={{ textAlign: "left" }}
+          >
+            {address.address}
+          </ThemedText>
         </View>
       </TouchableOpacity>
       {address.phoneNumber && (
@@ -69,10 +80,12 @@ const Address: FC<IAddressProps> = (props) => {
             copyToClipboard(address.phoneNumber);
           }}
         >
-          <Text style={styles.phoneNumberLabel}>Номер телефона </Text>
-          <Text style={styles.phoneNumberInfo}>
-            {address.phoneNumber + "  " + address?.phoneName}
-          </Text>
+          <ThemedText type="hint" color="gray" align="left">
+            Номер телефона
+          </ThemedText>
+          <ThemedText type="mediumText" weight="bold" align="left">
+            {`${address.phoneNumber} ${address?.phoneName}`}
+          </ThemedText>
         </TouchableOpacity>
       )}
       <View
@@ -83,20 +96,17 @@ const Address: FC<IAddressProps> = (props) => {
           },
         ]}
       >
-        {address.geoData?.metro && (
-          <Text style={styles.locationInfoText}>
-            {address.geoData?.metro[0]?.name + " |"}
-          </Text>
-        )}
-        <Text style={styles.locationInfoText}>
-          {address?.distance.toFixed(1) + " км от вас"}
-        </Text>
+        <ThemedText color="white">{`${metroString} ${distance} км от вас`}</ThemedText>
       </View>
       {address.info && (
         <View>
-          <Text style={styles.infoLabel}>Дополнительно</Text>
+          <ThemedText type="hint" align="left">
+            Дополнительно
+          </ThemedText>
           <Hyperlink onPress={(url) => Linking.openURL(url)}>
-            <Text style={styles.info}>{address.info}</Text>
+            <ThemedText weight="medium" align="left">
+              {address.info}
+            </ThemedText>
           </Hyperlink>
         </View>
       )}
@@ -104,23 +114,25 @@ const Address: FC<IAddressProps> = (props) => {
       {index == 0 && (
         <View style={styles.priceContainer}>
           <Image source={icons.money} style={styles.priceIcon} />
-          <Text style={styles.priceText}>{"Получить " + price + "₽"}</Text>
+          <ThemedText type="mediumText" weight="medium">
+            {`Получить ${price} ₽`}
+          </ThemedText>
         </View>
       )}
       {address.floor && (
         <View style={styles.floorContainer}>
           <Image source={icons.building} style={styles.floorIcon} />
-          <Text style={styles.floorText}>
-            {address.floor + " этаж · " + address.apartment + " кв."}
-          </Text>
+          <ThemedText type="mediumText" weight="medium">
+            {`${address.floor} этаж ·  ${address.apartment} кв.`}
+          </ThemedText>
         </View>
       )}
       {address.type && isTypeShown && (
         <View style={styles.typeContainer}>
           <Image source={icons.settings} style={styles.floorIcon} />
-          <Text style={styles.floorText}>
+          <ThemedText type="mediumText" weight="medium">
             {address.type == "DELIVER" ? "Отдать заказ" : "Забрать заказ"}
-          </Text>
+          </ThemedText>
         </View>
       )}
     </View>
@@ -165,41 +177,11 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  addressText: {
-    flex: 1,
-    color: colors.black,
-    fontFamily: fonts.semiBold,
-    fontSize: 16,
-  },
-  addressIndex: {
-    color: colors.black,
-    fontFamily: fonts.medium,
-    fontSize: fontSizes.extraBig,
-  },
-  infoLabel: {
-    fontSize: 12,
-    color: colors.inputGray,
-    fontFamily: fonts.semiBold,
-  },
   phoneNumber: {
     backgroundColor: colors.lightPurple,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    fontSize: 12,
     borderRadius: 20,
-  },
-  phoneNumberLabel: {
-    color: colors.gray,
-    fontFamily: fonts.regular,
-  },
-  phoneNumberInfo: {
-    color: colors.black,
-    fontFamily: fonts.semiBold,
-  },
-  info: {
-    fontSize: 14,
-    color: colors.black,
-    fontFamily: fonts.semiBold,
   },
   priceContainer: {
     flexDirection: "row",
@@ -209,22 +191,13 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  priceText: {
-    fontSize: 14,
-    color: colors.black,
-    fontFamily: fonts.semiBold,
-  },
 
   floorContainer: {
     flexDirection: "row",
     gap: 5,
     alignItems: "center",
   },
-  floorText: {
-    fontSize: 14,
-    color: colors.black,
-    fontFamily: fonts.semiBold,
-  },
+
   floorIcon: {
     width: 20,
     height: 20,
@@ -233,25 +206,16 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   locationInfo: {
-    flexGrow: 0,
-    flexDirection: "row",
     alignSelf: "flex-start",
-    width: "auto",
     gap: 5,
     backgroundColor: colors.purple,
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingVertical: 4,
     borderRadius: 20,
-  },
-  locationInfoText: {
-    color: colors.white,
-    fontFamily: fonts.regular,
-    fontSize: 14,
   },
   typeContainer: {
     flexDirection: "row",
     gap: 5,
-
     position: "absolute",
     top: 0,
     left: 0,

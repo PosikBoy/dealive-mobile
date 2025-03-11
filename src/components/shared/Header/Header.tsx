@@ -4,23 +4,36 @@ import { router } from "expo-router";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 import { fonts } from "@/constants/styles";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 type Props = {
   title: string;
   onPressBack?: () => void;
+  isButtonBackShown?: boolean;
 };
 
 const onPressBackDefault = () => {
   router.back();
 };
 
-const Header: FC<Props> = ({ title, onPressBack = onPressBackDefault }) => {
+const Header: FC<Props> = ({
+  title,
+  onPressBack = onPressBackDefault,
+  isButtonBackShown = true,
+}) => {
   return (
     <View style={styles.header}>
-      <TouchableOpacity style={styles.backButton} onPress={onPressBack}>
-        <Image source={icons.arrow} style={{ width: "100%", height: "100%" }} />
-      </TouchableOpacity>
-      <Text style={styles.headerText}>{title}</Text>
+      {isButtonBackShown && (
+        <TouchableOpacity style={styles.backButton} onPress={onPressBack}>
+          <Image
+            source={icons.arrow}
+            style={{ width: "100%", height: "100%" }}
+          />
+        </TouchableOpacity>
+      )}
+      <ThemedText type="mediumText" weight="bold">
+        {title}
+      </ThemedText>
     </View>
   );
 };
@@ -44,9 +57,5 @@ const styles = StyleSheet.create({
     left: 0,
     width: 40,
     height: 40,
-  },
-  headerText: {
-    fontSize: 16,
-    fontFamily: fonts.semiBold,
   },
 });

@@ -13,12 +13,27 @@ import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 import { useTypedSelector } from "@/hooks/redux.hooks";
-import { borderRadiuses, fonts, fontSizes } from "@/constants/styles";
 import CustomBottomSheetModal from "@/components/shared/CustomBottomSheetModal/CustomBottomSheetModal";
 import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
 import { ActionSheetRef } from "react-native-actions-sheet";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import { borderRadiuses, fontSizes } from "@/constants/styles";
 
-type SortingRulesTypes = "lastDate" | "priceASC" | "priceDESC" | "distance";
+const sortingRuleOptions = [
+  "lastDate",
+  "priceASC",
+  "priceDESC",
+  "distance",
+] as const;
+
+const sortingRulesOptionsText = {
+  lastDate: "По дате (сначала новые)",
+  priceASC: "По цене (от дешевых к дорогим)",
+  priceDESC: "По цене (от дорогих к дешевым)",
+  distance: "По расстоянию (ближайший)",
+};
+
+type SortingRulesTypes = (typeof sortingRuleOptions)[number];
 
 const AvailableOrders = () => {
   const location = useTypedSelector((state) => state.location);
@@ -64,7 +79,7 @@ const AvailableOrders = () => {
         </View>
         <View style={styles.loadingTextContainer}>
           <View style={styles.loadingModal}>
-            <Text style={styles.text}>{location.error}</Text>
+            <ThemedText type="big">{location.error}</ThemedText>
           </View>
         </View>
       </View>
@@ -82,11 +97,11 @@ const AvailableOrders = () => {
         <View style={styles.loadingTextContainer}>
           <View style={styles.loadingModal}>
             <ActivityIndicator size={"large"} color={colors.purple} />
-            <Text style={styles.text}>
+            <ThemedText type="big" weight="bold">
               {location.isLocationLoading
                 ? "Пытаемся определить ваше местоположение"
                 : "Запрашиваем заказы с сервера"}
-            </Text>
+            </ThemedText>
           </View>
         </View>
       </View>
@@ -100,14 +115,15 @@ const AvailableOrders = () => {
           onPress={() => sortingRulesModalRef.current.show()}
           style={styles.sortButton}
         >
-          <Text style={styles.sortButtonText}> Сортировка заказов</Text>
+          <ThemedText weight="medium" type="mediumText">
+            Сортировка заказов
+          </ThemedText>
         </TouchableOpacity>
         <FlatList
           data={sortedOrders}
           renderItem={({ item }) => <OrderPreview order={item} />}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.flatListStyles}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
       </View>
       <TouchableOpacity style={styles.update} onPress={() => refetch()}>
@@ -122,45 +138,24 @@ const AvailableOrders = () => {
       </TouchableOpacity>
       <CustomBottomSheetModal ref={sortingRulesModalRef}>
         <>
-          <Text style={styles.modalHeaderText}>Как отсортировать?</Text>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={() => {
-              handleSortingRulePress("distance");
-            }}
-          >
-            <Text style={styles.modalButtonText}>
-              По адресу (ближайший первый)
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={() => {
-              handleSortingRulePress("lastDate");
-            }}
-          >
-            <Text style={styles.modalButtonText}> По дате (сначала новые)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={() => {
-              handleSortingRulePress("priceASC");
-            }}
-          >
-            <Text style={styles.modalButtonText}>
-              По цене (от дешевых к дорогим)
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.modalButton}
-            onPress={() => {
-              handleSortingRulePress("priceDESC");
-            }}
-          >
-            <Text style={styles.modalButtonText}>
-              По цене (от дорогих к дешевым)
-            </Text>
-          </TouchableOpacity>
+          <ThemedText weight="semiBold" type="mediumText">
+            Как отсортировать?
+          </ThemedText>
+          {sortingRuleOptions.map((item) => {
+            return (
+              <TouchableOpacity
+                style={styles.modalButton}
+                key={item}
+                onPress={() => {
+                  handleSortingRulePress(item);
+                }}
+              >
+                <ThemedText weight="medium" type="mediumText">
+                  {sortingRulesOptionsText[item]}
+                </ThemedText>
+              </TouchableOpacity>
+            );
+          })}
         </>
       </CustomBottomSheetModal>
     </View>
@@ -171,7 +166,6 @@ export default AvailableOrders;
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
     paddingHorizontal: 5,
   },
   loadingContainer: {
@@ -196,14 +190,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  text: {
-    color: colors.black,
-    fontSize: 18,
-    textAlign: "center",
-    fontFamily: fonts.medium,
-  },
   flatListStyles: {
-    paddingBottom: 126,
+    paddingBottom: 60,
+    gap: 20,
   },
   searchOrderContainer: {
     marginHorizontal: "auto",
@@ -211,10 +200,7 @@ const styles = StyleSheet.create({
     height: 256,
     width: 256,
   },
-  separator: {
-    height: 20, // Отступ между элементами
-    backgroundColor: "transparent",
-  },
+
   update: {
     position: "absolute",
     bottom: 130,
@@ -228,31 +214,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   sortButton: {
-    padding: 5,
-    alignSelf: "flex-start",
-  },
-  sortButtonText: {
-    fontSize: fontSizes.medium,
-    fontFamily: fonts.medium,
-    color: colors.black,
     backgroundColor: colors.white,
     borderRadius: borderRadiuses.big,
     padding: 10,
-  },
-  modalHeaderText: {
-    fontSize: fontSizes.big,
-    fontFamily: fonts.semiBold,
-    textAlign: "center",
+    marginVertical: 5,
   },
   modalButton: {
     paddingHorizontal: 10,
-  },
-  modalButtonText: {
     padding: 15,
-    fontSize: fontSizes.medium,
-    fontFamily: fonts.medium,
-    borderBottomColor: colors.gray,
     borderBottomWidth: 1,
     textAlign: "center",
+    borderColor: colors.gray,
   },
 });

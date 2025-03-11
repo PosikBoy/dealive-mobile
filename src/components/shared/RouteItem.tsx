@@ -1,19 +1,11 @@
 import { FC } from "react";
 import { IAddress } from "@/types/order.interface";
-import {
-  Image,
-  Linking,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
-import { fonts, fontSizes } from "@/constants/styles";
 import { getMetroColor } from "@/utils/getColorMetro";
-import copyToClipboard from "@/utils/copyToClipBoard";
 import { Link } from "expo-router";
+import ThemedText from "../ui/ThemedText/ThemedText";
 
 interface IRouteItemProps {
   address: IAddress;
@@ -24,31 +16,33 @@ interface IRouteItemProps {
 
 const RouteItem: FC<IRouteItemProps> = (props) => {
   const { address, index, isTypeShown = false, isHighlighted } = props;
+
+  const metroString = address.geoData?.metro?.[0]?.name
+    ? address.geoData?.metro?.[0]?.name + " |"
+    : "";
+  const distance = address.distance?.toFixed(1) || "";
+
   return (
     <Link href={`/orders/${address.orderId}`}>
       <View style={styles.addressContainer}>
         <View style={styles.addressIndexContainer}>
-          <Text style={styles.addressIndexText}>{index + 1}</Text>
+          <ThemedText color="white">{index + 1}</ThemedText>
         </View>
 
         <View style={[styles.address, isHighlighted && styles.highlited]}>
           <View style={styles.addressTextContainer}>
-            <Text style={styles.addressIndex}>{address.orderId}</Text>
-            <Text style={styles.addressText}>{address.address}</Text>
-          </View>
-          {address.phoneNumber && (
-            <TouchableOpacity
-              style={styles.phoneNumber}
-              onLongPress={() => {
-                copyToClipboard(address.phoneNumber);
-              }}
+            <ThemedText type="title" weight="medium">
+              {address.orderId}
+            </ThemedText>
+            <ThemedText
+              type="mediumText"
+              weight="medium"
+              style={{ textAlign: "left" }}
             >
-              <Text style={styles.phoneNumberLabel}>Номер телефона </Text>
-              <Text style={styles.phoneNumberInfo}>
-                {address.phoneNumber + "  " + address?.phoneName}
-              </Text>
-            </TouchableOpacity>
-          )}
+              {address.address}
+            </ThemedText>
+          </View>
+
           <View
             style={[
               styles.locationInfo,
@@ -57,22 +51,15 @@ const RouteItem: FC<IRouteItemProps> = (props) => {
               },
             ]}
           >
-            {address.geoData?.metro && (
-              <Text style={styles.locationInfoText}>
-                {address.geoData?.metro[0]?.name + " |"}
-              </Text>
-            )}
-            <Text style={styles.locationInfoText}>
-              {address?.distance.toFixed(1) + " км от вас"}
-            </Text>
+            <ThemedText color="white">{`${metroString} ${distance} км от вас`}</ThemedText>
           </View>
 
           {address.type && isTypeShown && (
             <View style={styles.typeContainer}>
               <Image source={icons.settings} style={styles.floorIcon} />
-              <Text style={styles.floorText}>
+              <ThemedText type="hint">
                 {address.type == "DELIVER" ? "Отдать заказ" : "Забрать заказ"}
-              </Text>
+              </ThemedText>
             </View>
           )}
         </View>
@@ -127,42 +114,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  addressText: {
-    flex: 1,
-    color: colors.black,
-    fontFamily: fonts.semiBold,
-    fontSize: 16,
-  },
-  addressIndex: {
-    color: colors.black,
-    fontFamily: fonts.medium,
-    fontSize: fontSizes.extraBig,
-  },
-  infoLabel: {
-    fontSize: 12,
-    color: colors.inputGray,
-    fontFamily: fonts.semiBold,
-  },
-  phoneNumber: {
-    backgroundColor: colors.lightPurple,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    fontSize: 12,
-    borderRadius: 20,
-  },
-  phoneNumberLabel: {
-    color: colors.gray,
-    fontFamily: fonts.regular,
-  },
-  phoneNumberInfo: {
-    color: colors.black,
-    fontFamily: fonts.semiBold,
-  },
-  info: {
-    fontSize: 14,
-    color: colors.black,
-    fontFamily: fonts.semiBold,
-  },
+
   priceContainer: {
     flexDirection: "row",
     gap: 5,
@@ -171,21 +123,10 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  priceText: {
-    fontSize: 14,
-    color: colors.black,
-    fontFamily: fonts.semiBold,
-  },
-
   floorContainer: {
     flexDirection: "row",
     gap: 5,
     alignItems: "center",
-  },
-  floorText: {
-    fontSize: 14,
-    color: colors.black,
-    fontFamily: fonts.semiBold,
   },
   floorIcon: {
     width: 20,
@@ -205,15 +146,9 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 20,
   },
-  locationInfoText: {
-    color: colors.white,
-    fontFamily: fonts.regular,
-    fontSize: 14,
-  },
   typeContainer: {
     flexDirection: "row",
     gap: 5,
-
     position: "absolute",
     top: 0,
     left: 0,
@@ -223,7 +158,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
-
   addressIndexContainer: {
     width: 30,
     height: 30,
@@ -231,10 +165,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.purple,
     justifyContent: "center",
     alignItems: "center",
-  },
-  addressIndexText: {
-    color: colors.white,
-    fontSize: 16,
-    fontFamily: fonts.semiBold,
   },
 });
