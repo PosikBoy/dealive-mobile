@@ -1,19 +1,28 @@
 import { View, Text, StyleSheet } from "react-native";
-import React from "react";
 import { useGetProfileQuery } from "@/services/profile/profile.service";
 import { colors } from "@/constants/colors";
-import formatDate, { formatDateWithoutTime } from "@/helpers/formatDate";
+import { formatDateWithoutTime } from "@/helpers/formatDate";
 import Header from "@/components/shared/Header/Header";
 import { fonts, fontSizes } from "@/constants/styles";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
-type Props = {};
-
-const Profile = (props: Props) => {
+const Profile = () => {
   const { data, isLoading, error } = useGetProfileQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
-  if (isLoading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error: {JSON.stringify(error)}</Text>;
+  if (isLoading)
+    return (
+      <View style={styles.container}>
+        <Header title="Профиль" />
+      </View>
+    );
+  if (error)
+    return (
+      <View style={styles.container}>
+        <Header title="Профиль" />
+        <ThemedText color="red">Произошла ошибка</ThemedText>
+      </View>
+    );
 
   return (
     <View style={styles.container}>

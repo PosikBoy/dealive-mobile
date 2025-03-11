@@ -16,13 +16,13 @@ type Props = {
 };
 
 const actionIcons = {
-  [IOrderActionType.GO_TO]: icons.goTo, // Иконка для GO_TO
-  [IOrderActionType.ARRIVED_AT]: icons.mapDot, // Иконка для ARRIVED_AT
-  [IOrderActionType.PICKUP]: icons.parcel, // Иконка для PICKUP
-  [IOrderActionType.DELIVER]: icons.parcel, // Иконка для DELIVER
-  [IOrderActionType.COLLECT_PAYMENT]: icons.money, // Иконка для COLLECT_PAYMENT
-  [IOrderActionType.PAY_COMMISION]: icons.money, // Иконка для PAY_COMMISION
-  [IOrderActionType.COMPLETE_ORDER]: icons.check, // Иконка для COMPLETE_ORDER
+  [IOrderActionType.GO_TO]: icons.goTo,
+  [IOrderActionType.ARRIVED_AT]: icons.mapDot,
+  [IOrderActionType.PICKUP]: icons.parcel,
+  [IOrderActionType.DELIVER]: icons.parcel,
+  [IOrderActionType.COLLECT_PAYMENT]: icons.money,
+  [IOrderActionType.PAY_COMMISION]: icons.money,
+  [IOrderActionType.COMPLETE_ORDER]: icons.check,
 };
 
 export const Action = (props: Props) => {
@@ -42,7 +42,7 @@ export const Action = (props: Props) => {
         <ThemedText
           type="mediumText"
           weight="medium"
-          style={{ textAlign: "left" }}
+          style={{ textAlign: "left", flex: 1 }}
         >
           {action.description}
         </ThemedText>

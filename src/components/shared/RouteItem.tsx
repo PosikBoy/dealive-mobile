@@ -37,7 +37,7 @@ const RouteItem: FC<IRouteItemProps> = (props) => {
             <ThemedText
               type="mediumText"
               weight="medium"
-              style={{ textAlign: "left" }}
+              style={{ textAlign: "left", flex: 1 }}
             >
               {address.address}
             </ThemedText>

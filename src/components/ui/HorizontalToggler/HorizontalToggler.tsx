@@ -59,11 +59,14 @@ const Toggler: FC<ITogglerProps> = ({ options, activeTab, onChange }) => {
             { width: togglerWidth / options.length },
           ]}
         />
-        {options.map((option, index) => {
+        {options.map((option) => {
           return (
             <TouchableOpacity
               key={option}
-              style={styles.togglerOption}
+              style={[
+                styles.togglerOption,
+                { width: togglerWidth / options.length },
+              ]}
               onPress={() => handlePress(option)}
             >
               <ThemedText
@@ -97,12 +100,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGray,
     overflow: "hidden",
   },
-
   togglerOption: {
-    padding: 7,
+    paddingVertical: 7,
     alignItems: "center",
     justifyContent: "center",
-    width: "33%",
   },
   activeTogglerText: {
     color: colors.white,

@@ -15,7 +15,7 @@ const TabsLayout = () => {
       </Text>
     </View>
   );
-  // return <Support />;
+  return <Support />;
 };
 
 export default TabsLayout;

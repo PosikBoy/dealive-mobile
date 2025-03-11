@@ -7,7 +7,7 @@ import Toggler from "@/components/ui/HorizontalToggler/HorizontalToggler";
 import RecommendedOrders from "./components/RecommendedOrders";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
-const options = ["Доступные", "Рекомендация", "Активные"];
+const options = ["Доступные", "Лучшие", "Активные"];
 
 const OrdersScreen = () => {
   const [activeTab, setActiveTab] = useState<string>("Доступные");
@@ -111,7 +111,7 @@ const OrdersScreen = () => {
             {
               opacity: recommendedOpacity,
               transform: [{ translateX: recommendedTranslate }],
-              pointerEvents: activeTab === "Рекомендация" ? "auto" : "none",
+              pointerEvents: activeTab === "Лучшие" ? "auto" : "none",
             },
           ]}
         >
