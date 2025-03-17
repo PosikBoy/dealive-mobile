@@ -24,7 +24,6 @@ SplashScreen.preventAutoHideAsync();
 
 const Layout = () => {
   const colorScheme = useColorScheme() || "light";
-  Appearance.setColorScheme("dark");
   return (
     <GestureHandlerRootView>
       <SafeAreaView style={{ flex: 1 }}>
