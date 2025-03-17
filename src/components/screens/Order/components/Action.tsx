@@ -44,8 +44,8 @@ export const Action = (props: Props) => {
         disabled={disabled}
         style={[
           styles.action,
-          action.isCompleted && styles.actionCompleted,
           { backgroundColor: colors[colorScheme].white },
+          action.isCompleted && styles.actionCompleted,
         ]}
       >
         <View style={styles.iconContainer}>

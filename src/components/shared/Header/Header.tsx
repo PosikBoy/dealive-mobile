@@ -1,5 +1,6 @@
 import {
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -20,6 +21,7 @@ type Props = {
 };
 
 const onPressBackDefault = () => {
+  console.log("asdc");
   router.back();
 };
 
@@ -34,17 +36,19 @@ const Header: FC<Props> = ({
       style={[styles.header, { backgroundColor: colors[colorScheme].white }]}
     >
       {isButtonBackShown && (
-        <TouchableOpacity style={styles.backButton} onPress={onPressBack}>
+        <Pressable style={styles.backButton} onPress={onPressBack}>
           <Image
             tintColor={colors[colorScheme].black}
             source={icons.arrow}
             style={{ width: "100%", height: "100%" }}
           />
-        </TouchableOpacity>
+        </Pressable>
       )}
-      <ThemedText type="mediumText" weight="bold" style={{ flex: 1 }}>
-        {title}
-      </ThemedText>
+      <View>
+        <ThemedText type="mediumText" weight="bold">
+          {title}
+        </ThemedText>
+      </View>
     </View>
   );
 };
@@ -55,7 +59,6 @@ const styles = StyleSheet.create({
   header: {
     paddingVertical: 20,
     paddingHorizontal: 0,
-    width: "100%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",

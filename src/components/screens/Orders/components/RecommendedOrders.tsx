@@ -19,6 +19,30 @@ const RecommendedOrders = () => {
   const location = useTypedSelector((state) => state.location);
   const { recommendedOrders, isLoading } = useRecommendedOrders();
 
+  if (location.error) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <OrderPreviewSkeleton />
+          <OrderPreviewSkeleton />
+          <OrderPreviewSkeleton />
+        </View>
+        <View style={styles.loadingTextContainer}>
+          <View
+            style={[
+              styles.loadingModal,
+              { backgroundColor: colors[colorScheme].white },
+            ]}
+          >
+            <ThemedText type="big" weight="medium">
+              {location.error}
+            </ThemedText>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
   if (location.isLocationLoading || isLoading) {
     return (
       <View style={styles.container}>

@@ -85,13 +85,14 @@ const AvailableOrders = () => {
               { backgroundColor: colors[colorScheme].white },
             ]}
           >
-            <ThemedText type="big">{location.error}</ThemedText>
+            <ThemedText type="big" weight="medium">
+              {location.error}
+            </ThemedText>
           </View>
         </View>
       </View>
     );
   }
-
   if (location.isLocationLoading || isLoading) {
     return (
       <View style={styles.container}>
