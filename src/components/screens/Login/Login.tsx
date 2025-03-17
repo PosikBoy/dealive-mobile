@@ -24,7 +24,7 @@ interface IPhoneNumberPassword {
 }
 
 const Login = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const {
     control,
     formState: { errors },

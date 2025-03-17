@@ -19,7 +19,7 @@ import {
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 const waitForApproval = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const { isApproved, isLoading, error } = useTypedSelector(
     (state) => state.auth
   );

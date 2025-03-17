@@ -4,7 +4,7 @@ import { FC } from "react";
 import { StyleSheet, useColorScheme, View } from "react-native";
 
 const OrderPreviewSkeleton: FC = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
 
   return (
     <View

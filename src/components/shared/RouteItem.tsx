@@ -15,7 +15,7 @@ interface IRouteItemProps {
 }
 
 const RouteItem: FC<IRouteItemProps> = (props) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const { address, index, isTypeShown = false, isHighlighted } = props;
 
   const metroString = address.geoData?.metro?.[0]?.name
@@ -35,9 +35,9 @@ const RouteItem: FC<IRouteItemProps> = (props) => {
         <View
           style={[
             styles.address,
-            isHighlighted && styles.highlited,
-            isTypeShown && { paddingTop: 30 },
             { backgroundColor: colors[colorScheme].white },
+            isHighlighted && { backgroundColor: colors[colorScheme].green },
+            isTypeShown && { paddingTop: 30 },
           ]}
         >
           <View style={styles.addressTextContainer}>
@@ -104,9 +104,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flex: 1,
   },
-  highlited: {
-    backgroundColor: colors.green,
-  },
+
   activeAddressTooltip: {
     position: "absolute",
     top: 0,

@@ -10,7 +10,7 @@ interface IProps {
 
 const CustomBottomSheetModal = forwardRef<ActionSheetRef, IProps>(
   (props, ref) => {
-    const colorScheme = useColorScheme();
+    const colorScheme = useColorScheme() || "light";
     const { children } = props;
 
     return (

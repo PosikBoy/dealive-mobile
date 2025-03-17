@@ -18,7 +18,6 @@ export const colors = {
     gray: "#808080",
     lightGray: "#808080",
     lightPurple: "#872CFE",
-
     red: "#EE2400",
     green: "rgb(0, 112, 24)",
     white: "rgb(48, 46, 46)",

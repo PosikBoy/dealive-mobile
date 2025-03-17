@@ -36,7 +36,7 @@ const sortingRulesOptionsText = {
 type SortingRulesTypes = (typeof sortingRuleOptions)[number];
 
 const AvailableOrders = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const location = useTypedSelector((state) => state.location);
 
   const [sortingRules, setSortingRules] =

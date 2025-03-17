@@ -21,7 +21,7 @@ import ThemedText from "@/components/ui/ThemedText/ThemedText";
 import { FlashList } from "@shopify/flash-list";
 
 const CompletedOrders = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const [orders, setOrders] = useState<IOrder[]>([]);
 
   const { data, isLoading } = useGetAllOrdersQuery(undefined, {

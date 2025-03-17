@@ -13,7 +13,7 @@ import ThemedText from "@/components/ui/ThemedText/ThemedText";
 import Header from "@/components/shared/Header/Header";
 
 const Route = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const [sum, setSum] = useState<number>(0);
   const routeData = useTypedSelector((state) => state.route);
   const { data } = useGetActiveOrdersQuery();

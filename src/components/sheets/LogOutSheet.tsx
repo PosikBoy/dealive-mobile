@@ -17,7 +17,7 @@ const STRINGS = {
 };
 
 const LogOutSheet = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const dispatch = useTypedDispatch();
   const [isLoading, setIsLoading] = useState(false);
 

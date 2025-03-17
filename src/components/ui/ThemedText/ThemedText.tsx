@@ -42,7 +42,7 @@ const ThemedText = (props: IProps) => {
     align = "center",
     ...rest
   } = props;
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const colors = colorScheme === "light" ? lightColors : darkColors;
   const textColor = colors[color];
 

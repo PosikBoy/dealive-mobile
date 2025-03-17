@@ -17,7 +17,7 @@ import ThemedText from "@/components/ui/ThemedText/ThemedText";
 import { colors } from "@/constants/colors";
 
 const Settings = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
 
   const logoutButtonHandler = async () => {
     SheetManager.show("log-out-sheet");

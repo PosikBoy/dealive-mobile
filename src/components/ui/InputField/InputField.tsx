@@ -28,7 +28,7 @@ interface IField {
   keyboardType?: KeyboardTypeOptions;
 }
 const InputField: FC<IField> = (props) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const {
     type = "default",
     placeholder,

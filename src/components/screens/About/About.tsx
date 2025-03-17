@@ -4,11 +4,10 @@ import Header from "@/components/shared/Header/Header";
 import logo from "@/assets/icon.png";
 
 import { colors } from "@/constants/colors";
-import { fonts, fontSizes } from "@/constants/styles";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 const About = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   return (
     <View
       style={[

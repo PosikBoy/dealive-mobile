@@ -28,7 +28,7 @@ const Header: FC<Props> = ({
   onPressBack = onPressBackDefault,
   isButtonBackShown = true,
 }) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   return (
     <View
       style={[styles.header, { backgroundColor: colors[colorScheme].white }]}
@@ -42,7 +42,7 @@ const Header: FC<Props> = ({
           />
         </TouchableOpacity>
       )}
-      <ThemedText type="mediumText" weight="bold">
+      <ThemedText type="mediumText" weight="bold" style={{ flex: 1 }}>
         {title}
       </ThemedText>
     </View>

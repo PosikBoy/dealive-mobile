@@ -20,7 +20,7 @@ import ThemedText from "@/components/ui/ThemedText/ThemedText";
 import Animated, { LinearTransition } from "react-native-reanimated";
 
 const ActiveOrders = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const location = useTypedSelector((state) => state.location);
   const { data, isLoading, refetch } = useGetActiveOrdersQuery();
 

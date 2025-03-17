@@ -34,7 +34,7 @@ const CustomTabButton = (props) => (
 );
 
 const TabsLayout = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   return (
     <Tabs
       initialRouteName="index"

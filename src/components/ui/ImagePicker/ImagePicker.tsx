@@ -23,7 +23,7 @@ import { fonts } from "@/constants/styles";
 import ThemedText from "../ThemedText/ThemedText";
 
 const ImagePicker = (props: IProps) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const { title, linkSuggestion, control, name, rules = {} } = props;
 
   const { field } = useController({ control, name, rules });

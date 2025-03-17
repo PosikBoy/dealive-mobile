@@ -28,7 +28,7 @@ interface IField {
   placeholder: string;
 }
 const PhoneInputField: FC<IField> = (props) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const { name, control, error, placeholder } = props;
   const rules = {
     required: "Введите номер телефона",

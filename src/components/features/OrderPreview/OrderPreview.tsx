@@ -29,7 +29,7 @@ const getOrderHeaderText = (length, id, income) => {
 };
 // Оборачиваем в memo для оптимизации
 const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const { id, date, parcelType, weight, price, addresses } = order;
   const createdAtString = formatDate(date);
 

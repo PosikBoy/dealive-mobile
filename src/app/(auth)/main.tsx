@@ -15,7 +15,7 @@ import { colors } from "@/constants/colors";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 const index = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const handleLogin = () => {
     router.push("/(auth)/login");
   };

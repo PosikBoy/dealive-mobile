@@ -33,7 +33,7 @@ interface IControllerField {
   placeholder: string;
 }
 const DataInputField: FC<IControllerField> = (props) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const { name, control, error, placeholder } = props;
   const rules = {
     required: "Введите дату рождения",

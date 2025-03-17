@@ -6,7 +6,7 @@ import Header from "@/components/shared/Header/Header";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 const Profile = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const { data, isLoading, error } = useGetProfileQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });

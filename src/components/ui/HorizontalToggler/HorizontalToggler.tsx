@@ -17,7 +17,7 @@ interface ITogglerProps {
 }
 
 const Toggler: FC<ITogglerProps> = ({ options, activeTab, onChange }) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const [togglerWidth, setTogglerWidth] = useState(0);
 
   const tabAnimation = useRef(
@@ -77,7 +77,12 @@ const Toggler: FC<ITogglerProps> = ({ options, activeTab, onChange }) => {
             >
               <ThemedText
                 type="default"
-                style={[option === activeTab && styles.activeTogglerText]}
+                style={[
+                  option === activeTab && styles.activeTogglerText,
+                  {
+                    flex: 1,
+                  },
+                ]}
               >
                 {option}
               </ThemedText>
@@ -104,12 +109,13 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 40,
     overflow: "hidden",
+    height: 30,
   },
   togglerOption: {
-    paddingVertical: 7,
     alignItems: "center",
     justifyContent: "center",
-    flex: 1,
+    height: "100%",
+    flexDirection: "row",
   },
   activeTogglerText: {
     color: colors.white,

@@ -15,7 +15,7 @@ import ThemedText from "@/components/ui/ThemedText/ThemedText";
 import { FlashList } from "@shopify/flash-list";
 
 const RecommendedOrders = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const location = useTypedSelector((state) => state.location);
   const { recommendedOrders, isLoading } = useRecommendedOrders();
 

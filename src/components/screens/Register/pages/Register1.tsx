@@ -29,7 +29,7 @@ interface IFormField {
 }
 
 const Register1: FC<IProps> = (props) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const { nextPage, previousPage } = props;
 
   const [existingError, setExistingError] = useState("");

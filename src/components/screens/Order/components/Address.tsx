@@ -25,7 +25,7 @@ interface IAddressProps {
 }
 
 const Address: FC<IAddressProps> = (props) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const { address, index, price, isActive, isTypeShown = false } = props;
 
   const handleOpenURL = async () => {
@@ -54,8 +54,8 @@ const Address: FC<IAddressProps> = (props) => {
     <View
       style={[
         styles.address,
-        isActive && styles.active,
         { backgroundColor: colors[colorScheme].white },
+        isActive && styles.active,
       ]}
     >
       {isActive && (

@@ -4,7 +4,7 @@ import { FC } from "react";
 import { StyleSheet, useColorScheme, View } from "react-native";
 
 const OrderSkeleton: FC = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   return (
     <View
       style={[styles.container, { backgroundColor: colors[colorScheme].white }]}

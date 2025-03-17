@@ -13,7 +13,7 @@ export interface ITakeOrderSheet {
 }
 
 const TakeOrderSheet = (props: SheetProps<"take-order-sheet">) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
 
   const { order, takeOrder, error } = props.payload;
 

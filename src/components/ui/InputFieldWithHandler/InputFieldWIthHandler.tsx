@@ -30,7 +30,7 @@ interface IControllerField {
   rules?: any;
 }
 const InputFieldWithHandler: FC<IControllerField> = (props) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const { name, control, error, placeholder, handler, rules = {} } = props;
 
   const { field } = useController({

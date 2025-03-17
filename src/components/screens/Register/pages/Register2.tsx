@@ -22,7 +22,7 @@ interface IFormField {
 }
 
 const Register2: FC<IProps> = (props) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const { nextPage, previousPage } = props;
   const state = useTypedSelector((state) => state.signupForm);
   const dispatch = useTypedDispatch();

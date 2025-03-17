@@ -39,7 +39,7 @@ const data = [
 ];
 
 const onBoarding = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const [currentPage, setCurrentPage] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
 

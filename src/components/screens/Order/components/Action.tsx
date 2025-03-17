@@ -33,7 +33,7 @@ const actionIcons = {
 };
 
 export const Action = (props: Props) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const { action, disabled } = props;
   const icon = actionIcons[action.actionType];
 

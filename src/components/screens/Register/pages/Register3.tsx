@@ -47,7 +47,7 @@ interface IFormField {
 }
 
 const Register3: FC<IProps> = (props) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const { previousPage } = props;
 
   const signupFormState = useTypedSelector((state) => state.signupForm);
