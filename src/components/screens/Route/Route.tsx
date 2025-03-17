@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, useColorScheme } from "react-native";
 import React, { useEffect, useState } from "react";
 
 import { borderRadiuses } from "@/constants/styles";
@@ -10,14 +10,17 @@ import { useTypedSelector } from "@/hooks/redux.hooks";
 import { useGetActiveOrdersQuery } from "@/services/orders/orders.service";
 import RouteItem from "@/components/shared/RouteItem";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import Header from "@/components/shared/Header/Header";
 
 const Route = () => {
+  const colorScheme = useColorScheme();
   const [sum, setSum] = useState<number>(0);
   const routeData = useTypedSelector((state) => state.route);
   const { data } = useGetActiveOrdersQuery();
   const footerText = `Расстояние ${routeData.distance.toFixed(
     2
   )} км | Доход ${sum.toFixed(0)}₽`;
+
   useEffect(() => {
     const sum = data.reduce((sum, order) => {
       return sum + order.price;
@@ -55,18 +58,14 @@ const Route = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <ThemedText weight="bold" type="heading">
-          Маршрут
-        </ThemedText>
-      </View>
+      <Header title="Маршрут" isButtonBackShown={false} />
       <FlatList
         data={routeData.route}
         renderItem={({ item, index }) => (
           <RouteItem address={item} index={index} isTypeShown={true} />
         )}
         contentContainerStyle={{
-          gap: 10,
+          gap: 5,
           paddingBottom: 120,
           width: "100%",
         }}
@@ -77,7 +76,9 @@ const Route = () => {
           width: "100%",
         }}
       />
-      <View style={styles.footer}>
+      <View
+        style={[styles.footer, { backgroundColor: colors[colorScheme].white }]}
+      >
         <ThemedText weight="medium" type="mediumText">
           {footerText}
         </ThemedText>
@@ -114,8 +115,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "absolute",
     bottom: 0,
-    backgroundColor: colors.white,
     padding: 10,
+    gap: 10,
     borderTopLeftRadius: borderRadiuses.medium,
     borderTopRightRadius: borderRadiuses.medium,
   },

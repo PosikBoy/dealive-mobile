@@ -58,6 +58,7 @@ export interface IAddress {
   updatedAt?: string;
   distance?: number;
   type?: "PICKUP" | "DELIVER";
+  isCompleted?: boolean;
 }
 
 export interface IOrder {

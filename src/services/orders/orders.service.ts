@@ -118,12 +118,14 @@ export const ordersApi = createApi({
             order.addresses.map((addr) => [addr.id, addr])
           );
 
-          order.actions.forEach(({ actionType, addressId }) => {
+          order.actions.forEach(({ actionType, addressId, isCompleted }) => {
             if (actionType == "PICKUP") {
               addressMap.get(addressId).type = "PICKUP";
+              addressMap.get(addressId).isCompleted = isCompleted;
             }
             if (actionType == "DELIVER") {
               addressMap.get(addressId).type = "DELIVER";
+              addressMap.get(addressId).isCompleted = isCompleted;
             }
           });
         });

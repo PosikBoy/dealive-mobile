@@ -8,6 +8,7 @@ import {
   StyleSheet,
   LayoutChangeEvent,
   Animated,
+  useColorScheme,
 } from "react-native";
 import ThemedText from "../ThemedText/ThemedText";
 
@@ -18,6 +19,7 @@ interface ITogglerProps {
 }
 
 const Toggler: FC<ITogglerProps> = ({ options, activeTab, onChange }) => {
+  const colorScheme = useColorScheme();
   const [togglerWidth, setTogglerWidth] = useState(0);
 
   const tabAnimation = useRef(
@@ -51,7 +53,13 @@ const Toggler: FC<ITogglerProps> = ({ options, activeTab, onChange }) => {
 
   return (
     <View style={styles.togglerTypeContainer}>
-      <View style={styles.togglerType} onLayout={onTogglerLayout}>
+      <View
+        style={[
+          styles.togglerType,
+          { backgroundColor: colors[colorScheme].lightGray },
+        ]}
+        onLayout={onTogglerLayout}
+      >
         <Animated.View
           style={[
             styles.indicator,
@@ -97,7 +105,6 @@ const styles = StyleSheet.create({
     position: "relative",
     width: "100%",
     borderRadius: 40,
-    backgroundColor: colors.lightGray,
     overflow: "hidden",
   },
   togglerOption: {

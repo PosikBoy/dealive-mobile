@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { IAddress } from "@/types/order.interface";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, useColorScheme, View } from "react-native";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 import { getMetroColor } from "@/utils/getColorMetro";
@@ -15,6 +15,7 @@ interface IRouteItemProps {
 }
 
 const RouteItem: FC<IRouteItemProps> = (props) => {
+  const colorScheme = useColorScheme();
   const { address, index, isTypeShown = false, isHighlighted } = props;
 
   const metroString = address.geoData?.metro?.[0]?.name
@@ -29,7 +30,14 @@ const RouteItem: FC<IRouteItemProps> = (props) => {
           <ThemedText color="white">{index + 1}</ThemedText>
         </View>
 
-        <View style={[styles.address, isHighlighted && styles.highlited]}>
+        <View
+          style={[
+            styles.address,
+            isHighlighted && styles.highlited,
+            isTypeShown && { paddingTop: 30 },
+            { backgroundColor: colors[colorScheme].white },
+          ]}
+        >
           <View style={styles.addressTextContainer}>
             <ThemedText type="title" weight="medium">
               {address.orderId}
@@ -55,7 +63,12 @@ const RouteItem: FC<IRouteItemProps> = (props) => {
           </View>
 
           {address.type && isTypeShown && (
-            <View style={styles.typeContainer}>
+            <View
+              style={[
+                styles.typeContainer,
+                { backgroundColor: colors[colorScheme].green },
+              ]}
+            >
               <Image source={icons.settings} style={styles.floorIcon} />
               <ThemedText type="hint">
                 {address.type == "DELIVER" ? "Отдать заказ" : "Забрать заказ"}
@@ -74,8 +87,8 @@ const styles = StyleSheet.create({
   address: {
     width: "100%",
     paddingHorizontal: 10,
-    paddingVertical: 10,
-    backgroundColor: colors.white,
+    paddingTop: 10,
+    paddingBottom: 10,
     borderRadius: 20,
     gap: 10,
     flex: 1,
@@ -152,7 +165,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
-    backgroundColor: colors.green,
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderTopLeftRadius: 20,

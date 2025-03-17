@@ -9,14 +9,12 @@ import { colors } from "@/constants/colors";
 import { useCompleteActionMutation } from "@/services/orders/orders.service";
 import MyButton from "@/components/ui/Button/Button";
 
-import { fonts } from "@/constants/styles";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import geodataService from "@/services/geodata/geodata.service";
 import ActionSheet, {
   SheetManager,
   SheetProps,
 } from "react-native-actions-sheet";
-import { removeAddressFromRoute } from "@/store/route/route.slice";
 import ThemedText from "../ui/ThemedText/ThemedText";
 
 const ACTION_SNIPPETS = {
@@ -88,9 +86,9 @@ export const CompleteActionSheet = React.memo(
         }
 
         await completeAction(action.id).unwrap();
-        if (action.actionType == IOrderActionType.ARRIVED_AT) {
-          dispatch(removeAddressFromRoute(address.id));
-        }
+        // if (action.actionType == IOrderActionType.ARRIVED_AT) {
+        //   dispatch(removeAddressFromRoute(address.id));
+        // }
 
         SheetManager.hide("complete-action-sheet");
         ToastAndroid.show(

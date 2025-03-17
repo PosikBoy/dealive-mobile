@@ -1,6 +1,12 @@
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  useColorScheme,
+  View,
+} from "react-native";
 import React from "react";
-import { Tabs, useSegments } from "expo-router";
+import { Tabs } from "expo-router";
 import { colors } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 
@@ -28,6 +34,7 @@ const CustomTabButton = (props) => (
 );
 
 const TabsLayout = () => {
+  const colorScheme = useColorScheme();
   return (
     <Tabs
       initialRouteName="index"
@@ -37,7 +44,7 @@ const TabsLayout = () => {
         tabBarInactiveTintColor: colors.gray,
         tabBarButton: (props) => <CustomTabButton {...props} />,
         tabBarStyle: {
-          backgroundColor: colors.white,
+          backgroundColor: colors[colorScheme].white,
           borderTopWidth: 1,
           shadowOpacity: 2,
           height: 60,

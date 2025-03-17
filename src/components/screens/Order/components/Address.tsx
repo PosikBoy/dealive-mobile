@@ -5,6 +5,7 @@ import {
   Linking,
   StyleSheet,
   TouchableOpacity,
+  useColorScheme,
   View,
 } from "react-native";
 import { colors } from "@/constants/colors";
@@ -24,6 +25,7 @@ interface IAddressProps {
 }
 
 const Address: FC<IAddressProps> = (props) => {
+  const colorScheme = useColorScheme();
   const { address, index, price, isActive, isTypeShown = false } = props;
 
   const handleOpenURL = async () => {
@@ -49,9 +51,20 @@ const Address: FC<IAddressProps> = (props) => {
   const distance = address.distance?.toFixed(1) || "";
 
   return (
-    <View style={[styles.address, isActive && styles.active]}>
+    <View
+      style={[
+        styles.address,
+        isActive && styles.active,
+        { backgroundColor: colors[colorScheme].white },
+      ]}
+    >
       {isActive && (
-        <View style={styles.activeAddressTooltip}>
+        <View
+          style={[
+            styles.activeAddressTooltip,
+            { backgroundColor: colors[colorScheme].green },
+          ]}
+        >
           <ThemedText>Активный адрес</ThemedText>
         </View>
       )}
@@ -113,7 +126,11 @@ const Address: FC<IAddressProps> = (props) => {
 
       {index == 0 && (
         <View style={styles.priceContainer}>
-          <Image source={icons.money} style={styles.priceIcon} />
+          <Image
+            tintColor={colors[colorScheme].black}
+            source={icons.money}
+            style={styles.priceIcon}
+          />
           <ThemedText type="mediumText" weight="medium">
             {`Получить ${price} ₽`}
           </ThemedText>
@@ -121,7 +138,11 @@ const Address: FC<IAddressProps> = (props) => {
       )}
       {address.floor && (
         <View style={styles.floorContainer}>
-          <Image source={icons.building} style={styles.floorIcon} />
+          <Image
+            tintColor={colors[colorScheme].black}
+            source={icons.building}
+            style={styles.floorIcon}
+          />
           <ThemedText type="mediumText" weight="medium">
             {`${address.floor} этаж ·  ${address.apartment} кв.`}
           </ThemedText>
@@ -129,7 +150,11 @@ const Address: FC<IAddressProps> = (props) => {
       )}
       {address.type && isTypeShown && (
         <View style={styles.typeContainer}>
-          <Image source={icons.settings} style={styles.floorIcon} />
+          <Image
+            tintColor={colors[colorScheme].black}
+            source={icons.settings}
+            style={styles.floorIcon}
+          />
           <ThemedText type="mediumText" weight="medium">
             {address.type == "DELIVER" ? "Отдать заказ" : "Забрать заказ"}
           </ThemedText>
@@ -146,7 +171,6 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 20,
     paddingVertical: 30,
-    backgroundColor: colors.white,
     borderRadius: 20,
     gap: 10,
   },
@@ -157,7 +181,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
-    backgroundColor: colors.green,
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderTopLeftRadius: 20,

@@ -1,12 +1,12 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet, useColorScheme } from "react-native";
 import { useGetProfileQuery } from "@/services/profile/profile.service";
 import { colors } from "@/constants/colors";
 import { formatDateWithoutTime } from "@/helpers/formatDate";
 import Header from "@/components/shared/Header/Header";
-import { fonts, fontSizes } from "@/constants/styles";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 const Profile = () => {
+  const colorScheme = useColorScheme();
   const { data, isLoading, error } = useGetProfileQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
@@ -25,34 +25,48 @@ const Profile = () => {
     );
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: colors[colorScheme].white }]}
+    >
       <Header title="Профиль" />
       <View style={styles.content}>
         <View style={styles.infoContainer}>
-          <Text style={styles.label}>ФИО</Text>
-          <Text style={styles.value}>
+          <ThemedText align="left" type="mediumText">
+            ФИО
+          </ThemedText>
+          <ThemedText align="left" type="mediumText">
             {`${data.secondName} ${data.name} ${data.lastName}`}
-          </Text>
+          </ThemedText>
         </View>
       </View>
       <View style={styles.content}>
         <View style={styles.infoContainer}>
-          <Text style={styles.label}>Номер телефона</Text>
-          <Text style={styles.value}>{data.phoneNumber}</Text>
+          <ThemedText align="left" type="mediumText">
+            Номер телефона
+          </ThemedText>
+          <ThemedText align="left" type="mediumText">
+            {data.phoneNumber}
+          </ThemedText>
         </View>
       </View>
       <View style={styles.content}>
         <View style={styles.infoContainer}>
-          <Text style={styles.label}>Электронная почта</Text>
-          <Text style={styles.value}>{data.email}</Text>
+          <ThemedText align="left" type="mediumText">
+            Электронная почта
+          </ThemedText>
+          <ThemedText align="left" type="mediumText">
+            {data.email}
+          </ThemedText>
         </View>
       </View>
       <View style={styles.content}>
         <View style={styles.infoContainer}>
-          <Text style={styles.label}>Дата рождения</Text>
-          <Text style={styles.value}>
+          <ThemedText align="left" type="mediumText">
+            Дата рождения
+          </ThemedText>
+          <ThemedText align="left" type="mediumText">
             {formatDateWithoutTime(data.birthDate)}
-          </Text>
+          </ThemedText>
         </View>
       </View>
     </View>
@@ -64,7 +78,6 @@ export default Profile;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
   },
   content: {
     gap: 20,
@@ -75,14 +88,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     gap: 5,
-  },
-  label: {
-    fontSize: fontSizes.medium,
-    fontFamily: fonts.semiBold,
-  },
-  value: {
-    fontSize: fontSizes.medium,
-    fontFamily: fonts.regular,
-    color: colors.gray,
   },
 });

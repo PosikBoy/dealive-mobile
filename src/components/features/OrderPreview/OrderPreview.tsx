@@ -1,6 +1,11 @@
 import { colors } from "@/constants/colors";
 import { FC, memo } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
 import formatDate from "@/helpers/formatDate";
 import { router } from "expo-router";
 import { borderRadiuses, gaps, paddings } from "@/constants/styles";
@@ -24,6 +29,7 @@ const getOrderHeaderText = (length, id, income) => {
 };
 // Оборачиваем в memo для оптимизации
 const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
+  const colorScheme = useColorScheme();
   const { id, date, parcelType, weight, price, addresses } = order;
   const createdAtString = formatDate(date);
 
@@ -32,7 +38,10 @@ const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
   };
 
   return (
-    <Animated.View entering={FadeInLeft.duration(500)} style={styles.container}>
+    <Animated.View
+      entering={FadeInLeft.duration(500)}
+      style={[styles.container, { backgroundColor: colors[colorScheme].white }]}
+    >
       <TouchableOpacity activeOpacity={0.8} onPress={navigateToOrder}>
         <View style={styles.innerContainer}>
           <ThemedText weight="bold" type="heading">
@@ -108,7 +117,6 @@ export default OrderPreview;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.white,
     borderRadius: borderRadiuses.medium,
     paddingHorizontal: paddings.medium,
     paddingVertical: paddings.medium,

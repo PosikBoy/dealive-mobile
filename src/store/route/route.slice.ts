@@ -1,3 +1,4 @@
+import { ordersApi } from "@/services/orders/orders.service";
 import routeService from "@/services/route/route.service";
 import { IAddress } from "@/types/order.interface";
 import { createSlice } from "@reduxjs/toolkit";
@@ -12,21 +13,17 @@ const initialState: IInitialState = { route: [], distance: 0 };
 export const routeSlice = createSlice({
   name: "routeSlice",
   initialState,
-  reducers: {
-    pushRoute(state, action) {
-      state.route = action.payload.route;
-      state.distance = action.payload.distance;
-    },
-    removeAddressFromRoute(state, action) {
-      const newRoute = state.route.filter(
-        (address) => address.id !== action.payload
-      );
-      const distance = routeService.calculateRouteDistance(newRoute);
-      state.route = newRoute;
-      state.distance = distance;
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      ordersApi.endpoints.getActiveOrders.matchFulfilled,
+      (state, action) => {
+        const route = routeService.restoreRoute(action.payload);
+        state.route = route.route;
+        state.distance = route.distance;
+      }
+    );
   },
 });
 
-export const { pushRoute, removeAddressFromRoute } = routeSlice.actions;
 export default routeSlice;

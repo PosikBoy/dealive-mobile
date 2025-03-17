@@ -6,6 +6,7 @@ import ActiveOrders from "./components/ActiveOrders";
 import Toggler from "@/components/ui/HorizontalToggler/HorizontalToggler";
 import RecommendedOrders from "./components/RecommendedOrders";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import Header from "@/components/shared/Header/Header";
 
 const options = ["Доступные", "Лучшие", "Активные"];
 
@@ -81,16 +82,12 @@ const OrdersScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.ordersHeader}>
-        <ThemedText weight="bold" type="heading">
-          Заказы
-        </ThemedText>
-        <Toggler
-          options={options}
-          activeTab={activeTab}
-          onChange={setActiveTab}
-        />
-      </View>
+      <Header title="Заказы" isButtonBackShown={false} />
+      <Toggler
+        options={options}
+        activeTab={activeTab}
+        onChange={setActiveTab}
+      />
 
       <View style={styles.ordersContainer}>
         <Animated.View
@@ -139,12 +136,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
   },
-  ordersHeader: {
-    paddingVertical: 20,
-    backgroundColor: colors.white,
-    borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 20,
-  },
+
   ordersContainer: {
     flex: 1,
   },

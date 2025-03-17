@@ -15,9 +15,7 @@ import { Redirect } from "expo-router";
 const TabsLayout = () => {
   const dispatch = useTypedDispatch();
 
-  const { isAuth, isApproved, isLoading, error } = useTypedSelector(
-    (state) => state.auth
-  );
+  const { isAuth, isApproved, error } = useTypedSelector((state) => state.auth);
 
   const [isAppReady, setIsAppReady] = useState(false);
 

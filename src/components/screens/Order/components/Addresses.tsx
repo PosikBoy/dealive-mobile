@@ -48,6 +48,11 @@ const Addresses = (props: Props) => {
         }}
         ListFooterComponent={
           <>
+            <MyButton
+              buttonText="Открыть маршрут на карте"
+              onPress={openRoute}
+              color="purple"
+            />
             <View style={styles.creationDateContainer}>
               <ThemedText type="mediumText" weight="medium">
                 {`Создан ${formatDate(order.date)}`}
@@ -56,12 +61,6 @@ const Addresses = (props: Props) => {
             {order.statusId == 5 && (
               <ThemedText type="title">Заказ завершен, спасибо!</ThemedText>
             )}
-
-            <MyButton
-              buttonText="Открыть маршрут на карте"
-              onPress={openRoute}
-              color="purple"
-            />
           </>
         }
         ListFooterComponentStyle={{ gap: 10 }}
@@ -79,7 +78,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   creationDateContainer: {
-    backgroundColor: colors.white,
     paddingVertical: 20,
     borderRadius: 20,
   },

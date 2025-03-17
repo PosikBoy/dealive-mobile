@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
 import {
   IAddress,
   IOrderAction,
@@ -26,6 +33,7 @@ const actionIcons = {
 };
 
 export const Action = (props: Props) => {
+  const colorScheme = useColorScheme();
   const { action, disabled } = props;
   const icon = actionIcons[action.actionType];
 
@@ -34,10 +42,18 @@ export const Action = (props: Props) => {
       <TouchableOpacity
         activeOpacity={0.7}
         disabled={disabled}
-        style={[styles.action, action.isCompleted && styles.actionCompleted]}
+        style={[
+          styles.action,
+          action.isCompleted && styles.actionCompleted,
+          { backgroundColor: colors[colorScheme].white },
+        ]}
       >
         <View style={styles.iconContainer}>
-          <Image source={icon} style={{ width: 20, height: 20 }} />
+          <Image
+            tintColor={colors[colorScheme].black}
+            source={icon}
+            style={{ width: 20, height: 20 }}
+          />
         </View>
         <ThemedText
           type="mediumText"
@@ -59,7 +75,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: colors.white,
     flexDirection: "row",
     alignItems: "center",
   },

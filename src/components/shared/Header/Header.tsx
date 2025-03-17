@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
 import React, { FC } from "react";
 import { router } from "expo-router";
 import { colors } from "@/constants/colors";
@@ -21,11 +28,15 @@ const Header: FC<Props> = ({
   onPressBack = onPressBackDefault,
   isButtonBackShown = true,
 }) => {
+  const colorScheme = useColorScheme();
   return (
-    <View style={styles.header}>
+    <View
+      style={[styles.header, { backgroundColor: colors[colorScheme].white }]}
+    >
       {isButtonBackShown && (
         <TouchableOpacity style={styles.backButton} onPress={onPressBack}>
           <Image
+            tintColor={colors[colorScheme].black}
             source={icons.arrow}
             style={{ width: "100%", height: "100%" }}
           />
@@ -48,14 +59,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.white,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
   backButton: {
     position: "absolute",
     left: 0,
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
   },
 });
