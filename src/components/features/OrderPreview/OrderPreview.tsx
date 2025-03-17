@@ -73,6 +73,7 @@ const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
                     <View
                       style={[
                         styles.locationInfo,
+
                         address.geoData?.metro && {
                           backgroundColor: getMetroColor(
                             address.geoData.metro[0].line
@@ -80,7 +81,9 @@ const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
                         },
                       ]}
                     >
-                      <ThemedText color="white">{`${metroString} ${distance} км от вас`}</ThemedText>
+                      <ThemedText
+                        style={{ color: colors.white }}
+                      >{`${metroString} ${distance} км от вас`}</ThemedText>
                     </View>
                   </View>
                 </View>
@@ -94,7 +97,7 @@ const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
               </ThemedText>
               <View style={styles.price}>
                 <ThemedText
-                  color="white"
+                  style={{ color: colors.white }}
                   type="mediumText"
                   weight="medium"
                 >{`${price} ₽`}</ThemedText>

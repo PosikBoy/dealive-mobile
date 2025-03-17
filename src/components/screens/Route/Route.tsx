@@ -43,11 +43,7 @@ const Route = () => {
   if (routeData.route?.length === 0) {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <ThemedText weight="bold" type="heading">
-            Маршрут
-          </ThemedText>
-        </View>
+        <Header title="Маршрут" isButtonBackShown={false} />
         <ThemedText type="mediumText" weight="medium" style={{ margin: 20 }}>
           Похоже, что у вас нет активных заказов на данный момент. Вы можете
           выбрать подходящий на вкладке "Заказы"

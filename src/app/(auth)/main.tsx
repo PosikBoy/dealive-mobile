@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
+  useColorScheme,
   View,
 } from "react-native";
 import React from "react";
@@ -11,8 +12,10 @@ import { router } from "expo-router";
 import { icons } from "@/constants/icons";
 import { fonts } from "@/constants/styles";
 import { colors } from "@/constants/colors";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 const index = () => {
+  const colorScheme = useColorScheme();
   const handleLogin = () => {
     router.push("/(auth)/login");
   };
@@ -22,11 +25,17 @@ const index = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: colors[colorScheme].white }]}
+    >
       <View style={styles.textContainer}>
-        <Text style={styles.title}>DEALIVE</Text>
-        <Text style={styles.subtitle}>Поможем с работой!</Text>
+        <ThemedText type="title" weight="bold" align="left">
+          DEALIVE
+        </ThemedText>
       </View>
+      <ThemedText type="subtitle" weight="bold" align="left">
+        Поможем с работой!
+      </ThemedText>
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={icons.box} resizeMode="contain" />
       </View>
@@ -37,7 +46,10 @@ const index = () => {
           onPress={handleRegister}
           underlayColor="#fff"
         >
-          <Text style={styles.registerLabel}> Зарегистрироваться</Text>
+          <ThemedText style={styles.registerLabel}>
+            {" "}
+            Зарегистрироваться
+          </ThemedText>
         </TouchableHighlight>
       </View>
     </View>

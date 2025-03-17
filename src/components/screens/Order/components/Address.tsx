@@ -88,12 +88,15 @@ const Address: FC<IAddressProps> = (props) => {
       {address.phoneNumber && (
         <TouchableOpacity
           onPress={handleCall}
-          style={styles.phoneNumber}
+          style={[
+            styles.phoneNumber,
+            { backgroundColor: colors[colorScheme].lightPurple },
+          ]}
           onLongPress={() => {
             copyToClipboard(address.phoneNumber);
           }}
         >
-          <ThemedText type="hint" color="gray" align="left">
+          <ThemedText type="hint" color="black" align="left">
             Номер телефона
           </ThemedText>
           <ThemedText type="mediumText" weight="bold" align="left">
@@ -109,7 +112,9 @@ const Address: FC<IAddressProps> = (props) => {
           },
         ]}
       >
-        <ThemedText color="white">{`${metroString} ${distance} км от вас`}</ThemedText>
+        <ThemedText
+          style={{ color: colors.white }}
+        >{`${metroString} ${distance} км от вас`}</ThemedText>
       </View>
       {address.info && (
         <View>

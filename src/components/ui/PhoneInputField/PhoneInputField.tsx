@@ -8,6 +8,7 @@ import {
   Text,
   StyleSheet,
   TouchableWithoutFeedback,
+  useColorScheme,
 } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -27,6 +28,7 @@ interface IField {
   placeholder: string;
 }
 const PhoneInputField: FC<IField> = (props) => {
+  const colorScheme = useColorScheme();
   const { name, control, error, placeholder } = props;
   const rules = {
     required: "Введите номер телефона",
@@ -141,11 +143,17 @@ const PhoneInputField: FC<IField> = (props) => {
 
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.inputContainer, animatedBorderColor]}>
+      <Animated.View
+        style={[
+          styles.inputContainer,
+          { backgroundColor: colors[colorScheme].white },
+          animatedBorderColor,
+        ]}
+      >
         <TextInput
           placeholder=""
           ref={inputRef}
-          style={styles.input}
+          style={[styles.input, { color: colors[colorScheme].black }]}
           keyboardType="numeric"
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -158,7 +166,13 @@ const PhoneInputField: FC<IField> = (props) => {
         style={[styles.placeholderContainer, animatedPlaceholderPosition]}
       >
         <TouchableWithoutFeedback onPress={() => inputRef.current.focus()}>
-          <Animated.Text style={[styles.placeholder, animatedPlaceholderColor]}>
+          <Animated.Text
+            style={[
+              styles.placeholder,
+              { backgroundColor: colors[colorScheme].white },
+              animatedPlaceholderColor,
+            ]}
+          >
             {placeholder + "*"}
           </Animated.Text>
         </TouchableWithoutFeedback>
@@ -187,7 +201,6 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     height: "100%",
-    color: colors.black,
     fontSize: 14,
     fontFamily: fonts.regular,
     paddingLeft: 15,
@@ -196,8 +209,6 @@ const styles = StyleSheet.create({
   placeholderContainer: {
     position: "absolute",
     left: 12,
-    backgroundColor: colors.white,
-    paddingHorizontal: 5,
   },
   placeholder: {
     fontFamily: fonts.medium,

@@ -5,6 +5,7 @@ import {
   Animated,
   Text,
   TouchableHighlight,
+  useColorScheme,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import OnBoardingItem from "./components/OnBoardingItem";
@@ -38,6 +39,7 @@ const data = [
 ];
 
 const onBoarding = () => {
+  const colorScheme = useColorScheme();
   const [currentPage, setCurrentPage] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
 
@@ -49,7 +51,7 @@ const onBoarding = () => {
 
   const nextButtonClick = () => {
     if (currentPage == data.length - 1) {
-      router.push("/(auth)/main");
+      router.replace("/(auth)/main");
     }
 
     if (currentPage < data.length - 1) {
@@ -63,7 +65,9 @@ const onBoarding = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: colors[colorScheme].white }]}
+    >
       <TouchableHighlight
         style={styles.skipTextContainer}
         onPress={navigateToLogin}

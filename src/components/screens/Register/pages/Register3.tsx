@@ -1,4 +1,9 @@
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  useColorScheme,
+  View,
+} from "react-native";
 
 import React, { FC } from "react";
 import { useForm } from "react-hook-form";
@@ -42,6 +47,7 @@ interface IFormField {
 }
 
 const Register3: FC<IProps> = (props) => {
+  const colorScheme = useColorScheme();
   const { previousPage } = props;
 
   const signupFormState = useTypedSelector((state) => state.signupForm);
@@ -73,7 +79,9 @@ const Register3: FC<IProps> = (props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: colors[colorScheme].white }]}
+    >
       <Header title="Регистрация" onPressBack={previousPage} />
       <View style={styles.fieldContainer}>
         <ThemedText type="mediumText" align="left">

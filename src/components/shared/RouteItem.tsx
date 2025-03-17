@@ -27,7 +27,9 @@ const RouteItem: FC<IRouteItemProps> = (props) => {
     <Link href={`/orders/${address.orderId}`}>
       <View style={styles.addressContainer}>
         <View style={styles.addressIndexContainer}>
-          <ThemedText color="white">{index + 1}</ThemedText>
+          <ThemedText style={{ color: colors.white }} weight="bold">
+            {index + 1}
+          </ThemedText>
         </View>
 
         <View
@@ -59,7 +61,9 @@ const RouteItem: FC<IRouteItemProps> = (props) => {
               },
             ]}
           >
-            <ThemedText color="white">{`${metroString} ${distance} км от вас`}</ThemedText>
+            <ThemedText
+              style={{ color: colors.white }}
+            >{`${metroString} ${distance} км от вас`}</ThemedText>
           </View>
 
           {address.type && isTypeShown && (

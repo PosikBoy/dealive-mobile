@@ -3,6 +3,7 @@ import {
   FlatList,
   Image,
   StyleSheet,
+  useColorScheme,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -17,8 +18,10 @@ import { IOrder } from "@/types/order.interface";
 import { colors } from "@/constants/colors";
 import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import { FlashList } from "@shopify/flash-list";
 
 const CompletedOrders = () => {
+  const colorScheme = useColorScheme();
   const [orders, setOrders] = useState<IOrder[]>([]);
 
   const { data, isLoading } = useGetAllOrdersQuery(undefined, {
@@ -46,7 +49,12 @@ const CompletedOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View style={styles.loadingModal}>
+          <View
+            style={[
+              styles.loadingModal,
+              { backgroundColor: colors[colorScheme].white },
+            ]}
+          >
             <ActivityIndicator size={"large"} color={colors.purple} />
             <ThemedText type="big" weight="bold">
               {location.isLocationLoading
@@ -68,8 +76,9 @@ const CompletedOrders = () => {
       <Header title="Завершенные заказы" />
       <View style={styles.ordersContainer}>
         {completedOrders.length > 0 && (
-          <FlatList
+          <FlashList
             data={orders}
+            estimatedItemSize={150}
             renderItem={({ item }) => <OrderPreview order={item} />}
             keyExtractor={(item) => item.id.toString()}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -104,6 +113,7 @@ const styles = StyleSheet.create({
     paddingBottom: 126,
   },
   ordersContainer: {
+    flex: 1,
     paddingHorizontal: 5,
   },
   searchOrderContainer: {

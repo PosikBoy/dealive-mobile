@@ -67,7 +67,6 @@ const Order: FC<IProps> = ({ order }) => {
     }
     if (order.statusId == 3) {
       const route = routeService.getRouteWithNewOrder(routeState.route, order);
-      console.log(route);
       setRoute(route);
     }
   }, []);

@@ -1,9 +1,7 @@
 import { colors } from "@/constants/colors";
-import { fonts, fontSizes } from "@/constants/styles";
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import {
   TouchableOpacity,
-  Text,
   View,
   StyleSheet,
   LayoutChangeEvent,
@@ -111,6 +109,7 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     alignItems: "center",
     justifyContent: "center",
+    flex: 1,
   },
   activeTogglerText: {
     color: colors.white,

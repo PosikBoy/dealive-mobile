@@ -8,6 +8,7 @@ import {
   Text,
   StyleSheet,
   TouchableWithoutFeedback,
+  useColorScheme,
 } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -29,6 +30,7 @@ interface IControllerField {
   rules?: any;
 }
 const InputFieldWithHandler: FC<IControllerField> = (props) => {
+  const colorScheme = useColorScheme();
   const { name, control, error, placeholder, handler, rules = {} } = props;
 
   const { field } = useController({
@@ -107,11 +109,17 @@ const InputFieldWithHandler: FC<IControllerField> = (props) => {
 
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.inputContainer, animatedBorderColor]}>
+      <Animated.View
+        style={[
+          styles.inputContainer,
+          animatedBorderColor,
+          { backgroundColor: colors[colorScheme].white },
+        ]}
+      >
         <TextInput
           placeholder=""
           ref={inputRef}
-          style={styles.input}
+          style={[styles.input, { color: colors[colorScheme].black }]}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChangeText={changeHandler}
@@ -123,7 +131,13 @@ const InputFieldWithHandler: FC<IControllerField> = (props) => {
         style={[styles.placeholderContainer, animatedPlaceholderPosition]}
       >
         <TouchableWithoutFeedback onPress={() => inputRef.current.focus()}>
-          <Animated.Text style={[styles.placeholder, animatedPlaceholderColor]}>
+          <Animated.Text
+            style={[
+              styles.placeholder,
+              { backgroundColor: colors[colorScheme].white },
+              animatedPlaceholderColor,
+            ]}
+          >
             {placeholder + "*"}
           </Animated.Text>
         </TouchableWithoutFeedback>
@@ -162,7 +176,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 12,
     backgroundColor: colors.white,
-    paddingHorizontal: 5,
   },
   placeholder: {
     fontFamily: fonts.medium,

@@ -17,13 +17,14 @@ import {
 import "@/components/sheets/SheetsManager.tsx";
 import { persistor } from "@/store/store";
 import { PersistGate } from "redux-persist/integration/react";
-import { useColorScheme } from "react-native";
+import { Appearance, useColorScheme } from "react-native";
+import { colors } from "@/constants/colors";
 
 SplashScreen.preventAutoHideAsync();
 
 const Layout = () => {
   const colorScheme = useColorScheme();
-
+  Appearance.setColorScheme("dark");
   return (
     <GestureHandlerRootView>
       <SafeAreaView style={{ flex: 1 }}>
@@ -35,7 +36,13 @@ const Layout = () => {
                   <ThemeProvider
                     value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
                   >
-                    <StatusBar style="auto" />
+                    <StatusBar
+                      backgroundColor={
+                        colorScheme === "dark"
+                          ? colors.dark.statusBarColor
+                          : "#fff"
+                      }
+                    />
                     <Stack
                       screenOptions={{
                         headerShown: false,
