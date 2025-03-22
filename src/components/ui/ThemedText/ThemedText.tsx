@@ -14,6 +14,7 @@ interface IProps extends PropsWithChildren<TextProps> {
     | "big"
     | "mediumText";
   align?: "left" | "center";
+  key?: React.Key;
 }
 
 const lightColors = {
@@ -40,14 +41,15 @@ const ThemedText = (props: IProps) => {
     style,
     type = "default",
     align = "center",
+    key,
     ...rest
   } = props;
   const colorScheme = useColorScheme() || "light";
   const colors = colorScheme === "light" ? lightColors : darkColors;
   const textColor = colors[color];
-
   return (
     <Text
+      {...rest}
       style={[
         styles[weight],
         styles[type],
@@ -55,7 +57,6 @@ const ThemedText = (props: IProps) => {
         { color: textColor },
         style,
       ]}
-      {...rest}
     >
       {children}
     </Text>

@@ -31,25 +31,24 @@ const Layout = () => {
           <PersistGate loading={null} persistor={persistor}>
             <SheetProvider>
               <ConnectionCheck>
-                <LocationProvider>
-                  <ThemeProvider
-                    value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-                  >
-                    <StatusBar
-                      backgroundColor={
-                        colorScheme === "dark"
-                          ? colors.dark.statusBarColor
-                          : "#fff"
-                      }
-                    />
-                    <Stack
-                      screenOptions={{
-                        headerShown: false,
-                        animation: "fade_from_bottom",
-                      }}
-                    />
-                  </ThemeProvider>
-                </LocationProvider>
+                <ThemeProvider
+                  value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+                >
+                  <StatusBar
+                    backgroundColor={
+                      colorScheme === "dark"
+                        ? colors.dark.statusBarColor
+                        : "#fff"
+                    }
+                  />
+                  <Stack
+                    screenOptions={{
+                      headerShown: false,
+                      animation: "fade_from_bottom",
+                    }}
+                  />
+                  <LocationProvider />
+                </ThemeProvider>
               </ConnectionCheck>
             </SheetProvider>
           </PersistGate>

@@ -121,6 +121,7 @@ const Address: FC<IAddressProps> = (props) => {
           <ThemedText type="hint" align="left">
             Дополнительно
           </ThemedText>
+          {/* Я не знаю зачем сюда передавать ключ, но иначе ошибка, */}
           <Hyperlink onPress={(url) => Linking.openURL(url)}>
             <ThemedText weight="medium" align="left">
               {address.info}

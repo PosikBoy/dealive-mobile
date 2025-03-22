@@ -54,24 +54,26 @@ export const useLocation = () => {
           lat: data.coords.latitude,
         };
 
-        if (location) {
-          // Вычисляем расстояние между текущей и новой локацией
-          const distance = geodataService.calculateDistance(
-            location.lat,
-            location.lon,
-            newLocation.lat,
-            newLocation.lon
-          );
-          // Обновляем локацию только если она изменилась на 50 метров или больше
-          if (distance > 0.05) {
-            setLocation(newLocation);
-            setError(null);
-          }
-        } else {
-          // Если локации ещё нет, просто сохраняем её
-          setLocation(newLocation);
-          setError(null);
-        }
+        // if (location) {
+        //   // Вычисляем расстояние между текущей и новой локацией
+        //   const distance = geodataService.calculateDistance(
+        //     location.lat,
+        //     location.lon,
+        //     newLocation.lat,
+        //     newLocation.lon
+        //   );
+        //   // Обновляем локацию только если она изменилась на 50 метров или больше
+        //   if (distance > 0.05) {
+        //     setLocation(newLocation);
+        //     setError(null);
+        //   }
+        // } else {
+        //   // Если локации ещё нет, просто сохраняем её
+        //   setLocation(newLocation);
+        //   setError(null);
+        // }
+        setLocation(newLocation);
+        setError(null);
       } catch (err: any) {
         setError(
           "Не удалось получить местоположение. Убедитесь, что на вашем устройстве включена геолокация."
@@ -83,7 +85,7 @@ export const useLocation = () => {
 
     getLocation();
 
-    interval = setInterval(getLocation, 2000);
+    interval = setInterval(getLocation, 1000);
 
     return () => clearInterval(interval);
   }, [location]);
