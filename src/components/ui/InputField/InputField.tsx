@@ -9,6 +9,7 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   KeyboardTypeOptions,
+  useColorScheme,
 } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -27,6 +28,7 @@ interface IField {
   keyboardType?: KeyboardTypeOptions;
 }
 const InputField: FC<IField> = (props) => {
+  const colorScheme = useColorScheme() || "light";
   const {
     type = "default",
     placeholder,
@@ -98,12 +100,18 @@ const InputField: FC<IField> = (props) => {
   };
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.inputContainer, animatedBorderColor]}>
+      <Animated.View
+        style={[
+          styles.inputContainer,
+          { backgroundColor: colors[colorScheme].white },
+          animatedBorderColor,
+        ]}
+      >
         <TextInput
           placeholder=""
           ref={inputRef}
           secureTextEntry={type === "password"}
-          style={styles.input}
+          style={[styles.input, { color: colors[colorScheme].black }]}
           value={field.value}
           keyboardType={keyboardType}
           onFocus={handleFocus}
@@ -117,7 +125,7 @@ const InputField: FC<IField> = (props) => {
           position: "absolute",
           top: placeholderTop,
           left: 12,
-          backgroundColor: colors.white,
+          backgroundColor: colors[colorScheme].white,
           paddingHorizontal: 5,
         }}
       >
@@ -143,7 +151,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: "100%",
     height: 40,
-    backgroundColor: colors.white,
     borderWidth: 1,
     borderRadius: 8,
   },
@@ -157,6 +164,5 @@ const styles = StyleSheet.create({
   placeholder: {
     fontSize: 14,
     fontFamily: fonts.regular,
-    color: colors.inputGray,
   },
 });

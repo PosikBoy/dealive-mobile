@@ -1,13 +1,12 @@
 import { colors } from "@/constants/colors";
-import { fonts, fontSizes } from "@/constants/styles";
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import {
   TouchableOpacity,
-  Text,
   View,
   StyleSheet,
   LayoutChangeEvent,
   Animated,
+  useColorScheme,
 } from "react-native";
 import ThemedText from "../ThemedText/ThemedText";
 
@@ -18,6 +17,7 @@ interface ITogglerProps {
 }
 
 const Toggler: FC<ITogglerProps> = ({ options, activeTab, onChange }) => {
+  const colorScheme = useColorScheme() || "light";
   const [togglerWidth, setTogglerWidth] = useState(0);
 
   const tabAnimation = useRef(
@@ -51,7 +51,13 @@ const Toggler: FC<ITogglerProps> = ({ options, activeTab, onChange }) => {
 
   return (
     <View style={styles.togglerTypeContainer}>
-      <View style={styles.togglerType} onLayout={onTogglerLayout}>
+      <View
+        style={[
+          styles.togglerType,
+          { backgroundColor: colors[colorScheme].lightGray },
+        ]}
+        onLayout={onTogglerLayout}
+      >
         <Animated.View
           style={[
             styles.indicator,
@@ -59,16 +65,24 @@ const Toggler: FC<ITogglerProps> = ({ options, activeTab, onChange }) => {
             { width: togglerWidth / options.length },
           ]}
         />
-        {options.map((option, index) => {
+        {options.map((option) => {
           return (
             <TouchableOpacity
               key={option}
-              style={styles.togglerOption}
+              style={[
+                styles.togglerOption,
+                { width: togglerWidth / options.length },
+              ]}
               onPress={() => handlePress(option)}
             >
               <ThemedText
                 type="default"
-                style={[option === activeTab && styles.activeTogglerText]}
+                style={[
+                  option === activeTab && styles.activeTogglerText,
+                  {
+                    flex: 1,
+                  },
+                ]}
               >
                 {option}
               </ThemedText>
@@ -94,15 +108,14 @@ const styles = StyleSheet.create({
     position: "relative",
     width: "100%",
     borderRadius: 40,
-    backgroundColor: colors.lightGray,
     overflow: "hidden",
+    height: 30,
   },
-
   togglerOption: {
-    padding: 7,
     alignItems: "center",
     justifyContent: "center",
-    width: "33%",
+    height: "100%",
+    flexDirection: "row",
   },
   activeTogglerText: {
     color: colors.white,

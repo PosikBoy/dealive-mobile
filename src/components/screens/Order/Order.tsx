@@ -7,7 +7,15 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Animated, Image, Linking, StyleSheet, Text, View } from "react-native";
+import {
+  Animated,
+  Image,
+  Linking,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from "react-native";
 import { colors } from "@/constants/colors";
 import MyButton from "@/components/ui/Button/Button";
 import { useTakeOrderMutation } from "@/services/orders/orders.service";
@@ -20,10 +28,10 @@ import { SheetManager } from "react-native-actions-sheet";
 import { icons } from "@/constants/icons";
 import yandexMaps from "@/utils/yandexMaps";
 import Route from "./components/Route";
-import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
+import { useTypedSelector } from "@/hooks/redux.hooks";
 import routeService from "@/services/route/route.service";
-import { pushRoute } from "@/store/route/route.slice";
 import Toggler from "@/components/ui/HorizontalToggler/HorizontalToggler";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 interface IProps {
   order: IOrder;
@@ -46,12 +54,12 @@ interface IRouteState {
 }
 
 const Order: FC<IProps> = ({ order }) => {
+  const colorScheme = useColorScheme();
+
   const [activeTab, setActiveTab] = useState<string>("Адреса");
   const [route, setRoute] = useState<IRouteState>({ distance: 0, route: [] });
   const [takeOrder, { error }] = useTakeOrderMutation();
   const routeState = useTypedSelector((state) => state.route);
-
-  const dispatch = useTypedDispatch();
 
   useEffect(() => {
     if (order.statusId == 4) {
@@ -59,7 +67,6 @@ const Order: FC<IProps> = ({ order }) => {
     }
     if (order.statusId == 3) {
       const route = routeService.getRouteWithNewOrder(routeState.route, order);
-      console.log(route);
       setRoute(route);
     }
   }, []);
@@ -76,7 +83,6 @@ const Order: FC<IProps> = ({ order }) => {
 
   const takeOrderHandler = async () => {
     await takeOrder({ orderId: order.id }).unwrap();
-    dispatch(pushRoute(route));
     SheetManager.hide("take-order-sheet");
   };
 
@@ -233,10 +239,12 @@ const Order: FC<IProps> = ({ order }) => {
           <Route route={route.route} orderId={order.id} />
         </Animated.View>
       </View>
-      <View style={styles.footer}>
-        <Text style={styles.footerInfo}>
+      <View
+        style={[styles.footer, { backgroundColor: colors[colorScheme].white }]}
+      >
+        <ThemedText style={styles.footerInfo}>
           {order.price + "₽ · " + order.weight + " · " + order.parcelType}
-        </Text>
+        </ThemedText>
         <View style={styles.buttonsContainer}>
           {order.statusId == 3 && (
             <MyButton buttonText="Взять заказ" onPress={takeOrderModalShow} />
@@ -306,7 +314,6 @@ const styles = StyleSheet.create({
     width: "100%",
     gap: 10,
     boxShadow: "0px -4px 4px rgba(0, 0, 0, 0.10)",
-    backgroundColor: colors.white,
   },
   footerInfo: {
     fontSize: 18,

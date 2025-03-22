@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
 import {
   IAddress,
   IOrderAction,
@@ -16,16 +23,17 @@ type Props = {
 };
 
 const actionIcons = {
-  [IOrderActionType.GO_TO]: icons.goTo, // Иконка для GO_TO
-  [IOrderActionType.ARRIVED_AT]: icons.mapDot, // Иконка для ARRIVED_AT
-  [IOrderActionType.PICKUP]: icons.parcel, // Иконка для PICKUP
-  [IOrderActionType.DELIVER]: icons.parcel, // Иконка для DELIVER
-  [IOrderActionType.COLLECT_PAYMENT]: icons.money, // Иконка для COLLECT_PAYMENT
-  [IOrderActionType.PAY_COMMISION]: icons.money, // Иконка для PAY_COMMISION
-  [IOrderActionType.COMPLETE_ORDER]: icons.check, // Иконка для COMPLETE_ORDER
+  [IOrderActionType.GO_TO]: icons.goTo,
+  [IOrderActionType.ARRIVED_AT]: icons.mapDot,
+  [IOrderActionType.PICKUP]: icons.parcel,
+  [IOrderActionType.DELIVER]: icons.parcel,
+  [IOrderActionType.COLLECT_PAYMENT]: icons.money,
+  [IOrderActionType.PAY_COMMISION]: icons.money,
+  [IOrderActionType.COMPLETE_ORDER]: icons.check,
 };
 
 export const Action = (props: Props) => {
+  const colorScheme = useColorScheme() || "light";
   const { action, disabled } = props;
   const icon = actionIcons[action.actionType];
 
@@ -34,15 +42,23 @@ export const Action = (props: Props) => {
       <TouchableOpacity
         activeOpacity={0.7}
         disabled={disabled}
-        style={[styles.action, action.isCompleted && styles.actionCompleted]}
+        style={[
+          styles.action,
+          { backgroundColor: colors[colorScheme].white },
+          action.isCompleted && styles.actionCompleted,
+        ]}
       >
         <View style={styles.iconContainer}>
-          <Image source={icon} style={{ width: 20, height: 20 }} />
+          <Image
+            tintColor={colors[colorScheme].black}
+            source={icon}
+            style={{ width: 20, height: 20 }}
+          />
         </View>
         <ThemedText
           type="mediumText"
           weight="medium"
-          style={{ textAlign: "left" }}
+          style={{ textAlign: "left", flex: 1 }}
         >
           {action.description}
         </ThemedText>
@@ -59,7 +75,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: colors.white,
     flexDirection: "row",
     alignItems: "center",
   },

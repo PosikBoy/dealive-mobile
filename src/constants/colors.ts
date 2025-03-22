@@ -15,16 +15,20 @@ export const colors = {
 
   backgroundColor: "rgba(0, 0, 0, 0.05)",
   dark: {
-    gray: "#D1D1D1",
-    lightGray: "#D9D9D9",
+    gray: "#808080",
+    lightGray: "#808080",
+    lightPurple: "#872CFE",
     red: "#EE2400",
-    green: "#D0FF84",
-    white: "#000000",
+    green: "rgb(0, 112, 24)",
+    white: "rgb(48, 46, 46)",
     black: "#ffffff",
+    statusBarColor: "rgb(48, 46, 46)",
   },
   light: {
     gray: "#808080",
     lightGray: "#D9D9D9",
+    lightPurple: "#FAE3FF",
+
     red: "#EE2400",
     green: "#D0FF84",
     black: "#000000",

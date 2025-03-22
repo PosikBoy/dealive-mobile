@@ -1,4 +1,4 @@
-import { StyleSheet, ToastAndroid, View } from "react-native";
+import { StyleSheet, ToastAndroid, useColorScheme, View } from "react-native";
 import React, { useCallback, useState } from "react";
 import {
   IAddress,
@@ -9,14 +9,12 @@ import { colors } from "@/constants/colors";
 import { useCompleteActionMutation } from "@/services/orders/orders.service";
 import MyButton from "@/components/ui/Button/Button";
 
-import { fonts } from "@/constants/styles";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import geodataService from "@/services/geodata/geodata.service";
 import ActionSheet, {
   SheetManager,
   SheetProps,
 } from "react-native-actions-sheet";
-import { removeAddressFromRoute } from "@/store/route/route.slice";
 import ThemedText from "../ui/ThemedText/ThemedText";
 
 const ACTION_SNIPPETS = {
@@ -57,6 +55,7 @@ export interface ICompleteActionSheet {
 
 export const CompleteActionSheet = React.memo(
   (props: SheetProps<"complete-action-sheet">) => {
+    const colorScheme = useColorScheme() || "light";
     const { action, address } = props.payload;
     const location = useTypedSelector((state) => state.location);
     const snippet = ACTION_SNIPPETS[action.actionType];
@@ -88,9 +87,9 @@ export const CompleteActionSheet = React.memo(
         }
 
         await completeAction(action.id).unwrap();
-        if (action.actionType == IOrderActionType.ARRIVED_AT) {
-          dispatch(removeAddressFromRoute(address.id));
-        }
+        // if (action.actionType == IOrderActionType.ARRIVED_AT) {
+        //   dispatch(removeAddressFromRoute(address.id));
+        // }
 
         SheetManager.hide("complete-action-sheet");
         ToastAndroid.show(
@@ -121,8 +120,16 @@ export const CompleteActionSheet = React.memo(
           damping: 100000, // Увеличиваем затухание
           mass: 1, // Масса (оставляем по умолчанию)
         }}
+        containerStyle={{
+          backgroundColor: colors[colorScheme].white,
+        }}
       >
-        <View style={styles.sheetContainer}>
+        <View
+          style={[
+            styles.sheetContainer,
+            { backgroundColor: colors[colorScheme].white },
+          ]}
+        >
           <View style={styles.sheetTextGroup}>
             <ThemedText type="subtitle" weight="medium">
               Подтверждение выполнения
@@ -154,7 +161,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: "center",
     gap: 10,
-    backgroundColor: colors.white,
   },
   sheetTextGroup: {
     width: "100%",

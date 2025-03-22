@@ -3,6 +3,7 @@ import {
   Image,
   Linking,
   StyleSheet,
+  useColorScheme,
   View,
 } from "react-native";
 import MyButton from "@/components/ui/Button/Button";
@@ -18,6 +19,7 @@ import {
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 const waitForApproval = () => {
+  const colorScheme = useColorScheme() || "light";
   const { isApproved, isLoading, error } = useTypedSelector(
     (state) => state.auth
   );
@@ -35,8 +37,11 @@ const waitForApproval = () => {
       console.log(error);
     }
   };
+
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: colors[colorScheme].white }]}
+    >
       <View style={styles.header}>
         <ThemedText type="title" weight="bold">
           Вы успешно зарегистрировались

@@ -1,4 +1,9 @@
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  useColorScheme,
+  View,
+} from "react-native";
 import React from "react";
 import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
 import { colors } from "@/constants/colors";
@@ -10,8 +15,33 @@ import ThemedText from "@/components/ui/ThemedText/ThemedText";
 import { FlashList } from "@shopify/flash-list";
 
 const RecommendedOrders = () => {
+  const colorScheme = useColorScheme() || "light";
   const location = useTypedSelector((state) => state.location);
   const { recommendedOrders, isLoading } = useRecommendedOrders();
+
+  if (location.error) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <OrderPreviewSkeleton />
+          <OrderPreviewSkeleton />
+          <OrderPreviewSkeleton />
+        </View>
+        <View style={styles.loadingTextContainer}>
+          <View
+            style={[
+              styles.loadingModal,
+              { backgroundColor: colors[colorScheme].white },
+            ]}
+          >
+            <ThemedText type="big" weight="medium">
+              {location.error}
+            </ThemedText>
+          </View>
+        </View>
+      </View>
+    );
+  }
 
   if (location.isLocationLoading || isLoading) {
     return (
@@ -22,7 +52,12 @@ const RecommendedOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View style={styles.loadingModal}>
+          <View
+            style={[
+              styles.loadingModal,
+              { backgroundColor: colors[colorScheme].white },
+            ]}
+          >
             <ActivityIndicator size={"large"} color={colors.purple} />
             <ThemedText type="big" weight="medium">
               {location.isLocationLoading
@@ -89,30 +124,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   loadingModal: {
     transform: [{ translateY: -60 }],
-    backgroundColor: colors.white,
     padding: 20,
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
   },
-
   separator: {
     height: 5,
     backgroundColor: "transparent",
-  },
-  update: {
-    position: "absolute",
-    bottom: 130,
-    right: 20,
-    width: 40,
-    height: 40,
-    padding: 10,
-    borderRadius: 25,
-    backgroundColor: colors.white,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });

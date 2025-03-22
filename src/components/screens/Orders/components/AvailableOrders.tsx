@@ -3,6 +3,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  useColorScheme,
   View,
 } from "react-native";
 import React, { useMemo, useRef, useState } from "react";
@@ -35,6 +36,7 @@ const sortingRulesOptionsText = {
 type SortingRulesTypes = (typeof sortingRuleOptions)[number];
 
 const AvailableOrders = () => {
+  const colorScheme = useColorScheme() || "light";
   const location = useTypedSelector((state) => state.location);
 
   const [sortingRules, setSortingRules] =
@@ -77,14 +79,20 @@ const AvailableOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View style={styles.loadingModal}>
-            <ThemedText type="big">{location.error}</ThemedText>
+          <View
+            style={[
+              styles.loadingModal,
+              { backgroundColor: colors[colorScheme].white },
+            ]}
+          >
+            <ThemedText type="big" weight="medium">
+              {location.error}
+            </ThemedText>
           </View>
         </View>
       </View>
     );
   }
-
   if (location.isLocationLoading || isLoading) {
     return (
       <View style={styles.container}>
@@ -94,7 +102,12 @@ const AvailableOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View style={styles.loadingModal}>
+          <View
+            style={[
+              styles.loadingModal,
+              { backgroundColor: colors[colorScheme].white },
+            ]}
+          >
             <ActivityIndicator size={"large"} color={colors.purple} />
             <ThemedText type="big" weight="bold">
               {location.isLocationLoading
@@ -112,7 +125,10 @@ const AvailableOrders = () => {
       <View style={{ flex: 1 }}>
         <TouchableOpacity
           onPress={() => sortingRulesModalRef.current.show()}
-          style={styles.sortButton}
+          style={[
+            styles.sortButton,
+            { backgroundColor: colors[colorScheme].white },
+          ]}
         >
           <ThemedText weight="medium" type="mediumText">
             Сортировка заказов
@@ -120,25 +136,30 @@ const AvailableOrders = () => {
         </TouchableOpacity>
         <FlashList
           data={sortedOrders}
-          estimatedItemSize={150} // 🔥 ВАЖНО: FlashList требует указанного размера элемента
+          estimatedItemSize={150}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => <OrderPreview order={item} />}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
       </View>
-      <TouchableOpacity style={styles.update} onPress={() => refetch()}>
+      <TouchableOpacity
+        style={[styles.update, { backgroundColor: colors[colorScheme].white }]}
+        onPress={() => refetch()}
+        disabled={isFetching}
+      >
         {isFetching ? (
           <ActivityIndicator size="small" color={colors.purple} />
         ) : (
           <Image
+            tintColor={colors[colorScheme].black}
             source={icons.refetch}
             style={{ width: "100%", height: "100%" }}
           />
         )}
       </TouchableOpacity>
       <CustomBottomSheetModal ref={sortingRulesModalRef}>
-        <>
+        <View style={{ backgroundColor: colors[colorScheme].white }}>
           <ThemedText weight="semiBold" type="mediumText">
             Как отсортировать?
           </ThemedText>
@@ -157,7 +178,7 @@ const AvailableOrders = () => {
               </TouchableOpacity>
             );
           })}
-        </>
+        </View>
       </CustomBottomSheetModal>
     </View>
   );
@@ -187,7 +208,6 @@ const styles = StyleSheet.create({
   },
   loadingModal: {
     transform: [{ translateY: -60 }],
-    backgroundColor: colors.white,
     padding: 20,
     borderRadius: 20,
     justifyContent: "center",
@@ -214,12 +234,10 @@ const styles = StyleSheet.create({
     height: 40,
     padding: 10,
     borderRadius: 25,
-    backgroundColor: colors.white,
     justifyContent: "center",
     alignItems: "center",
   },
   sortButton: {
-    backgroundColor: colors.white,
     borderRadius: borderRadiuses.big,
     padding: 10,
     marginVertical: 5,

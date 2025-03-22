@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  useColorScheme,
   View,
 } from "react-native";
 import React from "react";
@@ -19,9 +20,32 @@ import ThemedText from "@/components/ui/ThemedText/ThemedText";
 import Animated, { LinearTransition } from "react-native-reanimated";
 
 const ActiveOrders = () => {
+  const colorScheme = useColorScheme() || "light";
   const location = useTypedSelector((state) => state.location);
   const { data, isLoading, refetch } = useGetActiveOrdersQuery();
-
+  if (location.error) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <OrderPreviewSkeleton />
+          <OrderPreviewSkeleton />
+          <OrderPreviewSkeleton />
+        </View>
+        <View style={styles.loadingTextContainer}>
+          <View
+            style={[
+              styles.loadingModal,
+              { backgroundColor: colors[colorScheme].white },
+            ]}
+          >
+            <ThemedText type="big" weight="medium">
+              {location.error}
+            </ThemedText>
+          </View>
+        </View>
+      </View>
+    );
+  }
   if (location.isLocationLoading || isLoading) {
     return (
       <View style={styles.container}>
@@ -31,7 +55,12 @@ const ActiveOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View style={styles.loadingModal}>
+          <View
+            style={[
+              styles.loadingModal,
+              { backgroundColor: colors[colorScheme].white },
+            ]}
+          >
             <ActivityIndicator size={"large"} color={colors.purple} />
             <ThemedText type="big" weight="medium">
               {location.isLocationLoading
@@ -72,7 +101,7 @@ const ActiveOrders = () => {
         />
       </View>
       <TouchableOpacity
-        style={styles.update}
+        style={[styles.update, { backgroundColor: colors[colorScheme].white }]}
         onPress={() => refetch()}
         disabled={isLoading}
       >
@@ -80,6 +109,7 @@ const ActiveOrders = () => {
           <ActivityIndicator size="small" color={colors.purple} />
         ) : (
           <Image
+            tintColor={colors[colorScheme].black}
             source={icons.refetch}
             style={{ width: "100%", height: "100%" }}
           />
@@ -138,7 +168,6 @@ const styles = StyleSheet.create({
     height: 40,
     padding: 10,
     borderRadius: 25,
-    backgroundColor: colors.white,
     justifyContent: "center",
     alignItems: "center",
   },

@@ -1,5 +1,5 @@
 import { IOrder } from "@/types/order.interface";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, useColorScheme, View } from "react-native";
 import ActionSheet, { SheetProps } from "react-native-actions-sheet";
 import MyButton from "../ui/Button/Button";
 import { gaps, paddings } from "@/constants/styles";
@@ -13,6 +13,8 @@ export interface ITakeOrderSheet {
 }
 
 const TakeOrderSheet = (props: SheetProps<"take-order-sheet">) => {
+  const colorScheme = useColorScheme() || "light";
+
   const { order, takeOrder, error } = props.payload;
 
   return (
@@ -21,6 +23,7 @@ const TakeOrderSheet = (props: SheetProps<"take-order-sheet">) => {
       containerStyle={{
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: colors[colorScheme].white,
       }}
       openAnimationConfig={{
         stiffness: 1000, // Уменьшаем жесткость
@@ -28,7 +31,12 @@ const TakeOrderSheet = (props: SheetProps<"take-order-sheet">) => {
         mass: 1, // Масса (оставляем по умолчанию)
       }}
     >
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: colors[colorScheme].white },
+        ]}
+      >
         <View style={styles.textContainer}>
           <ThemedText type="subtitle" weight="bold">
             Информация о заказе

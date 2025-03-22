@@ -8,6 +8,7 @@ import {
   Text,
   StyleSheet,
   TouchableWithoutFeedback,
+  useColorScheme,
 } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -32,6 +33,7 @@ interface IControllerField {
   placeholder: string;
 }
 const DataInputField: FC<IControllerField> = (props) => {
+  const colorScheme = useColorScheme() || "light";
   const { name, control, error, placeholder } = props;
   const rules = {
     required: "Введите дату рождения",
@@ -133,11 +135,17 @@ const DataInputField: FC<IControllerField> = (props) => {
 
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.inputContainer, animatedBorderColor]}>
+      <Animated.View
+        style={[
+          styles.inputContainer,
+          { backgroundColor: colors[colorScheme].white },
+          animatedBorderColor,
+        ]}
+      >
         <TextInput
           placeholder=""
           ref={inputRef}
-          style={styles.input}
+          style={[styles.input, { color: colors[colorScheme].black }]}
           keyboardType="numeric"
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -150,7 +158,13 @@ const DataInputField: FC<IControllerField> = (props) => {
         style={[styles.placeholderContainer, animatedPlaceholderPosition]}
       >
         <TouchableWithoutFeedback onPress={() => inputRef.current.focus()}>
-          <Animated.Text style={[styles.placeholder, animatedPlaceholderColor]}>
+          <Animated.Text
+            style={[
+              styles.placeholder,
+              { backgroundColor: colors[colorScheme].white },
+              animatedPlaceholderColor,
+            ]}
+          >
             {placeholder + "*"}
           </Animated.Text>
         </TouchableWithoutFeedback>
@@ -189,7 +203,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 12,
     backgroundColor: colors.white,
-    paddingHorizontal: 5,
   },
   placeholder: {
     fontFamily: fonts.medium,

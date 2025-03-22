@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  useColorScheme,
+} from "react-native";
 import React from "react";
 import { Link } from "expo-router";
 interface IProps {
@@ -13,8 +20,10 @@ import * as ExpoImagePicker from "expo-image-picker";
 import { Control, useController } from "react-hook-form";
 import { icons } from "@/constants/icons";
 import { fonts } from "@/constants/styles";
+import ThemedText from "../ThemedText/ThemedText";
 
 const ImagePicker = (props: IProps) => {
+  const colorScheme = useColorScheme() || "light";
   const { title, linkSuggestion, control, name, rules = {} } = props;
 
   const { field } = useController({ control, name, rules });
@@ -45,10 +54,10 @@ const ImagePicker = (props: IProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.suggestion}>
-        <Text style={styles.title}>{title}</Text>
+        <ThemedText>{title}</ThemedText>
         {linkSuggestion && (
           <Link href={linkSuggestion}>
-            <Text style={styles.linkSuggestion}>Пример</Text>
+            <ThemedText style={styles.linkSuggestion}>Пример</ThemedText>
           </Link>
         )}
       </View>
@@ -57,11 +66,11 @@ const ImagePicker = (props: IProps) => {
           source={field.value ? field.value : icons.upload}
           style={{ width: 50, height: 50 }}
         />
-        <Text style={styles.title}>
+        <ThemedText type="mediumText">
           {field.value
             ? "Загрузить другое изображение"
             : "Загрузить изображение"}
-        </Text>
+        </ThemedText>
       </TouchableOpacity>
     </View>
   );
@@ -72,7 +81,6 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
   },
-  title: { fontFamily: fonts.semiBold, fontSize: 16 },
   suggestion: {
     flexDirection: "row",
     alignItems: "center",

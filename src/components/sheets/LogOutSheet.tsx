@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, useColorScheme, View } from "react-native";
 import React, { useState, useCallback } from "react";
 import ActionSheet, { SheetManager } from "react-native-actions-sheet";
 import MyButton from "../ui/Button/Button";
@@ -7,6 +7,7 @@ import { useTypedDispatch } from "@/hooks/redux.hooks";
 import { logOut } from "@/store/auth/auth.actions";
 import { router } from "expo-router";
 import ThemedText from "../ui/ThemedText/ThemedText";
+import { colors } from "@/constants/colors";
 
 const STRINGS = {
   TITLE: "Вы уверены, что хотите выйти из аккаунта?",
@@ -16,6 +17,7 @@ const STRINGS = {
 };
 
 const LogOutSheet = () => {
+  const colorScheme = useColorScheme() || "light";
   const dispatch = useTypedDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,13 +37,23 @@ const LogOutSheet = () => {
   return (
     <ActionSheet
       gestureEnabled={true}
+      containerStyle={{
+        backgroundColor: colors[colorScheme].white,
+      }}
       openAnimationConfig={{
         stiffness: 1000, // Уменьшаем жесткость
         damping: 100000, // Увеличиваем затухание
         mass: 1, // Масса (оставляем по умолчанию)
       }}
     >
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: colors[colorScheme].white,
+          },
+        ]}
+      >
         <ThemedText type="subtitle" weight="bold">
           {STRINGS.TITLE}
         </ThemedText>

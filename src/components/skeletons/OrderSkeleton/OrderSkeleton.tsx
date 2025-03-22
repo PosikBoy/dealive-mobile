@@ -1,11 +1,14 @@
 import Shimmer from "@/components/ui/Shimmer/Shimmer";
 import { colors } from "@/constants/colors";
 import { FC } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, useColorScheme, View } from "react-native";
 
 const OrderSkeleton: FC = () => {
+  const colorScheme = useColorScheme() || "light";
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: colors[colorScheme].white }]}
+    >
       <View style={styles.header}>
         <Shimmer />
       </View>
@@ -35,7 +38,6 @@ export default OrderSkeleton;
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: colors.white,
     height: "100%",
     width: "100%",
     gap: 20,

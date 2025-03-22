@@ -1,6 +1,5 @@
-import { IAddress, IGeoData, IOrder } from "@/types/order.interface";
+import { IAddress, IOrder } from "@/types/order.interface";
 import geodataService from "../geodata/geodata.service";
-import { current } from "@reduxjs/toolkit";
 
 interface IUserLocation {
   lat: number;
@@ -47,19 +46,11 @@ class RouteService {
     currentUserLocation?: IUserLocation
   ) => {
     //Если нет маршрута, то считаем просто расстояние между точками, так как не надо встраивать в маршрут
-    if (!route)
+    if (route.length === 0)
       return {
         distance: this.calculateRouteDistance(newOrder.addresses),
         route: newOrder.addresses,
       };
-
-    //если статсу заказа - в доставке, то возвращаем просто расстояние внутри маршрута, так как заказ там уже есть
-    if (newOrder?.statusId == 4) {
-      return {
-        distance: this.calculateRouteDistance(route),
-        route: route,
-      };
-    }
 
     if (currentUserLocation) {
       route.unshift({
@@ -116,6 +107,35 @@ class RouteService {
     }
 
     return distance;
+  };
+
+  restoreRoute = (orders: IOrder[], currentUserLocation?: IUserLocation) => {
+    if (orders.length === 0)
+      return {
+        distance: 0,
+        route: [],
+      };
+
+    const route = {
+      distance: this.calculateRouteDistance(orders[0].addresses),
+      route: orders[0].addresses,
+    };
+
+    const restoredRoute = orders.slice(1).reduce((acc, order) => {
+      const newRoute = this.getRouteWithNewOrder(acc.route, order);
+      return { distance: newRoute.distance, route: newRoute.route };
+    }, route);
+
+    const routeWithOnlyActiveOrders = restoredRoute.route.filter(
+      (address) => address?.isCompleted === false
+    );
+
+    const newDistance = this.calculateRouteDistance(routeWithOnlyActiveOrders);
+
+    return {
+      distance: newDistance,
+      route: routeWithOnlyActiveOrders,
+    };
   };
 }
 

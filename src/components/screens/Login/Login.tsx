@@ -1,4 +1,10 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import InputField from "@/components/ui/InputField/InputField";
 import { useForm } from "react-hook-form";
@@ -10,6 +16,7 @@ import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import { login } from "@/store/auth/auth.actions";
 import { colors } from "@/constants/colors";
 import { fonts, fontSizes, paddings } from "@/constants/styles";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 interface IPhoneNumberPassword {
   phoneNumber: String;
@@ -17,6 +24,7 @@ interface IPhoneNumberPassword {
 }
 
 const Login = () => {
+  const colorScheme = useColorScheme() || "light";
   const {
     control,
     formState: { errors },
@@ -34,9 +42,15 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Войдите в аккаунт</Text>
-      <Text style={styles.subtitle}>Пожалуйста, введите свои данные</Text>
+    <View
+      style={[styles.container, { backgroundColor: colors[colorScheme].white }]}
+    >
+      <ThemedText style={styles.title} type="title">
+        Войдите в аккаунт
+      </ThemedText>
+      <ThemedText type="subtitle" weight="bold">
+        Пожалуйста, введите свои данные
+      </ThemedText>
       <View style={styles.phoneInputContainer}>
         <PhoneInputField
           control={control}
@@ -45,7 +59,9 @@ const Login = () => {
         />
       </View>
       {errors.phoneNumber && (
-        <Text style={styles.errorText}>{errors?.phoneNumber?.message}</Text>
+        <ThemedText type="hint" color="red">
+          {errors?.phoneNumber?.message}
+        </ThemedText>
       )}
       <View style={styles.passwordInputContainer}>
         <InputField
@@ -59,10 +75,16 @@ const Login = () => {
         />
       </View>
       {errors?.password && (
-        <Text style={styles.errorText}>{errors?.password?.message}</Text>
+        <ThemedText type="hint" color="red">
+          {errors?.password?.message}
+        </ThemedText>
       )}
       {/* НАДО СДЕЛАТЬ СТРАНИЦУ ВОССТАНОВЛЕНИЯ ПАРОЛЯ */}
-      {state.error && <Text style={styles.errorText}>{state.error}</Text>}
+      {state.error && (
+        <ThemedText type="hint" color="red">
+          {state.error}
+        </ThemedText>
+      )}
       {state.isLoading && (
         <ActivityIndicator size="large" color={colors.purple} />
       )}
@@ -70,8 +92,10 @@ const Login = () => {
         <Text>Забыли пароль?</Text>
       </Link> */}
       <View style={styles.bottomContainer}>
-        <Link href={"/(auth)/register"} style={styles.registerLabel}>
-          <Text>Регистрация</Text>
+        <Link href={"/(auth)/register"}>
+          <ThemedText type="mediumText" weight="bold">
+            Регистрация
+          </ThemedText>
         </Link>
         <View style={styles.buttonContainer}>
           <MyButton buttonText="Войти" onPress={handleSubmit(onSubmit)} />
@@ -88,56 +112,27 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingHorizontal: paddings.horizontal,
-    backgroundColor: colors.white,
   },
   title: {
     marginTop: 90,
-    fontFamily: fonts.semiBold,
-    fontSize: fontSizes.big,
-  },
-  subtitle: {
-    marginTop: 8,
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.medium,
   },
   phoneInputContainer: {
     width: "100%",
     marginTop: 30,
     height: 40,
   },
-  phoneLabel: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSizes.small,
-  },
-  errorText: {
-    alignSelf: "flex-start",
-    fontFamily: fonts.semiBold,
-    color: colors.red,
-    fontSize: fontSizes.small,
-  },
+
   passwordInputContainer: {
     marginTop: 20,
     width: "100%",
     height: 40,
   },
-  passwordLabel: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSizes.medium,
-  },
-  forgotPasswordLabel: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSizes.big,
-    marginTop: 26,
-  },
+
   buttonContainer: {
     width: "100%",
     marginTop: 26,
   },
-  registerLabel: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSizes.big,
-    marginTop: 26,
-  },
+
   bottomContainer: {
     width: "100%",
     position: "absolute",

@@ -22,7 +22,7 @@
         {
           "image": "./src/assets/splash.png",
           "backgroundColor": "#E5CCFF",
-          "imageWidth": 300
+          "imageWidth": 200
         }
       ]
     ],
