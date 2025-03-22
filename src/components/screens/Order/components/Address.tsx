@@ -66,7 +66,7 @@ const Address: FC<IAddressProps> = (props) => {
           <ThemedText
             type="mediumText"
             weight="bold"
-            style={{ textAlign: "left" }}
+            style={{ textAlign: "left", flex: 1 }}
           >
             {address.address}
           </ThemedText>

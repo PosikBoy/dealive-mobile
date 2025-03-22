@@ -44,10 +44,10 @@ export const useLocation = () => {
           accuracy: Location.Accuracy.Lowest,
         });
 
-        // if (data?.mocked) {
-        //   setError("Приложение не поддерживает фиктивное местоположение.");
-        //   return;
-        // }
+        if (data?.mocked) {
+          setError("Приложение не поддерживает фиктивное местоположение.");
+          return;
+        }
 
         const newLocation = {
           lon: data.coords.longitude,
@@ -83,7 +83,7 @@ export const useLocation = () => {
 
     getLocation();
 
-    interval = setInterval(getLocation, 60000);
+    interval = setInterval(getLocation, 2000);
 
     return () => clearInterval(interval);
   }, [location]);

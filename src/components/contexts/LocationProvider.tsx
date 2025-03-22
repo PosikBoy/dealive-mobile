@@ -3,11 +3,7 @@ import { useTypedDispatch } from "@/hooks/redux.hooks";
 import { pushError, pushLocation } from "@/store/location/location.slice";
 import React, { FC, useEffect } from "react";
 
-interface IProps {
-  children: React.ReactNode;
-}
-
-const LocationProvider: FC<IProps> = ({ children }) => {
+const LocationProvider = () => {
   const { location, error, isLoading } = useLocation();
   const dispatch = useTypedDispatch();
   useEffect(() => {
@@ -18,7 +14,7 @@ const LocationProvider: FC<IProps> = ({ children }) => {
     }
   }, [location, error, isLoading]);
 
-  return <>{children}</>;
+  return null;
 };
 
 export default LocationProvider;
