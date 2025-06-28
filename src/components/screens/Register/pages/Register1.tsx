@@ -1,20 +1,20 @@
+import Header from "@/components/shared/Header/Header";
+import MyButton from "@/components/ui/Button/Button";
+import InputField from "@/components/ui/InputField/InputField";
+import PhoneInputField from "@/components/ui/PhoneInputField/PhoneInputField";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import { colors } from "@/constants/colors";
+import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
+import authService from "@/services/auth/auth.service";
+import { addFirstPageData } from "@/store/signupForm/signupForm.slice";
+import React, { FC, useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   ActivityIndicator,
   StyleSheet,
   useColorScheme,
   View,
 } from "react-native";
-import React, { FC, useState } from "react";
-import InputField from "@/components/ui/InputField/InputField";
-import { useForm } from "react-hook-form";
-import PhoneInputField from "@/components/ui/PhoneInputField/PhoneInputField";
-import MyButton from "@/components/ui/Button/Button";
-import { colors } from "@/constants/colors";
-import { useTypedSelector, useTypedDispatch } from "@/hooks/redux.hooks";
-import { addFirstPageData } from "@/store/signupForm/signupForm.slice";
-import authService from "@/services/auth/auth.service";
-import Header from "@/components/shared/Header/Header";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 interface IProps {
   nextPage: () => void;
@@ -146,16 +146,18 @@ const Register1: FC<IProps> = (props) => {
                 message: "Введите пароль",
               },
               pattern: {
-                value: /^[a-zA-Z0-9]+$/,
-                message: "Только латинские буквы и цифры",
+                value:
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,40}$/,
+                message:
+                  "Пароль должен содержать хотя бы одну заглавную букву, одну строчную букву, одну цифру и один спецсимвол (@$!%*?&)",
               },
               minLength: {
                 value: 6,
                 message: "Минимальная длина пароль - 6 символов",
               },
               maxLength: {
-                value: 32,
-                message: "Максимальная длина пароль - 32 символов",
+                value: 40,
+                message: "Максимальная длина пароль - 40 символов",
               },
             }}
           />
