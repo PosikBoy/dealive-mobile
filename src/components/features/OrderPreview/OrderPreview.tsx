@@ -1,4 +1,10 @@
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 import { colors } from "@/constants/colors";
+import { borderRadiuses, gaps, paddings } from "@/constants/styles";
+import formatDate from "@/helpers/formatDate";
+import { IOrder } from "@/types/order.interface";
+import { getMetroColor } from "@/utils/getColorMetro";
+import { router } from "expo-router";
 import { FC, memo } from "react";
 import {
   StyleSheet,
@@ -6,13 +12,7 @@ import {
   useColorScheme,
   View,
 } from "react-native";
-import formatDate from "@/helpers/formatDate";
-import { router } from "expo-router";
-import { borderRadiuses, gaps, paddings } from "@/constants/styles";
-import { getMetroColor } from "@/utils/getColorMetro";
-import { IOrder } from "@/types/order.interface";
 import Animated, { FadeInLeft } from "react-native-reanimated";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 interface OrderDetailsProps {
   order: IOrder;

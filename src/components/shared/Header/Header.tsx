@@ -1,18 +1,15 @@
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import { colors } from "@/constants/colors";
+import { icons } from "@/constants/icons";
+import { router } from "expo-router";
+import React, { FC } from "react";
 import {
   Image,
   Pressable,
   StyleSheet,
-  Text,
-  TouchableOpacity,
   useColorScheme,
   View,
 } from "react-native";
-import React, { FC } from "react";
-import { router } from "expo-router";
-import { colors } from "@/constants/colors";
-import { icons } from "@/constants/icons";
-import { fonts } from "@/constants/styles";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 type Props = {
   title: string;
@@ -64,6 +61,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+    width: "100%",
   },
   backButton: {
     position: "absolute",

@@ -1,14 +1,14 @@
-import { StyleSheet, useColorScheme, View } from "react-native";
-import React, { FC } from "react";
-import InputField from "@/components/ui/InputField/InputField";
-import { useForm } from "react-hook-form";
+import Header from "@/components/shared/Header/Header";
 import MyButton from "@/components/ui/Button/Button";
-import { colors } from "@/constants/colors";
 import DataInputField from "@/components/ui/DataInputField/DataInputField";
+import InputField from "@/components/ui/InputField/InputField";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import { colors } from "@/constants/colors";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import { addSecondPageData } from "@/store/signupForm/signupForm.slice";
-import Header from "@/components/shared/Header/Header";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import React, { FC } from "react";
+import { useForm } from "react-hook-form";
+import { StyleSheet, useColorScheme, View } from "react-native";
 
 interface IProps {
   nextPage: () => void;
@@ -52,7 +52,7 @@ const Register2: FC<IProps> = (props) => {
     }
   };
 
-  function isValidDate(dateString) {
+  function isValidDate(dateString: string) {
     const regex = /^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.(19|20)\d\d$/;
     if (!regex.test(dateString)) {
       return false;

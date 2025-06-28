@@ -38,5 +38,6 @@ class YandexMaps {
   }
 }
 
+
 const yandexMaps = new YandexMaps();
 export default yandexMaps;

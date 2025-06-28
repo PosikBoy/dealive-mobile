@@ -1,4 +1,4 @@
-import axios from "axios";
+import instance from "@/axios/interceptor";
 import {
   GET_IS_APPROVAL,
   IS_USER_EXIST_URL,
@@ -6,14 +6,14 @@ import {
   REFRESH_TOKEN_URL,
   REGISTER_URL,
 } from "@/constants/urls";
+import authHelper from "@/helpers/authStorage";
 import {
   IAuthResponseData,
   IIsUserExist,
   ILoginRequestData,
   IRegisterRequestData,
 } from "@/types/auth.interface";
-import authHelper from "@/helpers/authStorage";
-import instance from "@/axios/interceptor";
+import axios from "axios";
 
 class AuthService {
   async login(data: ILoginRequestData) {
@@ -45,11 +45,11 @@ class AuthService {
         } else {
           if (key == "birthDate" && typeof value == "string") {
             const parts = value.split(".");
-            const day = parseInt(parts[0], 10);
-            const month = parseInt(parts[1], 10);
-            const year = parseInt(parts[2], 10);
+            const day = parts[0];
+            const month = parts[1];
+            const year = parts[2];
 
-            value = `${month}.${day}.${year}`;
+            value = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
           }
 
           formData.append(key, value as string);
