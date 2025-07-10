@@ -53,6 +53,7 @@ export interface IAddress {
   phoneNumber?: string;
   phoneName?: string;
   info: string;
+  //На самом деле может прийти null, пока не знаю как это учесть и пофиксить
   geoData: IGeoData;
   createdAt?: string;
   updatedAt?: string;

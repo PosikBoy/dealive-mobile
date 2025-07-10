@@ -224,6 +224,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingHorizontal: 20,
+    gap: 10,
   },
   header: {
     width: "100%",
@@ -242,7 +243,6 @@ const styles = StyleSheet.create({
   },
 
   fieldContainer: {
-    height: 80,
     width: "100%",
     marginTop: 10,
   },

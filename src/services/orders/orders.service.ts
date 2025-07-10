@@ -1,11 +1,11 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { SERVER_URL } from "@/constants/urls";
 import instance from "@/axios/interceptor";
-import { IOrder } from "@/types/order.interface";
+import { SERVER_URL } from "@/constants/urls";
 import { errorCatch } from "@/helpers/errorCatch";
 import { useTypedSelector } from "@/hooks/redux.hooks";
-import { TypeRootState } from "@/store/store";
 import { ILocationInitialState } from "@/store/location/location.slice";
+import { TypeRootState } from "@/store/store";
+import { IOrder } from "@/types/order.interface";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import geodataService from "../geodata/geodata.service";
 
 const axiosBaseQuery =

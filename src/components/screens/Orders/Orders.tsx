@@ -1,12 +1,10 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
-import { StyleSheet, Text, View, Animated } from "react-native";
-import { colors } from "@/constants/colors";
-import AvailableOrders from "./components/AvailableOrders";
-import ActiveOrders from "./components/ActiveOrders";
-import Toggler from "@/components/ui/HorizontalToggler/HorizontalToggler";
-import RecommendedOrders from "./components/RecommendedOrders";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
 import Header from "@/components/shared/Header/Header";
+import Toggler from "@/components/ui/HorizontalToggler/HorizontalToggler";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Animated, StyleSheet, View } from "react-native";
+import ActiveOrders from "./components/ActiveOrders";
+import AvailableOrders from "./components/AvailableOrders";
+import RecommendedOrders from "./components/RecommendedOrders";
 
 const options = ["Доступные", "Лучшие", "Активные"];
 

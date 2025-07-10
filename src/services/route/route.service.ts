@@ -69,10 +69,13 @@ class RouteService {
       });
     }
 
+    //Генерируется все варианты вставки новых адресов
+
     const insertions = this.generateInsertions(route, newOrder.addresses);
 
     let filteredInsertions = insertions;
 
+    //Фильтруется только те, где местоположение самое первое
     if (currentUserLocation) {
       filteredInsertions = insertions.filter(
         (route) => route[0].address === "Ваше местоположение"
@@ -99,10 +102,10 @@ class RouteService {
 
     for (let i = 0; i < route.length - 1; i++) {
       distance += geodataService.calculateDistance(
-        +route[i].geoData.geoLat,
-        +route[i].geoData.geoLon,
-        +route[i + 1].geoData.geoLat,
-        +route[i + 1].geoData.geoLon
+        +route[i].geoData?.geoLat || 0,
+        +route[i].geoData?.geoLon || 0,
+        +route[i + 1].geoData?.geoLat || 0,
+        +route[i + 1].geoData?.geoLon || 0
       );
     }
 

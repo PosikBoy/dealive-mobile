@@ -1,0 +1,13 @@
+order.interface.ts надо пофиксить тип, потому что GeoData может прийти null
+Из-за этого в route-service я сделал на 103 строке проверку и если что ставим 0, но это костыль
+
+    for (let i = 0; i < route.length - 1; i++) {
+      distance += geodataService.calculateDistance(
+        +route[i].geoData?.geoLat || 0,
+        +route[i].geoData?.geoLon || 0,
+        +route[i + 1].geoData?.geoLat || 0,
+        +route[i + 1].geoData?.geoLon || 0
+      );
+    }
+
+буду фиксить позже, нужно сделать так, чтобы из рекомендаций такие заказы в принципе уходили, если у них нет геоданных.

@@ -1,8 +1,8 @@
 import { useGetAvailableOrdersQuery } from "@/services/orders/orders.service";
+import routeService from "@/services/route/route.service";
+import { IOrder } from "@/types/order.interface";
 import { useEffect, useState } from "react";
 import { useTypedSelector } from "./redux.hooks";
-import { IOrder } from "@/types/order.interface";
-import routeService from "@/services/route/route.service";
 
 const AVERAGE_SPEED_KMH = 12;
 

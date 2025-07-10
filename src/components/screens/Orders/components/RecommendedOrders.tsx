@@ -1,18 +1,18 @@
+import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
+import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import { colors } from "@/constants/colors";
+import useRecommendedOrders from "@/hooks/recommendation.hook";
+import { useTypedSelector } from "@/hooks/redux.hooks";
+import { FlashList } from "@shopify/flash-list";
+import React from "react";
 import {
   ActivityIndicator,
   StyleSheet,
   useColorScheme,
   View,
 } from "react-native";
-import React from "react";
-import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
-import { colors } from "@/constants/colors";
-import { useTypedSelector } from "@/hooks/redux.hooks";
-import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
 import AvailableOrders from "./AvailableOrders";
-import useRecommendedOrders from "@/hooks/recommendation.hook";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
-import { FlashList } from "@shopify/flash-list";
 
 const RecommendedOrders = () => {
   const colorScheme = useColorScheme() || "light";

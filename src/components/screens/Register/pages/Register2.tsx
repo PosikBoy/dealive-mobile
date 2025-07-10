@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     backgroundColor: colors.white,
+    gap: 10,
   },
   header: {
     width: "100%",
@@ -180,7 +181,6 @@ const styles = StyleSheet.create({
     height: 25,
   },
   fieldContainer: {
-    height: 80,
     width: "100%",
     marginTop: 10,
   },
