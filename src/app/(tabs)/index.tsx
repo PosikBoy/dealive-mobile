@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
 import Orders from "@/components/screens/Orders/Orders";
-import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
-import * as Font from "expo-font";
 import { fonts } from "@/constants/fonts";
 import authStorage from "@/helpers/authStorage";
+import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import {
   fetchAuthStatus,
   fetchIsApprovedStatus,
   logOut,
 } from "@/store/auth/auth.actions";
-import * as SplashScreen from "expo-splash-screen";
+import * as Font from "expo-font";
 import { Redirect } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import React, { useEffect, useState } from "react";
 
 const TabsLayout = () => {
   const dispatch = useTypedDispatch();
@@ -33,12 +33,14 @@ const TabsLayout = () => {
     } catch (err) {
       console.log(err);
     } finally {
+      console.log("aksdn");
       await SplashScreen.hideAsync();
       setIsAppReady(true);
     }
   };
 
   useEffect(() => {
+    console.log("some data");
     loadFonts();
     checkAuthStatus();
   }, []);

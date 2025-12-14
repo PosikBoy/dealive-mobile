@@ -1,29 +1,29 @@
-import React from "react";
-import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
 import ConnectionCheck from "@/components/contexts/ConnectionCheck";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { StoreProvider } from "@/components/contexts/ReduxProvider";
-import { StatusBar } from "expo-status-bar";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import LocationProvider from "@/components/contexts/LocationProvider";
-import { SheetProvider } from "react-native-actions-sheet";
+import { StoreProvider } from "@/components/contexts/ReduxProvider";
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { SheetProvider } from "react-native-actions-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import "@/components/sheets/SheetsManager.tsx";
-import { persistor } from "@/store/store";
-import { PersistGate } from "redux-persist/integration/react";
-import { useColorScheme } from "react-native";
 import { colors } from "@/constants/colors";
+import { persistor } from "@/store/store";
+import { useColorScheme } from "react-native";
+import { PersistGate } from "redux-persist/integration/react";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 const Layout = () => {
   const colorScheme = useColorScheme() || "light";
+
   return (
     <GestureHandlerRootView>
       <SafeAreaView style={{ flex: 1 }}>
