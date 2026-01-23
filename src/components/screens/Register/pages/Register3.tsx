@@ -1,24 +1,19 @@
-import {
-  ActivityIndicator,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from "react-native";
+import { router } from 'expo-router';
+import React, { FC } from 'react';
+import { useForm } from 'react-hook-form';
+import { ActivityIndicator, StyleSheet, useColorScheme, View } from 'react-native';
 
-import React, { FC } from "react";
-import { useForm } from "react-hook-form";
-import MyButton from "@/components/ui/Button/Button";
-import ImagePicker from "@/components/ui/ImagePicker/ImagePicker";
-import InputFieldWithHandler from "@/components/ui/InputFieldWithHandler/InputFieldWIthHandler";
-import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
-import { addThirdPageData } from "@/store/signupForm/signupForm.slice";
-import { register } from "@/store/auth/auth.actions";
-import { passportNumberHandler } from "@/helpers/passportHandler";
-import { colors } from "@/constants/colors";
-import store from "@/store/store";
-import { router } from "expo-router";
-import Header from "@/components/shared/Header/Header";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import Header from '@/components/shared/Header/Header';
+import MyButton from '@/components/ui/Button/Button';
+import ImagePicker from '@/components/ui/ImagePicker/ImagePicker';
+import InputFieldWithHandler from '@/components/ui/InputFieldWithHandler/InputFieldWIthHandler';
+import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { colors } from '@/constants/colors';
+import { passportNumberHandler } from '@/helpers/passportHandler';
+import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
+import { register } from '@/store/auth/auth.actions';
+import { addThirdPageData } from '@/store/signupForm/signupForm.slice';
+import store from '@/store/store';
 
 interface IProps {
   nextPage: () => void;
@@ -35,7 +30,7 @@ interface IImagePickerAsset {
   height: number | null; // Высота изображения
   mimeType: string | null; // MIME-тип файла
   rotation: number | null; // Поворот изображения
-  type: "image" | "video"; // Тип файла
+  type: 'image' | 'video'; // Тип файла
   uri: string; // URI файла
   width: number | null; // Ширина изображения
 }
@@ -46,12 +41,12 @@ interface IFormField {
   passportPhotoImage: IImagePickerAsset;
 }
 
-const Register3: FC<IProps> = (props) => {
-  const colorScheme = useColorScheme() || "light";
+const Register3: FC<IProps> = props => {
+  const colorScheme = useColorScheme() || 'light';
   const { previousPage } = props;
 
-  const signupFormState = useTypedSelector((state) => state.signupForm);
-  const { error, isLoading } = useTypedSelector((state) => state.auth);
+  const signupFormState = useTypedSelector(state => state.signupForm);
+  const { error, isLoading } = useTypedSelector(state => state.auth);
   const dispatch = useTypedDispatch();
 
   const {
@@ -60,7 +55,7 @@ const Register3: FC<IProps> = (props) => {
     handleSubmit,
     getValues,
   } = useForm<IFormField>({
-    mode: "onChange",
+    mode: 'onChange',
     defaultValues: {
       documentNumber: signupFormState.documentNumber,
       selfieWithPassportImage: signupFormState.documentFiles[0],
@@ -74,39 +69,35 @@ const Register3: FC<IProps> = (props) => {
 
       const updatedFormState = store.getState().signupForm;
       await dispatch(register(updatedFormState));
-      router.replace("/waitForApproval");
+      router.replace('/waitForApproval');
     } catch (error) {}
   };
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: colors[colorScheme].white }]}
-    >
-      <Header title="Регистрация" onPressBack={previousPage} />
+    <View style={[styles.container, { backgroundColor: colors[colorScheme].white }]}>
+      <Header title='Регистрация' onPressBack={previousPage} />
       <View style={styles.fieldContainer}>
-        <ThemedText type="mediumText" align="left">
+        <ThemedText type='mediumText' align='left'>
           Введите серию и номер паспорта
         </ThemedText>
         <View style={styles.inputField}>
           <InputFieldWithHandler
             control={control}
-            name="documentNumber"
-            placeholder="1234 567890"
-            keyboardType="number-pad"
+            name='documentNumber'
+            placeholder='1234 567890'
+            keyboardType='number-pad'
             rules={{
-              required: "Введите серию и номер паспорта",
+              required: 'Введите серию и номер паспорта',
               pattern: {
                 value: /^[0-9]{4} [0-9]{6}$/,
-                message: "Некорректная серия и номер паспорта",
+                message: 'Некорректная серия и номер паспорта',
               },
             }}
-            handler={(value) =>
-              passportNumberHandler(value, getValues().documentNumber)
-            }
+            handler={value => passportNumberHandler(value, getValues().documentNumber)}
           />
         </View>
         {errors?.documentNumber?.message && (
-          <ThemedText color="red" type="hint" align="left">
+          <ThemedText color='red' type='hint' align='left'>
             {errors?.documentNumber?.message}
           </ThemedText>
         )}
@@ -114,14 +105,14 @@ const Register3: FC<IProps> = (props) => {
 
       <View style={styles.imagePickerContainer}>
         <ImagePicker
-          title="Загрузите селфи с паспортом"
-          linkSuggestion="https://dealive.ru/selfie-passport.jpg"
+          title='Загрузите селфи с паспортом'
+          linkSuggestion='https://dealive.ru/selfie-passport.jpg'
           control={control}
-          name="selfieWithPassportImage"
-          rules={{ required: "Загрузите селфи с паспортом" }}
+          name='selfieWithPassportImage'
+          rules={{ required: 'Загрузите селфи с паспортом' }}
         />
         {errors?.selfieWithPassportImage?.message && (
-          <ThemedText color="red" type="hint" align="left">
+          <ThemedText color='red' type='hint' align='left'>
             {errors?.selfieWithPassportImage?.message}
           </ThemedText>
         )}
@@ -129,14 +120,14 @@ const Register3: FC<IProps> = (props) => {
 
       <View style={styles.imagePickerContainer}>
         <ImagePicker
-          title="Загрузите фото паспорта"
-          linkSuggestion="https://dealive.ru/passport.png"
+          title='Загрузите фото паспорта'
+          linkSuggestion='https://dealive.ru/passport.png'
           control={control}
-          name="passportPhotoImage"
-          rules={{ required: "Загрузите фото паспорта" }}
+          name='passportPhotoImage'
+          rules={{ required: 'Загрузите фото паспорта' }}
         />
         {errors?.passportPhotoImage?.message && (
-          <ThemedText color="red" type="hint" align="left">
+          <ThemedText color='red' type='hint' align='left'>
             {errors?.passportPhotoImage?.message}
           </ThemedText>
         )}
@@ -145,13 +136,13 @@ const Register3: FC<IProps> = (props) => {
       <View style={styles.loaderErrorContainer}>
         {isLoading && (
           <View style={styles.loaderContainer}>
-            <ActivityIndicator size="large" color={colors.purple} />
+            <ActivityIndicator size='large' color={colors.purple} />
           </View>
         )}
 
         {error && (
           <View style={styles.errorContainer}>
-            <ThemedText color="red" type="hint" align="left">
+            <ThemedText color='red' type='hint' align='left'>
               {error}
             </ThemedText>
           </View>
@@ -160,7 +151,7 @@ const Register3: FC<IProps> = (props) => {
 
       <View style={styles.buttonContainer}>
         <MyButton
-          buttonText="Создать аккаунт"
+          buttonText='Создать аккаунт'
           onPress={handleSubmit(onSubmit)}
           disabled={isLoading}
         />
@@ -174,15 +165,15 @@ export default Register3;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
     paddingHorizontal: 20,
     backgroundColor: colors.white,
   },
   header: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginTop: 20,
   },
   arrowButton: {
@@ -196,34 +187,34 @@ const styles = StyleSheet.create({
 
   fieldContainer: {
     height: 80,
-    width: "100%",
+    width: '100%',
     marginTop: 10,
   },
 
   inputField: {
     marginTop: 10,
     height: 40,
-    width: "100%",
+    width: '100%',
   },
 
   buttonContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 20,
-    width: "100%",
+    width: '100%',
   },
   imagePickerContainer: {
     height: 100,
-    width: "100%",
+    width: '100%',
     marginTop: 10,
   },
   loaderContainer: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   errorContainer: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loaderErrorContainer: {
     flex: 1,

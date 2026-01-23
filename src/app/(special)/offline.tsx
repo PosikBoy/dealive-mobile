@@ -1,18 +1,19 @@
-import { View, StyleSheet, Image, ToastAndroid } from "react-native";
-import React from "react";
-import NetInfo from "@react-native-community/netinfo";
-import MyButton from "@/components/ui/Button/Button";
-import { router } from "expo-router";
-import { icons } from "@/constants/icons";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import NetInfo from '@react-native-community/netinfo';
+import { router } from 'expo-router';
+import React from 'react';
+import { Image, StyleSheet, ToastAndroid, View } from 'react-native';
+
+import MyButton from '@/components/ui/Button/Button';
+import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { icons } from '@/constants/icons';
 
 const index = () => {
   const handleCheckConnection = () => {
-    NetInfo.fetch().then((state) => {
+    NetInfo.fetch().then(state => {
       if (state.isConnected) {
-        router.replace("/");
+        router.replace('/');
       } else {
-        ToastAndroid.show("Нет подключения к интернету", ToastAndroid.SHORT);
+        ToastAndroid.show('Нет подключения к интернету', ToastAndroid.SHORT);
       }
     });
   };
@@ -20,17 +21,14 @@ const index = () => {
   return (
     <View style={styles.container}>
       <Image source={icons.noConnection} style={styles.image} />
-      <ThemedText type="title" weight="bold">
+      <ThemedText type='title' weight='bold'>
         Нет подключения к интернету
       </ThemedText>
-      <ThemedText type="subtitle" weight="bold" color="gray">
+      <ThemedText type='subtitle' weight='bold' color='gray'>
         Проверьте соединение и попробуйте еще раз
       </ThemedText>
       <View style={styles.buttonContainer}>
-        <MyButton
-          buttonText="Проверить соединение"
-          onPress={handleCheckConnection}
-        />
+        <MyButton buttonText='Проверить соединение' onPress={handleCheckConnection} />
       </View>
     </View>
   );
@@ -38,11 +36,11 @@ const index = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: '100%',
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 20,
   },
   image: {
@@ -50,9 +48,9 @@ const styles = StyleSheet.create({
     height: 200,
   },
   buttonContainer: {
-    width: "100%",
+    width: '100%',
     flex: 1,
-    position: "absolute",
+    position: 'absolute',
     bottom: 16,
   },
 });

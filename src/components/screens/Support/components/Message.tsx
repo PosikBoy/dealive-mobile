@@ -1,11 +1,11 @@
-import { Image, StyleSheet, Text, View } from "react-native";
-import React, { FC, useEffect, useState } from "react";
-import { IMessage } from "@/types/chat.interface";
-import { colors } from "@/constants/colors";
-import formatDate from "@/helpers/formatDate";
-import fileService from "@/services/files/files.service";
-import * as FileSystem from "expo-file-system";
-import { fonts } from "@/constants/styles";
+import { File, Paths } from 'expo-file-system';
+import React, { FC, useEffect, useState } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
+
+import { colors } from '@/constants/colors';
+import { fonts } from '@/constants/styles';
+import fileService from '@/services/files/files.service';
+import { IMessage } from '@/types/chat.interface';
 
 interface IProps {
   message: IMessage;
@@ -17,26 +17,27 @@ const Message: FC<IProps> = (props: IProps) => {
   const isMe = props?.myId == props.message.senderId;
   const date = new Date(createdAt);
 
-  const time = date.toLocaleTimeString("ru-RU", {
-    hour: "2-digit",
-    minute: "2-digit",
+  const time = date.toLocaleTimeString('ru-RU', {
+    hour: '2-digit',
+    minute: '2-digit',
   });
   useEffect(() => {
     const fetchAttachments = async () => {
-      const files = props.message.attachments.map(async (file) => {
-        const fileUri = `${FileSystem.documentDirectory}${file.fileName}`;
+      const files = props.message.attachments.map(async file => {
+        const fileUri = `${Paths.document}${file.fileName}`;
 
         try {
-          // Проверяем, существует ли файл в файловой системе
-          await FileSystem.readAsStringAsync(fileUri);
+          const file = new File(fileUri);
 
-          return fileUri; // Если файл существует, возвращаем его путь
+          file.create();
+
+          return fileUri;
         } catch (error) {
           console.log(`Файл ${file.fileName} не найден, скачиваем с сервера.`);
           // Если файл не найден, скачиваем его с сервера
-          const downloadedFileUri = await fileService.downloadFile(
-            file.fileName
-          );
+
+          const downloadedFileUri = await fileService.downloadFile(file.fileName);
+
           return downloadedFileUri;
         }
       });
@@ -48,13 +49,10 @@ const Message: FC<IProps> = (props: IProps) => {
       fetchAttachments();
     }
   }, []);
+
   return (
     <View style={styles.container}>
-      <View
-        style={
-          isMe ? styles.myMessageTextContainer : styles.messageTextContainer
-        }
-      >
+      <View style={isMe ? styles.myMessageTextContainer : styles.messageTextContainer}>
         {!isMe && <Text style={styles.label}>Служба поддержки</Text>}
         <Text style={styles.messageText}>{text}</Text>
 
@@ -81,7 +79,7 @@ export default Message;
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: '100%',
     borderRadius: 20,
     padding: 5,
   },
@@ -91,35 +89,35 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   label: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
     marginBottom: 5,
     fontFamily: fonts.regular,
     fontSize: 12,
     color: colors.lightGray,
   },
   myMessageTextContainer: {
-    width: "80%",
-    alignSelf: "flex-end",
+    width: '80%',
+    alignSelf: 'flex-end',
     backgroundColor: colors.purple,
     color: colors.white,
     borderRadius: 20,
     padding: 10,
   },
   messageTextContainer: {
-    width: "80%",
+    width: '80%',
     backgroundColor: colors.lightRed,
     borderRadius: 20,
     padding: 10,
   },
   createdAt: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     fontFamily: fonts.regular,
     fontSize: 12,
     color: colors.white,
   },
   imageContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 10,
-    flexWrap: "wrap",
+    flexWrap: 'wrap',
   },
 });

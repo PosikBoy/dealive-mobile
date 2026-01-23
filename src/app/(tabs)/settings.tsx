@@ -1,5 +1,6 @@
-import Settings from "@/components/screens/Settings/Settings";
-import React from "react";
+import React from 'react';
+
+import Settings from '@/components/screens/Settings/Settings';
 
 const index = () => {
   return <Settings />;

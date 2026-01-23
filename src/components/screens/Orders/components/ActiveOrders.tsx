@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -7,21 +8,22 @@ import {
   TouchableOpacity,
   useColorScheme,
   View,
-} from "react-native";
-import React from "react";
-import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
-import { colors } from "@/constants/colors";
-import { icons } from "@/constants/icons";
-import { useTypedSelector } from "@/hooks/redux.hooks";
-import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
-import AvailableOrders from "./AvailableOrders";
-import { useGetActiveOrdersQuery } from "@/services/orders/orders.service";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
-import Animated, { LinearTransition } from "react-native-reanimated";
+} from 'react-native';
+import Animated, { LinearTransition } from 'react-native-reanimated';
+
+import OrderPreview from '@/components/features/OrderPreview/OrderPreview';
+import OrderPreviewSkeleton from '@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton';
+import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { colors } from '@/constants/colors';
+import { icons } from '@/constants/icons';
+import { useTypedSelector } from '@/hooks/redux.hooks';
+import { useGetActiveOrdersQuery } from '@/services/orders/orders.service';
+
+import AvailableOrders from './AvailableOrders';
 
 const ActiveOrders = () => {
-  const colorScheme = useColorScheme() || "light";
-  const location = useTypedSelector((state) => state.location);
+  const colorScheme = useColorScheme() || 'light';
+  const location = useTypedSelector(state => state.location);
   const { data, isLoading, refetch } = useGetActiveOrdersQuery();
   if (location.error) {
     return (
@@ -32,13 +34,8 @@ const ActiveOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View
-            style={[
-              styles.loadingModal,
-              { backgroundColor: colors[colorScheme].white },
-            ]}
-          >
-            <ThemedText type="big" weight="medium">
+          <View style={[styles.loadingModal, { backgroundColor: colors[colorScheme].white }]}>
+            <ThemedText type='big' weight='medium'>
               {location.error}
             </ThemedText>
           </View>
@@ -55,17 +52,12 @@ const ActiveOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View
-            style={[
-              styles.loadingModal,
-              { backgroundColor: colors[colorScheme].white },
-            ]}
-          >
-            <ActivityIndicator size={"large"} color={colors.purple} />
-            <ThemedText type="big" weight="medium">
+          <View style={[styles.loadingModal, { backgroundColor: colors[colorScheme].white }]}>
+            <ActivityIndicator size={'large'} color={colors.purple} />
+            <ThemedText type='big' weight='medium'>
               {location.isLocationLoading
-                ? "Пытаемся определить ваше местоположение"
-                : "Запрашиваем заказы с сервера"}
+                ? 'Пытаемся определить ваше местоположение'
+                : 'Запрашиваем заказы с сервера'}
             </ThemedText>
           </View>
         </View>
@@ -77,9 +69,9 @@ const ActiveOrders = () => {
     return (
       <View style={styles.container}>
         <View style={styles.noOrdersTextContainer}>
-          <ThemedText weight="medium">
-            Похоже, что у вас нет активных заказов на данный момент. Вы можете
-            выбрать подходящий из списка ниже!
+          <ThemedText weight='medium'>
+            Похоже, что у вас нет активных заказов на данный момент. Вы можете выбрать подходящий из
+            списка ниже!
           </ThemedText>
         </View>
         <AvailableOrders />
@@ -94,7 +86,7 @@ const ActiveOrders = () => {
           itemLayoutAnimation={LinearTransition}
           data={data}
           renderItem={({ item }) => <OrderPreview order={item} />}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={item => item.id.toString()}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           contentContainerStyle={styles.flatListStyles}
           showsVerticalScrollIndicator={false}
@@ -106,12 +98,12 @@ const ActiveOrders = () => {
         disabled={isLoading}
       >
         {isLoading ? (
-          <ActivityIndicator size="small" color={colors.purple} />
+          <ActivityIndicator size='small' color={colors.purple} />
         ) : (
           <Image
             tintColor={colors[colorScheme].black}
             source={icons.refetch}
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: '100%', height: '100%' }}
           />
         )}
       </TouchableOpacity>
@@ -123,9 +115,9 @@ export default ActiveOrders;
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
+    height: '100%',
     paddingHorizontal: 5,
-    position: "relative",
+    position: 'relative',
   },
   flatListStyles: {
     paddingTop: 16,
@@ -136,14 +128,14 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   loadingTextContainer: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.05)",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   noOrdersTextContainer: {
     margin: 20,
@@ -153,22 +145,22 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     padding: 20,
     borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   separator: {
     height: 5,
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
   },
   update: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 130,
     right: 20,
     width: 40,
     height: 40,
     padding: 10,
     borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

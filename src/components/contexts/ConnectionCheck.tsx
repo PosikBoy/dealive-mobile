@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import NetInfo from "@react-native-community/netinfo";
-import { router } from "expo-router";
+import NetInfo from '@react-native-community/netinfo';
+import { router } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 
 export default function ConnectionCheck({ children }) {
   const [connectionStatus, setConnectionStatus] = useState(true);
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state) => {
+    const unsubscribe = NetInfo.addEventListener(state => {
       setConnectionStatus(state.isConnected);
     });
 
@@ -13,7 +13,7 @@ export default function ConnectionCheck({ children }) {
   }, []);
 
   if (!connectionStatus) {
-    router.replace("/offline");
+    router.replace('/offline');
   }
 
   return <>{children}</>;

@@ -1,23 +1,25 @@
-import { StyleSheet, Text, useColorScheme, View } from "react-native";
-import React, { useState, useCallback } from "react";
-import ActionSheet, { SheetManager } from "react-native-actions-sheet";
-import MyButton from "../ui/Button/Button";
-import { fonts, fontSizes } from "@/constants/styles";
-import { useTypedDispatch } from "@/hooks/redux.hooks";
-import { logOut } from "@/store/auth/auth.actions";
-import { router } from "expo-router";
-import ThemedText from "../ui/ThemedText/ThemedText";
-import { colors } from "@/constants/colors";
+import { router } from 'expo-router';
+import React, { useCallback, useState } from 'react';
+import { StyleSheet, Text, useColorScheme, View } from 'react-native';
+import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
+
+import { colors } from '@/constants/colors';
+import { fonts, fontSizes } from '@/constants/styles';
+import { useTypedDispatch } from '@/hooks/redux.hooks';
+import { logOut } from '@/store/auth/auth.actions';
+
+import MyButton from '../ui/Button/Button';
+import ThemedText from '../ui/ThemedText/ThemedText';
 
 const STRINGS = {
-  TITLE: "Вы уверены, что хотите выйти из аккаунта?",
-  SUBTITLE: "Вы сможете зайти снова, используя номер телефона и пароль",
-  LOGOUT_BUTTON: "Выйти из аккаунта",
-  CANCEL_BUTTON: "Отмена",
+  TITLE: 'Вы уверены, что хотите выйти из аккаунта?',
+  SUBTITLE: 'Вы сможете зайти снова, используя номер телефона и пароль',
+  LOGOUT_BUTTON: 'Выйти из аккаунта',
+  CANCEL_BUTTON: 'Отмена',
 };
 
 const LogOutSheet = () => {
-  const colorScheme = useColorScheme() || "light";
+  const colorScheme = useColorScheme() || 'light';
   const dispatch = useTypedDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,10 +27,10 @@ const LogOutSheet = () => {
     setIsLoading(true);
     try {
       await dispatch(logOut()).unwrap();
-      router.replace("/");
-      SheetManager.hide("log-out-sheet");
+      router.replace('/');
+      SheetManager.hide('log-out-sheet');
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error('Logout failed:', error);
     } finally {
       setIsLoading(false);
     }
@@ -54,15 +56,15 @@ const LogOutSheet = () => {
           },
         ]}
       >
-        <ThemedText type="subtitle" weight="bold">
+        <ThemedText type='subtitle' weight='bold'>
           {STRINGS.TITLE}
         </ThemedText>
-        <ThemedText type="mediumText">{STRINGS.SUBTITLE}</ThemedText>
+        <ThemedText type='mediumText'>{STRINGS.SUBTITLE}</ThemedText>
 
         <MyButton
           onPress={handleLogOut}
           buttonText={STRINGS.LOGOUT_BUTTON}
-          color={"red"}
+          color={'red'}
           isLoading={isLoading}
           disabled={isLoading}
         />

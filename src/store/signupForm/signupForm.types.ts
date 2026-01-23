@@ -1,4 +1,4 @@
-import { IImagePickerAsset } from "@/types/auth.interface";
+import { IImagePickerAsset } from '@/types/auth.interface';
 
 export type IInitialState = {
   phoneNumber: string;

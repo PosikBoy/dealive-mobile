@@ -1,28 +1,16 @@
-import MyButton from "@/components/ui/Button/Button";
-import { colors } from "@/constants/colors";
-import {
-  ActivityIndicator,
-  Image,
-  Linking,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from "react-native";
+import { router } from 'expo-router';
+import { ActivityIndicator, Image, Linking, StyleSheet, useColorScheme, View } from 'react-native';
 
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
-import { icons } from "@/constants/icons";
-import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
-import {
-  fetchAuthStatus,
-  fetchIsApprovedStatus,
-} from "@/store/auth/auth.actions";
-import { router } from "expo-router";
+import MyButton from '@/components/ui/Button/Button';
+import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { colors } from '@/constants/colors';
+import { icons } from '@/constants/icons';
+import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
+import { fetchAuthStatus, fetchIsApprovedStatus } from '@/store/auth/auth.actions';
 
 const waitForApproval = () => {
-  const colorScheme = useColorScheme() || "light";
-  const { isApproved, isLoading, error } = useTypedSelector(
-    (state) => state.auth
-  );
+  const colorScheme = useColorScheme() || 'light';
+  const { isApproved, isLoading, error } = useTypedSelector(state => state.auth);
 
   const dispatch = useTypedDispatch();
 
@@ -32,7 +20,7 @@ const waitForApproval = () => {
       const isApproved = await dispatch(fetchIsApprovedStatus()).unwrap();
 
       if (isApproved) {
-        router.replace("/");
+        router.replace('/');
       }
     } catch (error) {
       console.error(error);
@@ -40,54 +28,41 @@ const waitForApproval = () => {
   };
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: colors[colorScheme].white }]}
-    >
+    <View style={[styles.container, { backgroundColor: colors[colorScheme].white }]}>
       <View style={styles.header}>
-        <ThemedText type="title" weight="bold">
+        <ThemedText type='title' weight='bold'>
           Вы успешно зарегистрировались
         </ThemedText>
       </View>
       <View style={styles.imageContainer}>
-        <Image
-          style={styles.image}
-          source={icons.success}
-          resizeMode="contain"
-        />
+        <Image style={styles.image} source={icons.success} resizeMode='contain' />
       </View>
       <View style={styles.textContainer}>
-        <ThemedText type="title" weight="bold">
+        <ThemedText type='title' weight='bold'>
           Поздравляем!
         </ThemedText>
-        <ThemedText type="subtitle">
-          Вы успешно зарегистрировались. Обработка ваших персональных данных
-          займет около двух часов. Спасибо за ожидание.
+        <ThemedText type='subtitle'>
+          Вы успешно зарегистрировались. Обработка ваших персональных данных займет около двух
+          часов. Спасибо за ожидание.
         </ThemedText>
       </View>
 
-      {error && <ThemedText color="red">{error}</ThemedText>}
+      {error && <ThemedText color='red'>{error}</ThemedText>}
       {}
       {isLoading ? (
-        <ActivityIndicator size="large" color={colors.purple} />
+        <ActivityIndicator size='large' color={colors.purple} />
       ) : (
-        !isApproved && (
-          <ThemedText type="subtitle">
-            Мы все еще проверяем ваш аккаунт{" "}
-          </ThemedText>
-        )
+        !isApproved && <ThemedText type='subtitle'>Мы все еще проверяем ваш аккаунт </ThemedText>
       )}
 
       <View style={styles.supportButton}>
         <MyButton
-          buttonText="Связаться с техподдержкой"
-          onPress={() => Linking.openURL("https://t.me/DealiveSupport")}
+          buttonText='Связаться с техподдержкой'
+          onPress={() => Linking.openURL('https://t.me/DealiveSupport')}
         />
       </View>
       <View style={styles.buttonContainer}>
-        <MyButton
-          buttonText="Проверить подтверждение"
-          onPress={checkApproval}
-        />
+        <MyButton buttonText='Проверить подтверждение' onPress={checkApproval} />
       </View>
     </View>
   );
@@ -97,15 +72,15 @@ export default waitForApproval;
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: '100%',
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
     paddingHorizontal: 20,
     backgroundColor: colors.white,
   },
   header: {
-    width: "100%",
-    alignItems: "center",
+    width: '100%',
+    alignItems: 'center',
     marginTop: 20,
   },
 
@@ -113,24 +88,24 @@ const styles = StyleSheet.create({
     marginTop: 50,
     height: 200,
     width: 200,
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   image: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
   textContainer: {
-    width: "100%",
+    width: '100%',
     marginTop: 50,
   },
   buttonContainer: {
-    width: "100%",
-    position: "absolute",
+    width: '100%',
+    position: 'absolute',
     bottom: 20,
   },
   supportButton: {
-    width: "100%",
-    position: "absolute",
+    width: '100%',
+    position: 'absolute',
     bottom: 80,
   },
 });

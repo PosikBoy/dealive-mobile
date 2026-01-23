@@ -1,4 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { isError } from '@/helpers/isReduxError';
+
 import {
   // checkAuth,
   fetchAuthStatus,
@@ -6,8 +9,7 @@ import {
   login,
   logOut,
   register,
-} from "./auth.actions";
-import { isError } from "@/helpers/isReduxError";
+} from './auth.actions';
 
 interface IInitialState {
   isLoading: boolean;
@@ -24,12 +26,12 @@ const initialState: IInitialState = {
 };
 
 export const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(register.pending, (state) => {
+      .addCase(register.pending, state => {
         state.error = null;
         state.isLoading = true;
       })
@@ -37,7 +39,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.error = null;
       })
-      .addCase(login.pending, (state) => {
+      .addCase(login.pending, state => {
         state.error = null;
         state.isLoading = true;
       })
@@ -45,16 +47,16 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.error = null;
       })
-      .addCase(logOut.pending, (state) => {
+      .addCase(logOut.pending, state => {
         state.error = null;
         state.isLoading = true;
       })
-      .addCase(logOut.fulfilled, (state) => {
+      .addCase(logOut.fulfilled, state => {
         state.isLoading = false;
         state.isAuth = false;
         state.error = null;
       })
-      .addCase(fetchAuthStatus.pending, (state) => {
+      .addCase(fetchAuthStatus.pending, state => {
         state.isLoading = true;
         state.error = null;
       })
@@ -62,7 +64,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isAuth = action.payload;
       })
-      .addCase(fetchIsApprovedStatus.pending, (state) => {
+      .addCase(fetchIsApprovedStatus.pending, state => {
         state.isLoading = true;
         state.error = null;
       })
@@ -71,11 +73,11 @@ export const authSlice = createSlice({
         state.isApproved = action.payload;
       })
       .addMatcher(
-        (action) => isError(action, "auth"),
+        action => isError(action, 'auth'),
         (state, action: PayloadAction<string>) => {
           state.error = action.payload;
           state.isLoading = false;
-        }
+        },
       );
   },
 });

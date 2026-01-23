@@ -1,9 +1,10 @@
-import { ApiError } from "@/axios/api-error";
-import { instance } from "@/axios/interceptor";
-import { SERVER_URL } from "@/constants/urls";
-import { ICourier } from "@/types/courier.interface";
-import { BaseQueryFn, createApi } from "@reduxjs/toolkit/query/react";
-import { AxiosRequestConfig } from "axios";
+import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
+import { AxiosRequestConfig } from 'axios';
+
+import { ApiError } from '@/axios/api-error';
+import { instance } from '@/axios/interceptor';
+import { SERVER_URL } from '@/constants/urls';
+import { ICourier } from '@/types/courier.interface';
 
 type AxiosArgs = AxiosRequestConfig;
 
@@ -23,20 +24,20 @@ const axiosBaseQuery =
   };
 
 export const profileApi = createApi({
-  reducerPath: "profileApi",
+  reducerPath: 'profileApi',
   baseQuery: axiosBaseQuery({ baseUrl: SERVER_URL }),
-  tagTypes: ["Profile"],
-  endpoints: (builder) => ({
+  tagTypes: ['Profile'],
+  endpoints: builder => ({
     getProfile: builder.query<ICourier, void>({
       query: () => ({
-        url: "/courier",
-        method: "GET",
+        url: '/courier',
+        method: 'GET',
       }),
     }),
     getProfileById: builder.query({
-      query: (id) => ({
+      query: id => ({
         url: `/courier/${id}`,
-        method: "GET",
+        method: 'GET',
       }),
     }),
   }),

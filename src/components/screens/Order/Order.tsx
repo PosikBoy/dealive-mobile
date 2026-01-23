@@ -1,17 +1,4 @@
-import Header from "@/components/shared/Header/Header";
-import MyButton from "@/components/ui/Button/Button";
-import { colors } from "@/constants/colors";
-import { fonts } from "@/constants/styles";
-import { useTakeOrderMutation } from "@/services/orders/orders.service";
-import { IAddress, IOrder, IOrderActionType } from "@/types/order.interface";
-import React, {
-  FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   Image,
@@ -20,34 +7,41 @@ import {
   ToastAndroid,
   useColorScheme,
   View,
-} from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
-import Actions from "./components/Actions";
-import Addresses from "./components/Addresses";
+} from 'react-native';
+import { SheetManager } from 'react-native-actions-sheet';
 
-import { ApiError } from "@/axios/api-error";
-import Toggler from "@/components/ui/HorizontalToggler/HorizontalToggler";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
-import { icons } from "@/constants/icons";
-import { orderStatuses } from "@/constants/orderStatuses";
-import { useTypedSelector } from "@/hooks/redux.hooks";
-import routeService from "@/services/route/route.service";
-import yandexMaps from "@/utils/yandexMaps";
-import Route from "./components/Route";
+import { ApiError } from '@/axios/api-error';
+import Header from '@/components/shared/Header/Header';
+import MyButton from '@/components/ui/Button/Button';
+import Toggler from '@/components/ui/HorizontalToggler/HorizontalToggler';
+import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { colors } from '@/constants/colors';
+import { icons } from '@/constants/icons';
+import { orderStatuses } from '@/constants/orderStatuses';
+import { fonts } from '@/constants/styles';
+import { useTypedSelector } from '@/hooks/redux.hooks';
+import { useTakeOrderMutation } from '@/services/orders/orders.service';
+import routeService from '@/services/route/route.service';
+import { IAddress, IOrder, IOrderActionType } from '@/types/order.interface';
+import yandexMaps from '@/utils/yandexMaps';
+
+import Actions from './components/Actions';
+import Addresses from './components/Addresses';
+import Route from './components/Route';
 
 interface IProps {
   order: IOrder;
 }
-const options = ["Адреса", "Действия", "Маршрут"];
+const options = ['Адреса', 'Действия', 'Маршрут'];
 
 const ACTION_SNIPPETS = {
-  [IOrderActionType.GO_TO]: "✅ Выезжаю на адрес",
-  [IOrderActionType.ARRIVED_AT]: "📍 Я на месте",
-  [IOrderActionType.PICKUP]: "📦 Посылка получена",
-  [IOrderActionType.DELIVER]: "🏁 Доставлено",
-  [IOrderActionType.COLLECT_PAYMENT]: "💵 Получена оплата",
-  [IOrderActionType.PAY_COMMISION]: "📝 Оплатить комиссию",
-  [IOrderActionType.COMPLETE_ORDER]: "🎉 Завершить заказ",
+  [IOrderActionType.GO_TO]: '✅ Выезжаю на адрес',
+  [IOrderActionType.ARRIVED_AT]: '📍 Я на месте',
+  [IOrderActionType.PICKUP]: '📦 Посылка получена',
+  [IOrderActionType.DELIVER]: '🏁 Доставлено',
+  [IOrderActionType.COLLECT_PAYMENT]: '💵 Получена оплата',
+  [IOrderActionType.PAY_COMMISION]: '📝 Оплатить комиссию',
+  [IOrderActionType.COMPLETE_ORDER]: '🎉 Завершить заказ',
 };
 
 interface IRouteState {
@@ -58,10 +52,10 @@ interface IRouteState {
 const Order: FC<IProps> = ({ order }) => {
   const colorScheme = useColorScheme();
 
-  const [activeTab, setActiveTab] = useState<string>("Адреса");
+  const [activeTab, setActiveTab] = useState<string>('Адреса');
   const [route, setRoute] = useState<IRouteState>({ distance: 0, route: [] });
   const [takeOrder, { error }] = useTakeOrderMutation();
-  const routeState = useTypedSelector((state) => state.route);
+  const routeState = useTypedSelector(state => state.route);
 
   const showTakeOrderButton = order.statusId === orderStatuses.searchCourier;
   const showCompleteActionButton = order.statusId === orderStatuses.inProcess;
@@ -78,7 +72,7 @@ const Order: FC<IProps> = ({ order }) => {
   }, []);
 
   const takeOrderModalShow = () => {
-    SheetManager.show("take-order-sheet", {
+    SheetManager.show('take-order-sheet', {
       payload: {
         order: order,
         error: error?.message,
@@ -90,55 +84,46 @@ const Order: FC<IProps> = ({ order }) => {
   const takeOrderHandler = async () => {
     try {
       await takeOrder({ orderId: order.id }).unwrap();
-      SheetManager.hide("take-order-sheet");
+      SheetManager.hide('take-order-sheet');
     } catch (err) {
       const apiError = err as ApiError;
       ToastAndroid.show(apiError.message, ToastAndroid.SHORT);
     }
   };
 
-  const lastAction = order.actions.find((action) => !action.isCompleted);
+  const lastAction = order.actions.find(action => !action.isCompleted);
 
-  const lastAddress = order.addresses.find(
-    (address) => address.id == lastAction?.addressId
-  );
+  const lastAddress = order.addresses.find(address => address.id == lastAction?.addressId);
 
   const completeActionPayload = useMemo(
     () => ({
       address: lastAddress,
       action: lastAction,
     }),
-    [lastAddress, lastAction]
+    [lastAddress, lastAction],
   );
 
   const completeActionModalShow = useCallback(() => {
-    SheetManager.show("complete-action-sheet", {
+    SheetManager.show('complete-action-sheet', {
       payload: completeActionPayload,
     });
   }, [completeActionPayload]);
 
   const openMaps = async () => {
     try {
-      yandexMaps.getRouteToPoint(
-        lastAddress.geoData.geoLat,
-        lastAddress.geoData.geoLon
-      );
+      yandexMaps.getRouteToPoint(lastAddress.geoData.geoLat, lastAddress.geoData.geoLon);
     } catch (err) {
-      console.error("Ошибка при открытии URL:", err);
+      console.error('Ошибка при открытии URL:', err);
     }
   };
 
   const callPhone = () => {
-    Linking.openURL(
-      `tel:${"phoneNumber" in lastAddress ? lastAddress.phoneNumber : ""}`
-    );
+    Linking.openURL(`tel:${'phoneNumber' in lastAddress ? lastAddress.phoneNumber : ''}`);
   };
 
   //Анимации
 
-  const tabAnimation = useRef(
-    new Animated.Value(options.indexOf(activeTab))
-  ).current;
+  const tabAnimation = useRef(new Animated.Value(options.indexOf(activeTab))).current;
 
   useEffect(() => {
     Animated.spring(tabAnimation, {
@@ -155,7 +140,7 @@ const Order: FC<IProps> = ({ order }) => {
         inputRange: [0, 1, 2],
         outputRange: [0, -20, -20],
       }),
-    [tabAnimation]
+    [tabAnimation],
   );
 
   const activeTranslate = useMemo(
@@ -164,7 +149,7 @@ const Order: FC<IProps> = ({ order }) => {
         inputRange: [0, 1, 2],
         outputRange: [20, 0, -20],
       }),
-    [tabAnimation]
+    [tabAnimation],
   );
 
   const routeTranslate = useMemo(
@@ -173,7 +158,7 @@ const Order: FC<IProps> = ({ order }) => {
         inputRange: [0, 1, 2],
         outputRange: [20, -20, 0],
       }),
-    [tabAnimation]
+    [tabAnimation],
   );
 
   const availableOpacity = useMemo(
@@ -182,7 +167,7 @@ const Order: FC<IProps> = ({ order }) => {
         inputRange: [0, 1, 2],
         outputRange: [1, 0, 0],
       }),
-    [tabAnimation]
+    [tabAnimation],
   );
 
   const activeOpacity = useMemo(
@@ -191,7 +176,7 @@ const Order: FC<IProps> = ({ order }) => {
         inputRange: [0, 1, 2],
         outputRange: [0, 1, 0],
       }),
-    [tabAnimation]
+    [tabAnimation],
   );
 
   const routeOpacity = useMemo(
@@ -200,7 +185,7 @@ const Order: FC<IProps> = ({ order }) => {
         inputRange: [0, 1, 2],
         outputRange: [0, 0, 1],
       }),
-    [tabAnimation]
+    [tabAnimation],
   );
 
   if (error) {
@@ -211,12 +196,8 @@ const Order: FC<IProps> = ({ order }) => {
 
   return (
     <View style={styles.container}>
-      <Header title={"Заказ № " + order.id} />
-      <Toggler
-        options={options}
-        activeTab={activeTab}
-        onChange={setActiveTab}
-      />
+      <Header title={'Заказ № ' + order.id} />
+      <Toggler options={options} activeTab={activeTab} onChange={setActiveTab} />
       <View style={styles.orderContainer}>
         <Animated.View
           style={[
@@ -224,7 +205,7 @@ const Order: FC<IProps> = ({ order }) => {
             {
               opacity: availableOpacity,
               transform: [{ translateX: availableTranslate }],
-              pointerEvents: activeTab === "Адреса" ? "auto" : "none",
+              pointerEvents: activeTab === 'Адреса' ? 'auto' : 'none',
             },
           ]}
         >
@@ -237,7 +218,7 @@ const Order: FC<IProps> = ({ order }) => {
             {
               opacity: activeOpacity,
               transform: [{ translateX: activeTranslate }],
-              pointerEvents: activeTab === "Действия" ? "auto" : "none",
+              pointerEvents: activeTab === 'Действия' ? 'auto' : 'none',
             },
           ]}
         >
@@ -249,22 +230,20 @@ const Order: FC<IProps> = ({ order }) => {
             {
               opacity: routeOpacity,
               transform: [{ translateX: routeTranslate }],
-              pointerEvents: activeTab === "Маршрут" ? "auto" : "none",
+              pointerEvents: activeTab === 'Маршрут' ? 'auto' : 'none',
             },
           ]}
         >
           <Route route={route.route} orderId={order.id} />
         </Animated.View>
       </View>
-      <View
-        style={[styles.footer, { backgroundColor: colors[colorScheme].white }]}
-      >
+      <View style={[styles.footer, { backgroundColor: colors[colorScheme].white }]}>
         <ThemedText style={styles.footerInfo}>
-          {order.price + "₽ · " + order.weight + " · " + order.parcelType}
+          {order.price + '₽ · ' + order.weight + ' · ' + order.parcelType}
         </ThemedText>
         <View style={styles.buttonsContainer}>
           {showTakeOrderButton && (
-            <MyButton buttonText="Взять заказ" onPress={takeOrderModalShow} />
+            <MyButton buttonText='Взять заказ' onPress={takeOrderModalShow} />
           )}
           {showCompleteActionButton && (
             <>
@@ -276,29 +255,19 @@ const Order: FC<IProps> = ({ order }) => {
               </View>
 
               {lastAddress?.geoData && (
-                <View style={{ width: "20%" }}>
+                <View style={{ width: '20%' }}>
                   <MyButton
-                    icon={
-                      <Image
-                        style={{ width: "100%", height: 20 }}
-                        source={icons.location}
-                      />
-                    }
-                    color="lightPurple"
+                    icon={<Image style={{ width: '100%', height: 20 }} source={icons.location} />}
+                    color='lightPurple'
                     onPress={openMaps}
                   />
                 </View>
               )}
               {lastAddress?.phoneNumber && (
-                <View style={{ width: "20%" }}>
+                <View style={{ width: '20%' }}>
                   <MyButton
-                    icon={
-                      <Image
-                        style={{ width: 20, height: 20 }}
-                        source={icons.phone}
-                      />
-                    }
-                    color="lightPurple"
+                    icon={<Image style={{ width: 20, height: 20 }} source={icons.phone} />}
+                    color='lightPurple'
                     onPress={callPhone}
                   />
                 </View>
@@ -323,30 +292,30 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   footer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     zIndex: 10,
     paddingHorizontal: 20,
     paddingVertical: 20,
-    width: "100%",
+    width: '100%',
     gap: 10,
-    boxShadow: "0px -4px 4px rgba(0, 0, 0, 0.10)",
+    boxShadow: '0px -4px 4px rgba(0, 0, 0, 0.10)',
   },
   footerInfo: {
     fontSize: 18,
     fontFamily: fonts.semiBold,
-    textAlign: "center",
+    textAlign: 'center',
   },
   tabContent: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
     top: 0,
     left: 0,
   },
   buttonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     gap: 10,
   },
 });

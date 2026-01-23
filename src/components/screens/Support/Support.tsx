@@ -1,23 +1,18 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import { colors } from "@/constants/colors";
-import { icons } from "@/constants/icons";
-import Messages from "./components/Messages";
-import chatService from "@/services/chat/chat.service";
-import { Attachment } from "@/types/chat.interface";
-import authStorage from "@/helpers/authStorage";
-import ImagePicker from "./components/ImagePicker";
-import { fonts } from "@/constants/styles";
+import React, { useCallback, useEffect, useState } from 'react';
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+
+import { colors } from '@/constants/colors';
+import { icons } from '@/constants/icons';
+import { fonts } from '@/constants/styles';
+import authStorage from '@/helpers/authStorage';
+import chatService from '@/services/chat/chat.service';
+import { Attachment } from '@/types/chat.interface';
+
+import ImagePicker from './components/ImagePicker';
+import Messages from './components/Messages';
 
 const Support = () => {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [chatId, setChatId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState<string[]>([]);
@@ -38,7 +33,7 @@ const Support = () => {
         setChatId(newChatId); // Устанавливаем новый chatId
       }
     } catch (error) {
-      console.error("Ошибка при получении или создании чата:", error);
+      console.error('Ошибка при получении или создании чата:', error);
     }
   }, []);
 
@@ -46,7 +41,7 @@ const Support = () => {
     if (!message || isLoading) {
       return;
     }
-    setMessage("");
+    setMessage('');
     setAttachments([]);
     setImages([]);
     await chatService.sendMessage({
@@ -75,13 +70,7 @@ const Support = () => {
           <View style={styles.attachmentsContainer}>
             {images.map((attachment, index) => {
               if (!attachment) return null;
-              return (
-                <Image
-                  key={index}
-                  source={{ uri: attachment }}
-                  style={styles.attachment}
-                />
-              );
+              return <Image key={index} source={{ uri: attachment }} style={styles.attachment} />;
             })}
           </View>
         )}
@@ -95,19 +84,12 @@ const Support = () => {
             style={styles.input}
             value={message}
             onChangeText={setMessage}
-            placeholder="Введите сообщение"
+            placeholder='Введите сообщение'
             multiline
             numberOfLines={4}
           />
-          <TouchableOpacity
-            style={styles.button}
-            activeOpacity={0.5}
-            onPress={sendMessageHandler}
-          >
-            <Image
-              source={icons.send}
-              style={{ width: "100%", height: "100%" }}
-            />
+          <TouchableOpacity style={styles.button} activeOpacity={0.5} onPress={sendMessageHandler}>
+            <Image source={icons.send} style={{ width: '100%', height: '100%' }} />
           </TouchableOpacity>
         </View>
       </View>
@@ -120,15 +102,15 @@ export default Support;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
-    position: "relative",
+    position: 'relative',
     flex: 1,
   },
   header: {
     paddingVertical: 20,
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: colors.white,
   },
   button: {
@@ -141,15 +123,15 @@ const styles = StyleSheet.create({
     fontFamily: fonts.semiBold,
   },
   footerContainer: {
-    width: "100%",
-    position: "absolute",
+    width: '100%',
+    position: 'absolute',
     bottom: 10,
   },
   inputBlock: {
     padding: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     gap: 10,
     backgroundColor: colors.white,
   },
@@ -161,13 +143,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   messagesContainer: {
-    width: "100%",
+    width: '100%',
     paddingBottom: 130,
   },
   attachmentsContainer: {
     padding: 10,
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 10,
     backgroundColor: colors.white,
   },

@@ -1,14 +1,15 @@
-import Header from "@/components/shared/Header/Header";
-import MyButton from "@/components/ui/Button/Button";
-import DataInputField from "@/components/ui/DataInputField/DataInputField";
-import InputField from "@/components/ui/InputField/InputField";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
-import { colors } from "@/constants/colors";
-import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
-import { addSecondPageData } from "@/store/signupForm/signupForm.slice";
-import React, { FC } from "react";
-import { useForm } from "react-hook-form";
-import { StyleSheet, useColorScheme, View } from "react-native";
+import React, { FC } from 'react';
+import { useForm } from 'react-hook-form';
+import { StyleSheet, useColorScheme, View } from 'react-native';
+
+import Header from '@/components/shared/Header/Header';
+import MyButton from '@/components/ui/Button/Button';
+import DataInputField from '@/components/ui/DataInputField/DataInputField';
+import InputField from '@/components/ui/InputField/InputField';
+import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { colors } from '@/constants/colors';
+import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
+import { addSecondPageData } from '@/store/signupForm/signupForm.slice';
 
 interface IProps {
   nextPage: () => void;
@@ -21,10 +22,10 @@ interface IFormField {
   birthDate: string;
 }
 
-const Register2: FC<IProps> = (props) => {
-  const colorScheme = useColorScheme() || "light";
+const Register2: FC<IProps> = props => {
+  const colorScheme = useColorScheme() || 'light';
   const { nextPage, previousPage } = props;
-  const state = useTypedSelector((state) => state.signupForm);
+  const state = useTypedSelector(state => state.signupForm);
   const dispatch = useTypedDispatch();
   const {
     control,
@@ -32,7 +33,7 @@ const Register2: FC<IProps> = (props) => {
     handleSubmit,
     setError,
   } = useForm<IFormField>({
-    mode: "onChange",
+    mode: 'onChange',
     defaultValues: {
       name: state.name,
       secondName: state.secondName,
@@ -40,14 +41,14 @@ const Register2: FC<IProps> = (props) => {
       birthDate: state.birthDate,
     },
   });
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     if (isValidDate(data.birthDate)) {
       dispatch(addSecondPageData(data));
       nextPage();
     } else {
-      setError("birthDate", {
-        type: "manual",
-        message: "Некорректная дата",
+      setError('birthDate', {
+        type: 'manual',
+        message: 'Некорректная дата',
       });
     }
   };
@@ -58,7 +59,7 @@ const Register2: FC<IProps> = (props) => {
       return false;
     }
 
-    const [day, month, year] = dateString.split(".").map(Number);
+    const [day, month, year] = dateString.split('.').map(Number);
 
     const date = new Date(year, month - 1, day);
     const currentDate = new Date();
@@ -72,84 +73,78 @@ const Register2: FC<IProps> = (props) => {
   }
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: colors[colorScheme].white }]}
-    >
-      <Header title="Регистрация" onPressBack={previousPage} />
+    <View style={[styles.container, { backgroundColor: colors[colorScheme].white }]}>
+      <Header title='Регистрация' onPressBack={previousPage} />
       <View style={styles.fieldContainer}>
-        <ThemedText type="mediumText" align="left">
+        <ThemedText type='mediumText' align='left'>
           Введите фамилию
         </ThemedText>
 
         <View style={[styles.inputField, styles.phoneNumberField]}>
           <InputField
             control={control}
-            name="secondName"
-            placeholder="Фамилия"
-            rules={{ required: "Фамилия обязательна" }}
+            name='secondName'
+            placeholder='Фамилия'
+            rules={{ required: 'Фамилия обязательна' }}
           />
         </View>
         {errors?.secondName?.message && (
-          <ThemedText color="red" type="hint" align="left">
+          <ThemedText color='red' type='hint' align='left'>
             {errors?.secondName?.message}
           </ThemedText>
         )}
       </View>
       <View style={styles.fieldContainer}>
-        <ThemedText type="mediumText" align="left">
+        <ThemedText type='mediumText' align='left'>
           Введите имя
         </ThemedText>
         <View style={styles.inputField}>
           <InputField
             control={control}
-            name="name"
-            placeholder="Имя"
-            rules={{ required: "Имя обязательно" }}
+            name='name'
+            placeholder='Имя'
+            rules={{ required: 'Имя обязательно' }}
           />
         </View>
         {errors?.name?.message && (
-          <ThemedText color="red" type="hint" align="left">
+          <ThemedText color='red' type='hint' align='left'>
             {errors?.name?.message}
           </ThemedText>
         )}
       </View>
       <View style={styles.fieldContainer}>
-        <ThemedText type="mediumText" align="left">
+        <ThemedText type='mediumText' align='left'>
           Введите отчество
         </ThemedText>
         <View style={styles.inputField}>
           <InputField
             control={control}
-            name="lastName"
-            placeholder="Отчество"
-            rules={{ required: "Отчество обязательно" }}
+            name='lastName'
+            placeholder='Отчество'
+            rules={{ required: 'Отчество обязательно' }}
           />
         </View>
         {errors?.lastName?.message && (
-          <ThemedText color="red" type="hint" align="left">
+          <ThemedText color='red' type='hint' align='left'>
             {errors?.lastName?.message}
           </ThemedText>
         )}
       </View>
       <View style={styles.fieldContainer}>
-        <ThemedText type="mediumText" align="left">
+        <ThemedText type='mediumText' align='left'>
           Введите дату рождения
         </ThemedText>
         <View style={styles.inputField}>
-          <DataInputField
-            control={control}
-            name="birthDate"
-            placeholder="ДД.ММ.ГГГГ"
-          />
+          <DataInputField control={control} name='birthDate' placeholder='ДД.ММ.ГГГГ' />
         </View>
         {errors?.birthDate?.message && (
-          <ThemedText color="red" type="hint" align="left">
+          <ThemedText color='red' type='hint' align='left'>
             {errors?.birthDate?.message}
           </ThemedText>
         )}
       </View>
       <View style={styles.buttonContainer}>
-        <MyButton buttonText="Далее" onPress={handleSubmit(onSubmit)} />
+        <MyButton buttonText='Далее' onPress={handleSubmit(onSubmit)} />
       </View>
     </View>
   );
@@ -160,16 +155,16 @@ export default Register2;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
     paddingHorizontal: 20,
     backgroundColor: colors.white,
     gap: 10,
   },
   header: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginTop: 20,
   },
   arrowButton: {
@@ -181,20 +176,20 @@ const styles = StyleSheet.create({
     height: 25,
   },
   fieldContainer: {
-    width: "100%",
+    width: '100%',
     marginTop: 10,
   },
   inputField: {
     marginTop: 10,
     height: 40,
-    width: "100%",
+    width: '100%',
   },
   phoneNumberField: {
-    position: "relative",
+    position: 'relative',
   },
   buttonContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 20,
-    width: "100%",
+    width: '100%',
   },
 });

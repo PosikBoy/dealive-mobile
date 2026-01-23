@@ -1,28 +1,27 @@
-import { colors } from "@/constants/colors";
-import { forwardRef, ReactNode, Ref } from "react";
-import { useColorScheme } from "react-native";
-import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
+import { forwardRef, ReactNode, Ref } from 'react';
+import { useColorScheme } from 'react-native';
+import ActionSheet, { ActionSheetRef } from 'react-native-actions-sheet';
+
+import { colors } from '@/constants/colors';
 
 interface IProps {
   children: ReactNode;
   ref: Ref<ActionSheetRef>;
 }
 
-const CustomBottomSheetModal = forwardRef<ActionSheetRef, IProps>(
-  (props, ref) => {
-    const colorScheme = useColorScheme() || "light";
-    const { children } = props;
+const CustomBottomSheetModal = forwardRef<ActionSheetRef, IProps>((props, ref) => {
+  const colorScheme = useColorScheme() || 'light';
+  const { children } = props;
 
-    return (
-      <ActionSheet
-        ref={ref}
-        gestureEnabled={true}
-        containerStyle={{ backgroundColor: colors[colorScheme].white }}
-      >
-        {children}
-      </ActionSheet>
-    );
-  }
-);
+  return (
+    <ActionSheet
+      ref={ref}
+      gestureEnabled={true}
+      containerStyle={{ backgroundColor: colors[colorScheme].white }}
+    >
+      {children}
+    </ActionSheet>
+  );
+});
 
 export default CustomBottomSheetModal;

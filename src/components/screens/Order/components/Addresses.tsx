@@ -1,11 +1,13 @@
-import MyButton from "@/components/ui/Button/Button";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
-import formatDate from "@/helpers/formatDate";
-import { IOrder } from "@/types/order.interface";
-import yandexMaps from "@/utils/yandexMaps";
-import React from "react";
-import { FlatList, StyleSheet, View } from "react-native";
-import Address from "./Address";
+import React from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
+
+import MyButton from '@/components/ui/Button/Button';
+import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import formatDate from '@/helpers/formatDate';
+import { IOrder } from '@/types/order.interface';
+import yandexMaps from '@/utils/yandexMaps';
+
+import Address from './Address';
 
 type Props = {
   order: IOrder;
@@ -17,9 +19,7 @@ const Addresses = (props: Props) => {
 
   const openRoute = async () => {
     try {
-      const points = order.addresses.map((address) =>
-        yandexMaps.getPoint(address)
-      );
+      const points = order.addresses.map(address => yandexMaps.getPoint(address));
 
       yandexMaps.getRoute(points);
     } catch (error) {
@@ -39,7 +39,7 @@ const Addresses = (props: Props) => {
             isActive={item.id == activeAddressId}
           />
         )}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={item => item.id.toString()}
         contentContainerStyle={{
           gap: 10,
           paddingTop: 10,
@@ -47,19 +47,13 @@ const Addresses = (props: Props) => {
         }}
         ListFooterComponent={
           <>
-            <MyButton
-              buttonText="Открыть маршрут на карте"
-              onPress={openRoute}
-              color="purple"
-            />
+            <MyButton buttonText='Открыть маршрут на карте' onPress={openRoute} color='purple' />
             <View style={styles.creationDateContainer}>
-              <ThemedText type="mediumText" weight="medium">
+              <ThemedText type='mediumText' weight='medium'>
                 {`Создан ${formatDate(order.date)}`}
               </ThemedText>
             </View>
-            {order.statusId == 5 && (
-              <ThemedText type="title">Заказ завершен, спасибо!</ThemedText>
-            )}
+            {order.statusId == 5 && <ThemedText type='title'>Заказ завершен, спасибо!</ThemedText>}
           </>
         }
         ListFooterComponentStyle={{ gap: 10 }}
@@ -72,7 +66,7 @@ export default Addresses;
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: '100%',
     gap: 10,
     paddingHorizontal: 10,
   },

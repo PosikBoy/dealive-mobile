@@ -1,31 +1,28 @@
-import ConnectionCheck from "@/components/contexts/ConnectionCheck";
-import LocationProvider from "@/components/contexts/LocationProvider";
-import { StoreProvider } from "@/components/contexts/ReduxProvider";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
-import { SheetProvider } from "react-native-actions-sheet";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
+import '@/components/sheets/SheetsManager.tsx';
 
-import "@/components/sheets/SheetsManager.tsx";
-import { colors } from "@/constants/colors";
-import { fonts } from "@/constants/fonts";
-import { persistor } from "@/store/store";
-import * as Font from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import { useColorScheme } from "react-native";
-import { PersistGate } from "redux-persist/integration/react";
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import * as Font from 'expo-font';
+import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
+import React, { useEffect, useState } from 'react';
+import { useColorScheme } from 'react-native';
+import { SheetProvider } from 'react-native-actions-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { PersistGate } from 'redux-persist/integration/react';
+
+import ConnectionCheck from '@/components/contexts/ConnectionCheck';
+import LocationProvider from '@/components/contexts/LocationProvider';
+import { StoreProvider } from '@/components/contexts/ReduxProvider';
+import { colors } from '@/constants/colors';
+import { fonts } from '@/constants/fonts';
+import { persistor } from '@/store/store';
 
 SplashScreen.preventAutoHideAsync();
 
 const Layout = () => {
-  const colorScheme = useColorScheme() || "light";
+  const colorScheme = useColorScheme() || 'light';
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
@@ -33,7 +30,7 @@ const Layout = () => {
       try {
         await Font.loadAsync(fonts);
       } catch (error) {
-        console.error("Error loading fonts:", error);
+        console.error('Error loading fonts:', error);
       } finally {
         setFontsLoaded(true);
         await SplashScreen.hideAsync();
@@ -54,20 +51,14 @@ const Layout = () => {
           <PersistGate loading={null} persistor={persistor}>
             <SheetProvider>
               <ConnectionCheck>
-                <ThemeProvider
-                  value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-                >
+                <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
                   <StatusBar
-                    backgroundColor={
-                      colorScheme === "dark"
-                        ? colors.dark.statusBarColor
-                        : "#fff"
-                    }
+                    backgroundColor={colorScheme === 'dark' ? colors.dark.statusBarColor : '#fff'}
                   />
                   <Stack
                     screenOptions={{
                       headerShown: false,
-                      animation: "fade_from_bottom",
+                      animation: 'fade_from_bottom',
                     }}
                   />
                   <LocationProvider />

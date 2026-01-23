@@ -1,15 +1,14 @@
-import React from "react";
-import Support from "@/components/screens/Support/Support";
-import { StyleSheet, Text, View } from "react-native";
-import { fonts } from "@/constants/styles";
-import { colors } from "@/constants/colors";
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+
+import Support from '@/components/screens/Support/Support';
+import { colors } from '@/constants/colors';
+import { fonts } from '@/constants/styles';
 
 const TabsLayout = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>
-        На данный момент техподдержка работает в Telegram!
-      </Text>
+      <Text style={styles.text}>На данный момент техподдержка работает в Telegram!</Text>
       <Text style={styles.text}>
         Откройте настройки и нажмите на пункт Техподдержка в Telegram!
       </Text>
@@ -23,8 +22,8 @@ export default TabsLayout;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
     gap: 20,
   },

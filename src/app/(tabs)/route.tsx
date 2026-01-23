@@ -1,5 +1,6 @@
-import React from "react";
-import Route from "@/components/screens/Route/Route";
+import React from 'react';
+
+import Route from '@/components/screens/Route/Route';
 
 const index = () => {
   return <Route />;

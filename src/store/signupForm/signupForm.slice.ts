@@ -1,21 +1,22 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { IInitialState } from "./signupForm.types";
+import { createSlice } from '@reduxjs/toolkit';
+
+import { IInitialState } from './signupForm.types';
 
 const initialState: IInitialState = {
-  phoneNumber: "",
-  password: "",
-  code: "",
-  email: "",
+  phoneNumber: '',
+  password: '',
+  code: '',
+  email: '',
   isRulesAccepted: false,
-  name: "",
-  secondName: "",
-  lastName: "",
-  birthDate: "",
-  documentNumber: "",
+  name: '',
+  secondName: '',
+  lastName: '',
+  birthDate: '',
+  documentNumber: '',
   documentFiles: [],
 };
 export const signupFormSlice = createSlice({
-  name: "signupForm",
+  name: 'signupForm',
   initialState,
   reducers: {
     addFirstPageData(state, action) {
@@ -38,5 +39,4 @@ export const signupFormSlice = createSlice({
   },
 });
 
-export const { addFirstPageData, addSecondPageData, addThirdPageData } =
-  signupFormSlice.actions;
+export const { addFirstPageData, addSecondPageData, addThirdPageData } = signupFormSlice.actions;

@@ -1,23 +1,19 @@
-import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
-import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
-import { colors } from "@/constants/colors";
-import { useTypedSelector } from "@/hooks/redux.hooks";
-import { FlashList } from "@shopify/flash-list";
-import React from "react";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from "react-native";
+import { FlashList } from '@shopify/flash-list';
+import React from 'react';
+import { ActivityIndicator, StyleSheet, useColorScheme, View } from 'react-native';
 
-import { useRecommendedOrders } from "../hooks/useRecommendedOrders";
-import AvailableOrders from "./AvailableOrders";
+import OrderPreview from '@/components/features/OrderPreview/OrderPreview';
+import OrderPreviewSkeleton from '@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton';
+import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { colors } from '@/constants/colors';
+import { useTypedSelector } from '@/hooks/redux.hooks';
+
+import { useRecommendedOrders } from '../hooks/useRecommendedOrders';
+import AvailableOrders from './AvailableOrders';
 
 const RecommendedOrders = () => {
-  const colorScheme = useColorScheme() || "light";
-  const location = useTypedSelector((state) => state.location);
+  const colorScheme = useColorScheme() || 'light';
+  const location = useTypedSelector(state => state.location);
   const { recommendedOrders, isLoading } = useRecommendedOrders();
 
   if (location.error) {
@@ -29,13 +25,8 @@ const RecommendedOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View
-            style={[
-              styles.loadingModal,
-              { backgroundColor: colors[colorScheme].white },
-            ]}
-          >
-            <ThemedText type="big" weight="medium">
+          <View style={[styles.loadingModal, { backgroundColor: colors[colorScheme].white }]}>
+            <ThemedText type='big' weight='medium'>
               {location.error}
             </ThemedText>
           </View>
@@ -53,17 +44,12 @@ const RecommendedOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View
-            style={[
-              styles.loadingModal,
-              { backgroundColor: colors[colorScheme].white },
-            ]}
-          >
-            <ActivityIndicator size={"large"} color={colors.purple} />
-            <ThemedText type="big" weight="medium">
+          <View style={[styles.loadingModal, { backgroundColor: colors[colorScheme].white }]}>
+            <ActivityIndicator size={'large'} color={colors.purple} />
+            <ThemedText type='big' weight='medium'>
               {location.isLocationLoading
-                ? "Пытаемся определить ваше местоположение"
-                : "Запрашиваем заказы с сервера"}
+                ? 'Пытаемся определить ваше местоположение'
+                : 'Запрашиваем заказы с сервера'}
             </ThemedText>
           </View>
         </View>
@@ -74,7 +60,7 @@ const RecommendedOrders = () => {
   if (recommendedOrders.length === 0) {
     return (
       <View style={styles.container}>
-        <ThemedText weight="medium" type="mediumText">
+        <ThemedText weight='medium' type='mediumText'>
           Похоже, что сейчас мы не можем порекомендовать вам заказы
         </ThemedText>
         <AvailableOrders />
@@ -86,7 +72,7 @@ const RecommendedOrders = () => {
     <View style={styles.container}>
       <FlashList
         data={recommendedOrders}
-        keyExtractor={(item) => item.order.id.toString()}
+        keyExtractor={item => item.order.id.toString()}
         renderItem={({ item }) => (
           <OrderPreview order={item.order} incomePerHour={item.incomePerHour} />
         )}
@@ -103,7 +89,7 @@ export default RecommendedOrders;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: "relative",
+    position: 'relative',
     paddingHorizontal: 5,
   },
   flatListStyles: {
@@ -115,21 +101,21 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   loadingTextContainer: {
-    position: "absolute",
+    position: 'absolute',
     inset: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.05)",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loadingModal: {
     transform: [{ translateY: -60 }],
     padding: 20,
     borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   separator: {
     height: 5,
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
   },
 });

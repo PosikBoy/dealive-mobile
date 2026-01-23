@@ -1,5 +1,6 @@
-import { IAddress, IOrder } from "@/types/order.interface";
-import geodataService from "../geodata/geodata.service";
+import { IAddress, IOrder } from '@/types/order.interface';
+
+import geodataService from '../geodata/geodata.service';
 
 interface IUserLocation {
   lat: number;
@@ -9,29 +10,18 @@ interface IUserLocation {
 class RouteService {
   initialAddresses: IAddress[];
 
-  generateInsertions = (
-    route: IAddress[],
-    newAddresses: IAddress[]
-  ): IAddress[][] => {
+  generateInsertions = (route: IAddress[], newAddresses: IAddress[]): IAddress[][] => {
     const results: IAddress[][] = [];
 
     // Рекурсивная функция для генерации всех вариантов вставки
-    const insertRecursively = (
-      currentRoute: IAddress[],
-      remaining: IAddress[],
-      index: number
-    ) => {
+    const insertRecursively = (currentRoute: IAddress[], remaining: IAddress[], index: number) => {
       if (remaining.length === 0) {
         results.push(currentRoute);
         return;
       }
 
       for (let i = index; i <= currentRoute.length; i++) {
-        const newRoute = [
-          ...currentRoute.slice(0, i),
-          remaining[0],
-          ...currentRoute.slice(i),
-        ];
+        const newRoute = [...currentRoute.slice(0, i), remaining[0], ...currentRoute.slice(i)];
         insertRecursively(newRoute, remaining.slice(1), i + 1);
       }
     };
@@ -43,7 +33,7 @@ class RouteService {
   getRouteWithNewOrder = (
     route: IAddress[],
     newOrder: IOrder,
-    currentUserLocation?: IUserLocation
+    currentUserLocation?: IUserLocation,
   ) => {
     //Если нет маршрута, то считаем просто расстояние между точками, так как не надо встраивать в маршрут
     if (route.length === 0)
@@ -56,15 +46,15 @@ class RouteService {
       route.unshift({
         id: 0,
         orderId: 0,
-        address: "Ваше местоположение",
-        floor: "",
-        apartment: "",
-        info: "",
+        address: 'Ваше местоположение',
+        floor: '',
+        apartment: '',
+        info: '',
         geoData: {
           geoLat: currentUserLocation.lat.toString(),
           geoLon: currentUserLocation.lon.toString(),
           qcGeo: 0,
-          address: "Ваше местоположение",
+          address: 'Ваше местоположение',
         },
       });
     }
@@ -77,9 +67,7 @@ class RouteService {
 
     //Фильтруется только те, где местоположение самое первое
     if (currentUserLocation) {
-      filteredInsertions = insertions.filter(
-        (route) => route[0].address === "Ваше местоположение"
-      );
+      filteredInsertions = insertions.filter(route => route[0].address === 'Ваше местоположение');
     }
 
     let bestRoute = filteredInsertions[0];
@@ -105,7 +93,7 @@ class RouteService {
         +route[i].geoData?.geoLat || 0,
         +route[i].geoData?.geoLon || 0,
         +route[i + 1].geoData?.geoLat || 0,
-        +route[i + 1].geoData?.geoLon || 0
+        +route[i + 1].geoData?.geoLon || 0,
       );
     }
 
@@ -130,7 +118,7 @@ class RouteService {
     }, route);
 
     const routeWithOnlyActiveOrders = restoredRoute.route.filter(
-      (address) => address?.isCompleted === false
+      address => address?.isCompleted === false,
     );
 
     const newDistance = this.calculateRouteDistance(routeWithOnlyActiveOrders);

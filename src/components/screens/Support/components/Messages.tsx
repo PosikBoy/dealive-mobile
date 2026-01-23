@@ -1,19 +1,14 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 
-import { IMessage } from "@/types/chat.interface";
-import chatService from "@/services/chat/chat.service";
-import { ServerMessages } from "@/constants/messages";
-import Message from "./Message";
-import { useGetProfileQuery } from "@/services/profile/profile.service";
-import { colors } from "@/constants/colors";
-import { borderRadiuses, fonts, fontSizes } from "@/constants/styles";
+import { colors } from '@/constants/colors';
+import { ServerMessages } from '@/constants/messages';
+import { borderRadiuses, fonts, fontSizes } from '@/constants/styles';
+import chatService from '@/services/chat/chat.service';
+import { useGetProfileQuery } from '@/services/profile/profile.service';
+import { IMessage } from '@/types/chat.interface';
+
+import Message from './Message';
 
 type Props = {
   chatId: number;
@@ -28,9 +23,9 @@ const Messages = (props: Props) => {
     const getMessages = async () => {
       try {
         const response = await chatService.getMessages(props.chatId, page);
-        setMessages((prevMessages) => [...response, ...prevMessages]);
+        setMessages(prevMessages => [...response, ...prevMessages]);
       } catch (error) {
-        console.log("error", JSON.stringify(error));
+        console.log('error', JSON.stringify(error));
       }
     };
     subscribe();
@@ -40,9 +35,9 @@ const Messages = (props: Props) => {
   const subscribe = async () => {
     try {
       const response = await chatService.pollMessages(props.chatId);
-      setMessages((prevMessages) => {
+      setMessages(prevMessages => {
         // Проверяем, есть ли сообщение уже в списке
-        const isDuplicate = prevMessages.some((msg) => msg.id === response.id);
+        const isDuplicate = prevMessages.some(msg => msg.id === response.id);
         if (isDuplicate) {
           return prevMessages;
         }
@@ -62,17 +57,17 @@ const Messages = (props: Props) => {
       {messages.length === 0 && (
         <View style={styles.noMessages}>
           <Text style={styles.noMessagesText}>
-            Напишите нам, если у вас возникнут какие-либо трудности! Не
-            стесняйтесь, мы не кусаемся! Поддержка работает 24/7
+            Напишите нам, если у вас возникнут какие-либо трудности! Не стесняйтесь, мы не кусаемся!
+            Поддержка работает 24/7
           </Text>
         </View>
       )}
       <FlatList
         data={messages}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={item => item.id.toString()}
         inverted
         renderItem={({ item }) => <Message message={item} myId={myId} />}
-        style={{ height: "100%" }}
+        style={{ height: '100%' }}
         scrollEnabled={true}
       />
     </View>
@@ -83,14 +78,14 @@ export default Messages;
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
   noMessages: {
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   noMessagesText: {
     fontSize: fontSizes.medium,
@@ -99,7 +94,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     color: colors.white,
     padding: 20,
-    textAlign: "center",
+    textAlign: 'center',
     maxWidth: 300,
   },
 });

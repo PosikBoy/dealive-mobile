@@ -1,20 +1,17 @@
-import Orders from "@/components/screens/Orders/Orders";
-import { authStorage } from "@/helpers/authStorage";
-import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
-import {
-  fetchAuthStatus,
-  fetchIsApprovedStatus,
-  logOut,
-} from "@/store/auth/auth.actions";
-import { Redirect } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { Redirect } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+
+import Orders from '@/components/screens/Orders/Orders';
+import { authStorage } from '@/helpers/authStorage';
+import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
+import { fetchAuthStatus, fetchIsApprovedStatus, logOut } from '@/store/auth/auth.actions';
 
 const TabsLayout = () => {
   const [isAppReady, setIsAppReady] = useState(false);
 
   const dispatch = useTypedDispatch();
 
-  const { isAuth, isApproved, error } = useTypedSelector((state) => state.auth);
+  const { isAuth, isApproved, error } = useTypedSelector(state => state.auth);
 
   const checkAuthStatus = async () => {
     try {
@@ -25,7 +22,7 @@ const TabsLayout = () => {
         await dispatch(fetchIsApprovedStatus()).unwrap();
       }
     } catch (err) {
-      console.error("Error checking auth status:", err);
+      console.error('Error checking auth status:', err);
     } finally {
       setIsAppReady(true);
     }
@@ -45,11 +42,11 @@ const TabsLayout = () => {
   }
 
   if (!isAuth) {
-    return <Redirect href={{ pathname: "/(special)/onBoarding" }} />;
+    return <Redirect href={{ pathname: '/(special)/onBoarding' }} />;
   }
 
   if (!isApproved) {
-    return <Redirect href={{ pathname: "/(special)/waitForApproval" }} />;
+    return <Redirect href={{ pathname: '/(special)/waitForApproval' }} />;
   }
 
   return <Orders />;

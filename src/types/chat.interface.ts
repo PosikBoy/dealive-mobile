@@ -14,7 +14,7 @@ export interface IMessage {
 export interface IChat {
   id: number;
   creatorId: number;
-  type: "dialog" | "group";
+  type: 'dialog' | 'group';
   name: string;
   createdAt: Date;
 }

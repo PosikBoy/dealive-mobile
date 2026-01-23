@@ -1,3 +1,5 @@
+import { FlashList } from '@shopify/flash-list';
+import React, { useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -5,42 +7,35 @@ import {
   TouchableOpacity,
   useColorScheme,
   View,
-} from "react-native";
-import React, { useMemo, useRef, useState } from "react";
-import { useGetAvailableOrdersQuery } from "@/services/orders/orders.service";
-import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
-import { colors } from "@/constants/colors";
-import { icons } from "@/constants/icons";
-import { useTypedSelector } from "@/hooks/redux.hooks";
-import CustomBottomSheetModal from "@/components/shared/CustomBottomSheetModal/CustomBottomSheetModal";
-import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
-import { ActionSheetRef } from "react-native-actions-sheet";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
-import { borderRadiuses } from "@/constants/styles";
-import { FlashList } from "@shopify/flash-list";
+} from 'react-native';
+import { ActionSheetRef } from 'react-native-actions-sheet';
 
-const sortingRuleOptions = [
-  "lastDate",
-  "priceASC",
-  "priceDESC",
-  "distance",
-] as const;
+import OrderPreview from '@/components/features/OrderPreview/OrderPreview';
+import CustomBottomSheetModal from '@/components/shared/CustomBottomSheetModal/CustomBottomSheetModal';
+import OrderPreviewSkeleton from '@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton';
+import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { colors } from '@/constants/colors';
+import { icons } from '@/constants/icons';
+import { borderRadiuses } from '@/constants/styles';
+import { useTypedSelector } from '@/hooks/redux.hooks';
+import { useGetAvailableOrdersQuery } from '@/services/orders/orders.service';
+
+const sortingRuleOptions = ['lastDate', 'priceASC', 'priceDESC', 'distance'] as const;
 
 const sortingRulesOptionsText = {
-  lastDate: "По дате (сначала новые)",
-  priceASC: "По цене (от дешевых к дорогим)",
-  priceDESC: "По цене (от дорогих к дешевым)",
-  distance: "По расстоянию (ближайший)",
+  lastDate: 'По дате (сначала новые)',
+  priceASC: 'По цене (от дешевых к дорогим)',
+  priceDESC: 'По цене (от дорогих к дешевым)',
+  distance: 'По расстоянию (ближайший)',
 };
 
 type SortingRulesTypes = (typeof sortingRuleOptions)[number];
 
 const AvailableOrders = () => {
-  const colorScheme = useColorScheme() || "light";
-  const location = useTypedSelector((state) => state.location);
+  const colorScheme = useColorScheme() || 'light';
+  const location = useTypedSelector(state => state.location);
 
-  const [sortingRules, setSortingRules] =
-    useState<SortingRulesTypes>("lastDate");
+  const [sortingRules, setSortingRules] = useState<SortingRulesTypes>('lastDate');
 
   const sortingRulesModalRef = useRef<ActionSheetRef>(null);
 
@@ -55,13 +50,13 @@ const AvailableOrders = () => {
     return data
       ? [...data].sort((a, b) => {
           switch (sortingRules) {
-            case "priceASC":
+            case 'priceASC':
               return a.price - b.price;
-            case "priceDESC":
+            case 'priceDESC':
               return b.price - a.price;
-            case "distance":
+            case 'distance':
               return a.addresses[0].distance - b.addresses[0].distance;
-            case "lastDate":
+            case 'lastDate':
               return new Date(b.date).getTime() - new Date(a.date).getTime();
             default:
               return 0;
@@ -79,13 +74,8 @@ const AvailableOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View
-            style={[
-              styles.loadingModal,
-              { backgroundColor: colors[colorScheme].white },
-            ]}
-          >
-            <ThemedText type="big" weight="medium">
+          <View style={[styles.loadingModal, { backgroundColor: colors[colorScheme].white }]}>
+            <ThemedText type='big' weight='medium'>
               {location.error}
             </ThemedText>
           </View>
@@ -102,17 +92,12 @@ const AvailableOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View
-            style={[
-              styles.loadingModal,
-              { backgroundColor: colors[colorScheme].white },
-            ]}
-          >
-            <ActivityIndicator size={"large"} color={colors.purple} />
-            <ThemedText type="big" weight="bold">
+          <View style={[styles.loadingModal, { backgroundColor: colors[colorScheme].white }]}>
+            <ActivityIndicator size={'large'} color={colors.purple} />
+            <ThemedText type='big' weight='bold'>
               {location.isLocationLoading
-                ? "Пытаемся определить ваше местоположение"
-                : "Запрашиваем заказы с сервера"}
+                ? 'Пытаемся определить ваше местоположение'
+                : 'Запрашиваем заказы с сервера'}
             </ThemedText>
           </View>
         </View>
@@ -125,19 +110,16 @@ const AvailableOrders = () => {
       <View style={{ flex: 1 }}>
         <TouchableOpacity
           onPress={() => sortingRulesModalRef.current.show()}
-          style={[
-            styles.sortButton,
-            { backgroundColor: colors[colorScheme].white },
-          ]}
+          style={[styles.sortButton, { backgroundColor: colors[colorScheme].white }]}
         >
-          <ThemedText weight="medium" type="mediumText">
+          <ThemedText weight='medium' type='mediumText'>
             Сортировка заказов
           </ThemedText>
         </TouchableOpacity>
         <FlashList
           data={sortedOrders}
           estimatedItemSize={150}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={item => item.id.toString()}
           renderItem={({ item }) => <OrderPreview order={item} />}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -149,21 +131,21 @@ const AvailableOrders = () => {
         disabled={isFetching}
       >
         {isFetching ? (
-          <ActivityIndicator size="small" color={colors.purple} />
+          <ActivityIndicator size='small' color={colors.purple} />
         ) : (
           <Image
             tintColor={colors[colorScheme].black}
             source={icons.refetch}
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: '100%', height: '100%' }}
           />
         )}
       </TouchableOpacity>
       <CustomBottomSheetModal ref={sortingRulesModalRef}>
         <View style={{ backgroundColor: colors[colorScheme].white }}>
-          <ThemedText weight="semiBold" type="mediumText">
+          <ThemedText weight='semiBold' type='mediumText'>
             Как отсортировать?
           </ThemedText>
-          {sortingRuleOptions.map((item) => {
+          {sortingRuleOptions.map(item => {
             return (
               <TouchableOpacity
                 style={styles.modalButton}
@@ -172,7 +154,7 @@ const AvailableOrders = () => {
                   handleSortingRulePress(item);
                 }}
               >
-                <ThemedText weight="medium" type="mediumText">
+                <ThemedText weight='medium' type='mediumText'>
                   {sortingRulesOptionsText[item]}
                 </ThemedText>
               </TouchableOpacity>
@@ -189,7 +171,7 @@ export default AvailableOrders;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: "relative",
+    position: 'relative',
     paddingHorizontal: 5,
   },
   loadingContainer: {
@@ -197,28 +179,28 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   loadingTextContainer: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
     backgroundColor: colors.backgroundColor,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loadingModal: {
     transform: [{ translateY: -60 }],
     padding: 20,
     borderRadius: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   flatListStyles: {
     paddingBottom: 120,
     gap: 20,
   },
   searchOrderContainer: {
-    marginHorizontal: "auto",
+    marginHorizontal: 'auto',
     marginTop: 100,
     height: 256,
     width: 256,
@@ -227,15 +209,15 @@ const styles = StyleSheet.create({
     height: 5,
   },
   update: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 50,
     right: 20,
     width: 40,
     height: 40,
     padding: 10,
     borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   sortButton: {
     borderRadius: borderRadiuses.big,
@@ -246,7 +228,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     padding: 15,
     borderBottomWidth: 1,
-    textAlign: "center",
+    textAlign: 'center',
     borderColor: colors.gray,
   },
 });

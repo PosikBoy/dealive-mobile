@@ -1,15 +1,15 @@
-import React from "react";
-import { Stack } from "expo-router";
+import { Stack } from 'expo-router';
+import React from 'react';
 
 const AuthLayout = () => {
   return (
     <Stack
-      screenOptions={{ headerShown: false, animation: "fade_from_bottom" }}
-      initialRouteName="main"
+      screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }}
+      initialRouteName='main'
     >
-      <Stack.Screen name="main" />
-      <Stack.Screen name="login" />
-      <Stack.Screen name="register" />
+      <Stack.Screen name='main' />
+      <Stack.Screen name='login' />
+      <Stack.Screen name='register' />
     </Stack>
   );
 };

@@ -1,18 +1,14 @@
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
-import { colors } from "@/constants/colors";
-import { borderRadiuses, gaps, paddings } from "@/constants/styles";
-import formatDate from "@/helpers/formatDate";
-import { IOrder } from "@/types/order.interface";
-import { getMetroColor } from "@/utils/getColorMetro";
-import { router } from "expo-router";
-import { FC, memo } from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from "react-native";
-import Animated, { FadeInLeft } from "react-native-reanimated";
+import { router } from 'expo-router';
+import { FC, memo } from 'react';
+import { StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native';
+import Animated, { FadeInLeft } from 'react-native-reanimated';
+
+import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { colors } from '@/constants/colors';
+import { borderRadiuses, gaps, paddings } from '@/constants/styles';
+import formatDate from '@/helpers/formatDate';
+import { IOrder } from '@/types/order.interface';
+import { getMetroColor } from '@/utils/getColorMetro';
 
 interface OrderDetailsProps {
   order: IOrder;
@@ -20,16 +16,11 @@ interface OrderDetailsProps {
 }
 
 const getOrderHeaderText = (length, id, income) => {
-  return (
-    length +
-    " адреса | № " +
-    id +
-    (income ? " | +" + income.toFixed(0) + "₽/ч" : "")
-  );
+  return length + ' адреса | № ' + id + (income ? ' | +' + income.toFixed(0) + '₽/ч' : '');
 };
 // Оборачиваем в memo для оптимизации
 const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
-  const colorScheme = useColorScheme() || "light";
+  const colorScheme = useColorScheme() || 'light';
   const { id, date, parcelType, weight, price, addresses } = order;
   const createdAtString = formatDate(date);
 
@@ -44,29 +35,25 @@ const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
     >
       <TouchableOpacity activeOpacity={0.8} onPress={navigateToOrder}>
         <View style={styles.innerContainer}>
-          <ThemedText weight="bold" type="heading">
+          <ThemedText weight='bold' type='heading'>
             {getOrderHeaderText(order.addresses.length, id, incomePerHour)}
           </ThemedText>
           <View style={styles.addresses}>
             {addresses.map((address, index) => {
               const metroString = address.geoData?.metro?.[0]?.name
-                ? address.geoData?.metro?.[0]?.name + " |"
-                : "";
-              const distance = address.distance?.toFixed(1) || "";
+                ? address.geoData?.metro?.[0]?.name + ' |'
+                : '';
+              const distance = address.distance?.toFixed(1) || '';
 
               return (
                 <View key={address.id} style={styles.address}>
                   <View style={styles.addressIndexContainer}>
-                    <ThemedText weight="medium" type="title">
+                    <ThemedText weight='medium' type='title'>
                       {index + 1}
                     </ThemedText>
                   </View>
                   <View style={styles.addressTextContainer}>
-                    <ThemedText
-                      type="mediumText"
-                      weight="medium"
-                      style={{ textAlign: "left" }}
-                    >
+                    <ThemedText type='mediumText' weight='medium' style={{ textAlign: 'left' }}>
                       {address.address}
                     </ThemedText>
 
@@ -75,9 +62,7 @@ const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
                         styles.locationInfo,
 
                         address.geoData?.metro && {
-                          backgroundColor: getMetroColor(
-                            address.geoData.metro[0].line
-                          ),
+                          backgroundColor: getMetroColor(address.geoData.metro[0].line),
                         },
                       ]}
                     >
@@ -92,19 +77,19 @@ const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
           </View>
           <View style={styles.footer}>
             <View style={styles.info}>
-              <ThemedText weight="semiBold" type="mediumText">
+              <ThemedText weight='semiBold' type='mediumText'>
                 {`${parcelType} · ${weight}`}
               </ThemedText>
               <View style={styles.price}>
                 <ThemedText
                   style={{ color: colors.white }}
-                  type="mediumText"
-                  weight="medium"
+                  type='mediumText'
+                  weight='medium'
                 >{`${price} ₽`}</ThemedText>
               </View>
             </View>
             <View style={styles.meta}>
-              <ThemedText color="gray" type="hint">
+              <ThemedText color='gray' type='hint'>
                 {`Заказ создан ${createdAtString}`}
               </ThemedText>
             </View>
@@ -125,16 +110,16 @@ const styles = StyleSheet.create({
     paddingVertical: paddings.medium,
   },
   innerContainer: {
-    width: "100%",
+    width: '100%',
     gap: gaps.medium,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
 
   addresses: {
     gap: 5,
   },
   address: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 10,
   },
   addressTextContainer: {
@@ -145,7 +130,7 @@ const styles = StyleSheet.create({
     width: 30,
   },
   locationInfo: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
     gap: 5,
     backgroundColor: colors.purple,
     paddingHorizontal: 10,
@@ -153,12 +138,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   footer: {
-    width: "100%",
+    width: '100%',
     gap: 5,
   },
   info: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   price: {
     backgroundColor: colors.purple,
@@ -167,8 +152,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   meta: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

@@ -22,13 +22,13 @@ enum BeltwayHit {
 }
 
 export enum IOrderActionType {
-  GO_TO = "GO_TO",
-  ARRIVED_AT = "ARRIVED_AT",
-  PICKUP = "PICKUP",
-  DELIVER = "DELIVER",
-  COLLECT_PAYMENT = "COLLECT_PAYMENT",
-  PAY_COMMISION = "PAY_COMMISION",
-  COMPLETE_ORDER = "COMPLETE_ORDER",
+  GO_TO = 'GO_TO',
+  ARRIVED_AT = 'ARRIVED_AT',
+  PICKUP = 'PICKUP',
+  DELIVER = 'DELIVER',
+  COLLECT_PAYMENT = 'COLLECT_PAYMENT',
+  PAY_COMMISION = 'PAY_COMMISION',
+  COMPLETE_ORDER = 'COMPLETE_ORDER',
 }
 
 export interface IOrderAction {
@@ -58,7 +58,7 @@ export interface IAddress {
   createdAt?: string;
   updatedAt?: string;
   distance?: number;
-  type?: "PICKUP" | "DELIVER";
+  type?: 'PICKUP' | 'DELIVER';
   isCompleted?: boolean;
 }
 

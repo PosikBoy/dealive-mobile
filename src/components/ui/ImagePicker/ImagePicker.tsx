@@ -1,13 +1,6 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  useColorScheme,
-} from "react-native";
-import React from "react";
-import { Link } from "expo-router";
+import { Link } from 'expo-router';
+import React from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 interface IProps {
   title: string;
   linkSuggestion?: string;
@@ -16,33 +9,32 @@ interface IProps {
   name: string;
   rules?: any;
 }
-import * as ExpoImagePicker from "expo-image-picker";
-import { Control, useController } from "react-hook-form";
-import { icons } from "@/constants/icons";
-import { fonts } from "@/constants/styles";
-import ThemedText from "../ThemedText/ThemedText";
+import * as ExpoImagePicker from 'expo-image-picker';
+import { Control, useController } from 'react-hook-form';
+
+import { icons } from '@/constants/icons';
+import { fonts } from '@/constants/styles';
+
+import ThemedText from '../ThemedText/ThemedText';
 
 const ImagePicker = (props: IProps) => {
-  const colorScheme = useColorScheme() || "light";
+  const colorScheme = useColorScheme() || 'light';
   const { title, linkSuggestion, control, name, rules = {} } = props;
 
   const { field } = useController({ control, name, rules });
 
   const selectImage = async () => {
     // Запрашиваем разрешение на доступ к галерее
-    const permissionResult =
-      await ExpoImagePicker.requestMediaLibraryPermissionsAsync();
+    const permissionResult = await ExpoImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert(
-        "Мы не можем получить доступ к галерее, так как вы не предоставили нам разрешение."
-      );
+      alert('Мы не можем получить доступ к галерее, так как вы не предоставили нам разрешение.');
       return;
     }
 
     // Открываем галерею для выбора изображения
     const result = await ExpoImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
+      mediaTypes: ['images'],
       allowsEditing: true,
       quality: 1,
     });
@@ -66,10 +58,8 @@ const ImagePicker = (props: IProps) => {
           source={field.value ? field.value : icons.upload}
           style={{ width: 50, height: 50 }}
         />
-        <ThemedText type="mediumText">
-          {field.value
-            ? "Загрузить другое изображение"
-            : "Загрузить изображение"}
+        <ThemedText type='mediumText'>
+          {field.value ? 'Загрузить другое изображение' : 'Загрузить изображение'}
         </ThemedText>
       </TouchableOpacity>
     </View>
@@ -78,23 +68,23 @@ const ImagePicker = (props: IProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: "100%",
-    justifyContent: "center",
+    width: '100%',
+    justifyContent: 'center',
   },
   suggestion: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
   },
   linkSuggestion: {
     fontFamily: fonts.semiBold,
     fontSize: 16,
-    color: "blue",
+    color: 'blue',
     marginTop: 5,
   },
   button: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 10,
     gap: 10,
   },

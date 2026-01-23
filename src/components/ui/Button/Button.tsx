@@ -1,18 +1,13 @@
-import { colors } from "@/constants/colors";
-import { fonts } from "@/constants/styles";
-import React from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  TouchableHighlightProps,
-  View,
-} from "react-native";
+import React from 'react';
+import { StyleSheet, Text, TouchableHighlight, TouchableHighlightProps, View } from 'react-native';
+
+import { colors } from '@/constants/colors';
+import { fonts } from '@/constants/styles';
 
 interface IProps extends TouchableHighlightProps {
   buttonText?: string;
   onPress: () => void;
-  color?: "purple" | "red" | "lightPurple";
+  color?: 'purple' | 'red' | 'lightPurple';
   disabled?: boolean;
   isLoading?: boolean;
   icon?: React.ReactNode;
@@ -25,11 +20,11 @@ const ACTIVE_COLOR_MAP = {
   lightPurple: colors.hoverLightPurple,
 };
 
-const MyButton: React.FC<IProps> = (props) => {
+const MyButton: React.FC<IProps> = props => {
   const {
     buttonText,
     onPress,
-    color = "purple",
+    color = 'purple',
     disabled,
     isLoading,
     children,
@@ -42,9 +37,7 @@ const MyButton: React.FC<IProps> = (props) => {
     return (
       <View style={styles.contentWrapper}>
         {icon && <View style={styles.iconSize}>{icon}</View>}
-        {!isIconOnly && buttonText && (
-          <Text style={styles.buttonText}>{buttonText}</Text>
-        )}
+        {!isIconOnly && buttonText && <Text style={styles.buttonText}>{buttonText}</Text>}
       </View>
     );
   };
@@ -67,11 +60,11 @@ const styles = StyleSheet.create({
   baseButton: {
     borderRadius: 20,
     padding: 10,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 56,
-    width: "100%",
+    width: '100%',
     minWidth: 48, // Минимальный размер для иконки
   },
   iconOnly: {
@@ -84,15 +77,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.red,
   },
   buttonText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
     fontFamily: fonts.bold,
-    width: "100%",
-    textAlign: "center",
+    width: '100%',
+    textAlign: 'center',
   },
   contentWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   iconSize: {
     width: 24,

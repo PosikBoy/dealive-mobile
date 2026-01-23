@@ -1,14 +1,9 @@
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from "react-native";
-import React from "react";
-import { Tabs } from "expo-router";
-import { colors } from "@/constants/colors";
-import { icons } from "@/constants/icons";
+import { Tabs } from 'expo-router';
+import React from 'react';
+import { Image, Pressable, StyleSheet, useColorScheme, View } from 'react-native';
+
+import { colors } from '@/constants/colors';
+import { icons } from '@/constants/icons';
 
 const TabIcon = ({ icon, color, focused }) => {
   return (
@@ -18,97 +13,81 @@ const TabIcon = ({ icon, color, focused }) => {
           style={tabStyles.icon}
           source={icon}
           tintColor={focused ? color : colors.gray}
-          resizeMode="contain"
+          resizeMode='contain'
         />
       </View>
     </View>
   );
 };
 
-const CustomTabButton = (props) => (
+const CustomTabButton = props => (
   <Pressable
     {...props}
-    android_ripple={{ color: "transparent" }}
+    android_ripple={{ color: 'transparent' }}
     style={({ pressed }) => [props.style, { opacity: pressed ? 1 : 1 }]}
   />
 );
 
 const TabsLayout = () => {
-  const colorScheme = useColorScheme() || "light";
+  const colorScheme = useColorScheme() || 'light';
   return (
     <Tabs
-      initialRouteName="index"
+      initialRouteName='index'
       screenOptions={{
         tabBarShowLabel: false,
         tabBarActiveTintColor: colors.purple,
         tabBarInactiveTintColor: colors.gray,
-        tabBarButton: (props) => <CustomTabButton {...props} />,
+        tabBarButton: props => <CustomTabButton {...props} />,
         tabBarStyle: {
           backgroundColor: colors[colorScheme].white,
           borderTopWidth: 1,
           shadowOpacity: 2,
           height: 60,
-          alignItems: "center",
+          alignItems: 'center',
         },
-        animation: "shift",
+        animation: 'shift',
       }}
     >
       <Tabs.Screen
-        name="support"
+        name='support'
         options={{
           headerShown: false,
-          title: "Техподдержка",
+          title: 'Техподдержка',
           tabBarIcon: ({ focused }) => (
-            <TabIcon
-              icon={icons.chat}
-              color={colors.purple}
-              focused={focused}
-            />
+            <TabIcon icon={icons.chat} color={colors.purple} focused={focused} />
           ),
         }}
       />
 
       <Tabs.Screen
-        name="index"
+        name='index'
         options={{
           headerShown: false,
-          title: "Заказы",
+          title: 'Заказы',
           tabBarIcon: ({ focused }) => (
-            <TabIcon
-              icon={icons.orders}
-              color={colors.purple}
-              focused={focused}
-            />
+            <TabIcon icon={icons.orders} color={colors.purple} focused={focused} />
           ),
         }}
       />
 
       <Tabs.Screen
-        name="route"
+        name='route'
         options={{
           headerShown: false,
-          title: "Маршрут",
+          title: 'Маршрут',
           tabBarIcon: ({ focused }) => (
-            <TabIcon
-              icon={icons.mapDot}
-              color={colors.purple}
-              focused={focused}
-            />
+            <TabIcon icon={icons.mapDot} color={colors.purple} focused={focused} />
           ),
         }}
       />
 
       <Tabs.Screen
-        name="settings"
+        name='settings'
         options={{
           headerShown: false,
-          title: "Настройки",
+          title: 'Настройки',
           tabBarIcon: ({ focused }) => (
-            <TabIcon
-              icon={icons.settings}
-              color={colors.purple}
-              focused={focused}
-            />
+            <TabIcon icon={icons.settings} color={colors.purple} focused={focused} />
           ),
         }}
       />
@@ -121,22 +100,22 @@ export default TabsLayout;
 const tabStyles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
   },
   iconContainer: {
     height: 50,
     width: 30,
   },
   icon: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
   text: {
-    width: "100%",
+    width: '100%',
     color: colors.gray,
   },
   focusedText: {
-    width: "100%",
+    width: '100%',
     color: colors.purple,
   },
 });

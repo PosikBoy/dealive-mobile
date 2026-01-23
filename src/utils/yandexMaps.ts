@@ -1,5 +1,6 @@
-import { Linking } from "react-native";
-import { IAddress } from "@/types/order.interface";
+import { Linking } from 'react-native';
+
+import { IAddress } from '@/types/order.interface';
 
 interface IPoint {
   lat: string;
@@ -13,7 +14,7 @@ class YandexMaps {
       console.log(supported);
       await Linking.openURL(supported ? primaryUrl : fallbackUrl);
     } catch (err) {
-      console.error("Ошибка открытия URL:", err);
+      console.error('Ошибка открытия URL:', err);
     }
   }
 
@@ -24,7 +25,7 @@ class YandexMaps {
   }
 
   getRoute(points: IPoint[]) {
-    const pointsStr = points.map((p) => `${p.lat},${p.lon}`).join("~");
+    const pointsStr = points.map(p => `${p.lat},${p.lon}`).join('~');
     const url = `yandexmaps://maps.yandex.ru/?rtext=${pointsStr}&rtt=mt`;
     const fallback = `https://maps.yandex.ru/?rtext=${pointsStr}&rtt=mt`;
     this.openURL(url, fallback);
@@ -37,7 +38,6 @@ class YandexMaps {
     };
   }
 }
-
 
 const yandexMaps = new YandexMaps();
 export default yandexMaps;

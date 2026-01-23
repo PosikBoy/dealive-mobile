@@ -1,20 +1,9 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from "react-native";
-import {
-  IAddress,
-  IOrderAction,
-  IOrderActionType,
-} from "@/types/order.interface";
+import { Image, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 
-import { colors } from "@/constants/colors";
-import { icons } from "@/constants/icons";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { colors } from '@/constants/colors';
+import { icons } from '@/constants/icons';
+import { IAddress, IOrderAction, IOrderActionType } from '@/types/order.interface';
 
 type Props = {
   action: IOrderAction;
@@ -33,7 +22,7 @@ const actionIcons = {
 };
 
 export const Action = (props: Props) => {
-  const colorScheme = useColorScheme() || "light";
+  const colorScheme = useColorScheme() || 'light';
   const { action, disabled } = props;
   const icon = actionIcons[action.actionType];
 
@@ -55,11 +44,7 @@ export const Action = (props: Props) => {
             style={{ width: 20, height: 20 }}
           />
         </View>
-        <ThemedText
-          type="mediumText"
-          weight="medium"
-          style={{ textAlign: "left", flex: 1 }}
-        >
+        <ThemedText type='mediumText' weight='medium' style={{ textAlign: 'left', flex: 1 }}>
           {action.description}
         </ThemedText>
       </TouchableOpacity>
@@ -75,8 +60,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   actionCompleted: {
     backgroundColor: colors.green,
@@ -84,8 +69,8 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 40,
     height: 40,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 20,
     marginRight: 10,
   },

@@ -1,14 +1,15 @@
-import { StyleSheet, View } from "react-native";
-import React from "react";
-import { colors } from "@/constants/colors";
-import Header from "@/components/shared/Header/Header";
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+
+import Header from '@/components/shared/Header/Header';
+import { colors } from '@/constants/colors';
 
 type Props = {};
 
 const MoneyEarned = (props: Props) => {
   return (
     <View>
-      <Header title="Заработано" />
+      <Header title='Заработано' />
     </View>
   );
 };

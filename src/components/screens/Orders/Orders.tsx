@@ -1,19 +1,19 @@
-import Header from "@/components/shared/Header/Header";
-import Toggler from "@/components/ui/HorizontalToggler/HorizontalToggler";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Animated, StyleSheet, View } from "react-native";
-import ActiveOrders from "./components/ActiveOrders";
-import AvailableOrders from "./components/AvailableOrders";
-import RecommendedOrders from "./components/RecommendedOrders";
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Animated, StyleSheet, View } from 'react-native';
 
-const options = ["Доступные", "Лучшие", "Активные"];
+import Header from '@/components/shared/Header/Header';
+import Toggler from '@/components/ui/HorizontalToggler/HorizontalToggler';
+
+import ActiveOrders from './components/ActiveOrders';
+import AvailableOrders from './components/AvailableOrders';
+import RecommendedOrders from './components/RecommendedOrders';
+
+const options = ['Доступные', 'Лучшие', 'Активные'];
 
 const OrdersScreen = () => {
-  const [activeTab, setActiveTab] = useState<string>("Доступные");
+  const [activeTab, setActiveTab] = useState<string>('Доступные');
 
-  const tabAnimation = useRef(
-    new Animated.Value(options.indexOf(activeTab))
-  ).current;
+  const tabAnimation = useRef(new Animated.Value(options.indexOf(activeTab))).current;
 
   useEffect(() => {
     Animated.spring(tabAnimation, {
@@ -30,7 +30,7 @@ const OrdersScreen = () => {
         inputRange: [0, 1, 2],
         outputRange: [0, -20, -20],
       }),
-    [tabAnimation]
+    [tabAnimation],
   );
 
   const recommendedTranslate = useMemo(
@@ -39,7 +39,7 @@ const OrdersScreen = () => {
         inputRange: [0, 1, 2],
         outputRange: [20, 0, -20],
       }),
-    [tabAnimation]
+    [tabAnimation],
   );
 
   const activeTranslate = useMemo(
@@ -48,7 +48,7 @@ const OrdersScreen = () => {
         inputRange: [0, 1, 2],
         outputRange: [20, -20, 0],
       }),
-    [tabAnimation]
+    [tabAnimation],
   );
 
   const availableOpacity = useMemo(
@@ -57,7 +57,7 @@ const OrdersScreen = () => {
         inputRange: [0, 1, 2],
         outputRange: [1, 0, 0],
       }),
-    [tabAnimation]
+    [tabAnimation],
   );
 
   const recommendedOpacity = useMemo(
@@ -66,7 +66,7 @@ const OrdersScreen = () => {
         inputRange: [0, 1, 2],
         outputRange: [0, 1, 0],
       }),
-    [tabAnimation]
+    [tabAnimation],
   );
 
   const activeOpacity = useMemo(
@@ -75,17 +75,13 @@ const OrdersScreen = () => {
         inputRange: [0, 1, 2],
         outputRange: [0, 0, 1],
       }),
-    [tabAnimation]
+    [tabAnimation],
   );
 
   return (
     <View style={styles.container}>
-      <Header title="Заказы" isButtonBackShown={false} />
-      <Toggler
-        options={options}
-        activeTab={activeTab}
-        onChange={setActiveTab}
-      />
+      <Header title='Заказы' isButtonBackShown={false} />
+      <Toggler options={options} activeTab={activeTab} onChange={setActiveTab} />
 
       <View style={styles.ordersContainer}>
         <Animated.View
@@ -94,7 +90,7 @@ const OrdersScreen = () => {
             {
               opacity: availableOpacity,
               transform: [{ translateX: availableTranslate }],
-              pointerEvents: activeTab === "Доступные" ? "auto" : "none",
+              pointerEvents: activeTab === 'Доступные' ? 'auto' : 'none',
             },
           ]}
         >
@@ -106,7 +102,7 @@ const OrdersScreen = () => {
             {
               opacity: recommendedOpacity,
               transform: [{ translateX: recommendedTranslate }],
-              pointerEvents: activeTab === "Лучшие" ? "auto" : "none",
+              pointerEvents: activeTab === 'Лучшие' ? 'auto' : 'none',
             },
           ]}
         >
@@ -118,7 +114,7 @@ const OrdersScreen = () => {
             {
               opacity: activeOpacity,
               transform: [{ translateX: activeTranslate }],
-              pointerEvents: activeTab === "Активные" ? "auto" : "none",
+              pointerEvents: activeTab === 'Активные' ? 'auto' : 'none',
             },
           ]}
         >
@@ -132,16 +128,16 @@ const OrdersScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: "100%",
+    width: '100%',
   },
 
   ordersContainer: {
     flex: 1,
   },
   tabContent: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
     top: 0,
     left: 0,
   },

@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 export interface ILocationInitialState {
   lon: number;
@@ -14,7 +14,7 @@ const initialState: ILocationInitialState = {
   error: null,
 };
 export const locationSlice = createSlice({
-  name: "signupForm",
+  name: 'signupForm',
   initialState,
   reducers: {
     pushLocation(state, action) {

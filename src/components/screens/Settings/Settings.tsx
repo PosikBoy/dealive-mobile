@@ -1,26 +1,26 @@
+import { Link } from 'expo-router';
+import React from 'react';
 import {
-  View,
-  StyleSheet,
   Image,
-  TouchableOpacity,
-  Pressable,
   Linking,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
   useColorScheme,
-} from "react-native";
-import React from "react";
-import { Link } from "expo-router";
-import { icons } from "@/constants/icons";
+  View,
+} from 'react-native';
+import { SheetManager } from 'react-native-actions-sheet';
 
-import { SheetManager } from "react-native-actions-sheet";
-import Header from "@/components/shared/Header/Header";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
-import { colors } from "@/constants/colors";
+import Header from '@/components/shared/Header/Header';
+import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { colors } from '@/constants/colors';
+import { icons } from '@/constants/icons';
 
 const Settings = () => {
-  const colorScheme = useColorScheme() || "light";
+  const colorScheme = useColorScheme() || 'light';
 
   const logoutButtonHandler = async () => {
-    SheetManager.show("log-out-sheet");
+    SheetManager.show('log-out-sheet');
   };
 
   return (
@@ -32,25 +32,20 @@ const Settings = () => {
         },
       ]}
     >
-      <Header title="Настройки" isButtonBackShown={false} />
+      <Header title='Настройки' isButtonBackShown={false} />
       <View style={styles.content}>
-        <Link href="/settings/profile">
+        <Link href='/settings/profile'>
           <View style={styles.linkContainer}>
             <View style={styles.linkTextContainer}>
               <View style={styles.iconContainer}>
                 <Image
                   tintColor={colors[colorScheme].black}
                   source={icons.profile}
-                  resizeMode="contain"
+                  resizeMode='contain'
                   style={{ width: 20, height: 20 }}
                 />
               </View>
-              <ThemedText
-                weight="bold"
-                type="mediumText"
-                style={{ flex: 1 }}
-                align="left"
-              >
+              <ThemedText weight='bold' type='mediumText' style={{ flex: 1 }} align='left'>
                 Мой профиль
               </ThemedText>
             </View>
@@ -59,28 +54,23 @@ const Settings = () => {
                 tintColor={colors[colorScheme].black}
                 style={styles.arrowIcon}
                 source={icons.arrow}
-                resizeMode="contain"
+                resizeMode='contain'
               />
             </View>
           </View>
         </Link>
-        <Link href="/orders/completed">
+        <Link href='/orders/completed'>
           <View style={styles.linkContainer}>
             <View style={styles.linkTextContainer}>
               <View style={styles.iconContainer}>
                 <Image
                   tintColor={colors[colorScheme].black}
                   source={icons.orders}
-                  resizeMode="contain"
+                  resizeMode='contain'
                   style={{ width: 20, height: 20 }}
                 />
               </View>
-              <ThemedText
-                weight="bold"
-                type="mediumText"
-                style={{ flex: 1 }}
-                align="left"
-              >
+              <ThemedText weight='bold' type='mediumText' style={{ flex: 1 }} align='left'>
                 Выполненные заказы
               </ThemedText>
             </View>
@@ -90,30 +80,23 @@ const Settings = () => {
                 tintColor={colors[colorScheme].black}
                 style={styles.arrowIcon}
                 source={icons.arrow}
-                resizeMode="contain"
+                resizeMode='contain'
               />
             </View>
           </View>
         </Link>
-        <Pressable
-          onPress={() => Linking.openURL("https://dealive.ru/courier/faq")}
-        >
+        <Pressable onPress={() => Linking.openURL('https://dealive.ru/courier/faq')}>
           <View style={styles.linkContainer}>
             <View style={styles.linkTextContainer}>
               <View style={styles.iconContainer}>
                 <Image
                   tintColor={colors[colorScheme].black}
                   source={icons.faq}
-                  resizeMode="contain"
+                  resizeMode='contain'
                   style={{ width: 20, height: 20 }}
                 />
               </View>
-              <ThemedText
-                weight="bold"
-                type="mediumText"
-                style={{ flex: 1 }}
-                align="left"
-              >
+              <ThemedText weight='bold' type='mediumText' style={{ flex: 1 }} align='left'>
                 FAQ
               </ThemedText>
             </View>
@@ -123,29 +106,24 @@ const Settings = () => {
                 tintColor={colors[colorScheme].black}
                 style={styles.arrowIcon}
                 source={icons.arrow}
-                resizeMode="contain"
+                resizeMode='contain'
               />
             </View>
           </View>
         </Pressable>
 
-        <Link href="/settings/about">
+        <Link href='/settings/about'>
           <View style={styles.linkContainer}>
             <View style={styles.linkTextContainer}>
               <View style={styles.iconContainer}>
                 <Image
                   tintColor={colors[colorScheme].black}
                   source={icons.application}
-                  resizeMode="contain"
+                  resizeMode='contain'
                   style={{ width: 20, height: 20 }}
                 />
               </View>
-              <ThemedText
-                weight="bold"
-                type="mediumText"
-                style={{ flex: 1 }}
-                align="left"
-              >
+              <ThemedText weight='bold' type='mediumText' style={{ flex: 1 }} align='left'>
                 О приложении
               </ThemedText>
             </View>
@@ -154,30 +132,23 @@ const Settings = () => {
                 tintColor={colors[colorScheme].black}
                 style={styles.arrowIcon}
                 source={icons.arrow}
-                resizeMode="contain"
+                resizeMode='contain'
               />
             </View>
           </View>
         </Link>
-        <Pressable
-          onPress={() => Linking.openURL("https://t.me/dealivesupport")}
-        >
+        <Pressable onPress={() => Linking.openURL('https://t.me/dealivesupport')}>
           <View style={styles.linkContainer}>
             <View style={styles.linkTextContainer}>
               <View style={styles.iconContainer}>
                 <Image
                   tintColor={colors[colorScheme].black}
                   source={icons.telegram}
-                  resizeMode="contain"
+                  resizeMode='contain'
                   style={{ width: 20, height: 20 }}
                 />
               </View>
-              <ThemedText
-                weight="bold"
-                type="mediumText"
-                style={{ flex: 1 }}
-                align="left"
-              >
+              <ThemedText weight='bold' type='mediumText' style={{ flex: 1 }} align='left'>
                 Техподдержка в Telegram
               </ThemedText>
             </View>
@@ -187,16 +158,13 @@ const Settings = () => {
                 tintColor={colors[colorScheme].black}
                 style={styles.arrowIcon}
                 source={icons.arrow}
-                resizeMode="contain"
+                resizeMode='contain'
               />
             </View>
           </View>
         </Pressable>
-        <TouchableOpacity
-          onPress={logoutButtonHandler}
-          style={styles.logoutButton}
-        >
-          <ThemedText weight="bold" type="mediumText" color="red" align="left">
+        <TouchableOpacity onPress={logoutButtonHandler} style={styles.logoutButton}>
+          <ThemedText weight='bold' type='mediumText' color='red' align='left'>
             Выйти из профиля
           </ThemedText>
         </TouchableOpacity>
@@ -209,50 +177,50 @@ export default Settings;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
   },
   header: {
     paddingVertical: 20,
-    width: "100%",
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '100%',
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   content: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
   linkContainer: {
     paddingHorizontal: 20,
     height: 56,
-    width: "100%",
-    justifyContent: "center",
-    flexDirection: "row",
-    alignItems: "center",
+    width: '100%',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
   iconContainer: {
-    alignItems: "flex-end",
+    alignItems: 'flex-end',
     width: 20,
     height: 20,
   },
   arrowIcon: {
-    transform: [{ rotate: "180deg" }],
+    transform: [{ rotate: '180deg' }],
     width: 20,
     height: 20,
   },
   linkTextContainer: {
-    justifyContent: "center",
-    flexDirection: "row",
+    justifyContent: 'center',
+    flexDirection: 'row',
     gap: 10,
-    alignItems: "center",
+    alignItems: 'center',
   },
   logoutButton: {
     paddingHorizontal: 37,
-    width: "100%",
+    width: '100%',
     height: 50,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
 });

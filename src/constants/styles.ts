@@ -1,8 +1,8 @@
 export const fonts = {
-  regular: "CeraRoundPro-Regular",
-  medium: "CeraRoundPro-Medium",
-  bold: "CeraRoundPro-Bold",
-  semiBold: "CeraRoundPro-SemiBold",
+  regular: 'CeraRoundPro-Regular',
+  medium: 'CeraRoundPro-Medium',
+  bold: 'CeraRoundPro-Bold',
+  semiBold: 'CeraRoundPro-SemiBold',
 };
 
 export const gaps = {

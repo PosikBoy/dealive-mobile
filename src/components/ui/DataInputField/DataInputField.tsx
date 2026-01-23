@@ -1,20 +1,17 @@
-import { colors } from "@/constants/colors";
-import { fonts } from "@/constants/styles";
-import React, { FC, useImperativeHandle, useRef, useEffect } from "react";
-import { Control, useController } from "react-hook-form";
+import React, { FC, useEffect, useImperativeHandle, useRef } from 'react';
+import { Control, useController } from 'react-hook-form';
 import {
-  View,
-  TextInput,
-  Text,
   StyleSheet,
+  Text,
+  TextInput,
   TouchableWithoutFeedback,
   useColorScheme,
-} from "react-native";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+  View,
+} from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+
+import { colors } from '@/constants/colors';
+import { fonts } from '@/constants/styles';
 
 interface IField {
   onChange: (value: string) => void;
@@ -32,14 +29,14 @@ interface IControllerField {
   error?: any;
   placeholder: string;
 }
-const DataInputField: FC<IControllerField> = (props) => {
-  const colorScheme = useColorScheme() || "light";
+const DataInputField: FC<IControllerField> = props => {
+  const colorScheme = useColorScheme() || 'light';
   const { name, control, error, placeholder } = props;
   const rules = {
-    required: "Введите дату рождения",
+    required: 'Введите дату рождения',
     pattern: {
       value: /^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.(19|20)\d\d$/,
-      message: "Дата рождения некорректная",
+      message: 'Дата рождения некорректная',
     },
   };
 
@@ -53,24 +50,24 @@ const DataInputField: FC<IControllerField> = (props) => {
       raisePlaceholder();
     }
   });
-  const dataChangeHandler = (newValue) => {
+  const dataChangeHandler = newValue => {
     const regex = /[0-9]/;
-    const oldValue = field.value ? field.value : "";
+    const oldValue = field.value ? field.value : '';
     if (oldValue.length - newValue.length == 1) {
       field.onChange(newValue);
       return;
     }
     if (regex.test(newValue[newValue.length - 1]) && newValue.length < 12) {
-      newValue = newValue.replaceAll(/\D/g, "");
+      newValue = newValue.replaceAll(/\D/g, '');
       newValue =
-        (newValue[0] ? newValue[0] : "") +
-        (newValue[1] ? newValue[1] + "." : "") +
-        (newValue[2] ? newValue[2] : "") +
-        (newValue[3] ? newValue[3] + "." : "") +
-        (newValue[4] ? newValue[4] : "") +
-        (newValue[5] ? newValue[5] : "") +
-        (newValue[6] ? newValue[6] : "") +
-        (newValue[7] ? newValue[7] : "");
+        (newValue[0] ? newValue[0] : '') +
+        (newValue[1] ? newValue[1] + '.' : '') +
+        (newValue[2] ? newValue[2] : '') +
+        (newValue[3] ? newValue[3] + '.' : '') +
+        (newValue[4] ? newValue[4] : '') +
+        (newValue[5] ? newValue[5] : '') +
+        (newValue[6] ? newValue[6] : '') +
+        (newValue[7] ? newValue[7] : '');
       field.onChange(newValue);
       return;
     }
@@ -143,10 +140,10 @@ const DataInputField: FC<IControllerField> = (props) => {
         ]}
       >
         <TextInput
-          placeholder=""
+          placeholder=''
           ref={inputRef}
           style={[styles.input, { color: colors[colorScheme].black }]}
-          keyboardType="numeric"
+          keyboardType='numeric'
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChangeText={dataChangeHandler}
@@ -154,9 +151,7 @@ const DataInputField: FC<IControllerField> = (props) => {
         />
       </Animated.View>
 
-      <Animated.View
-        style={[styles.placeholderContainer, animatedPlaceholderPosition]}
-      >
+      <Animated.View style={[styles.placeholderContainer, animatedPlaceholderPosition]}>
         <TouchableWithoutFeedback onPress={() => inputRef.current.focus()}>
           <Animated.Text
             style={[
@@ -165,7 +160,7 @@ const DataInputField: FC<IControllerField> = (props) => {
               animatedPlaceholderColor,
             ]}
           >
-            {placeholder + "*"}
+            {placeholder + '*'}
           </Animated.Text>
         </TouchableWithoutFeedback>
       </Animated.View>
@@ -178,21 +173,21 @@ export default DataInputField;
 
 const styles = StyleSheet.create({
   container: {
-    position: "relative",
+    position: 'relative',
     flex: 1,
-    width: "100%",
+    width: '100%',
     height: 60,
   },
   inputContainer: {
-    width: "100%",
+    width: '100%',
     height: 40,
     backgroundColor: colors.white,
     borderWidth: 1,
     borderRadius: 8,
   },
   input: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
     color: colors.black,
     fontSize: 14,
     fontFamily: fonts.regular,
@@ -200,7 +195,7 @@ const styles = StyleSheet.create({
     paddingVertical: 11,
   },
   placeholderContainer: {
-    position: "absolute",
+    position: 'absolute',
     left: 12,
     backgroundColor: colors.white,
   },

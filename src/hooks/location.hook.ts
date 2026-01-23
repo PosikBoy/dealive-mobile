@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import * as Location from "expo-location";
-import geodataService from "@/services/geodata/geodata.service";
+import * as Location from 'expo-location';
+import { useEffect, useState } from 'react';
+
+import geodataService from '@/services/geodata/geodata.service';
 
 interface ILocation {
   lon: number;
@@ -18,9 +19,9 @@ export const useLocation = () => {
     const requestPermissions = async () => {
       try {
         const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
+        if (status !== 'granted') {
           throw new Error(
-            "Для доступа к заказам необходимо выдать разрешение на доступ к местоположению устройства."
+            'Для доступа к заказам необходимо выдать разрешение на доступ к местоположению устройства.',
           );
         }
         return true;
@@ -45,7 +46,7 @@ export const useLocation = () => {
         });
 
         if (data?.mocked) {
-          setError("Приложение не поддерживает фиктивное местоположение.");
+          setError('Приложение не поддерживает фиктивное местоположение.');
           return;
         }
 
@@ -76,7 +77,7 @@ export const useLocation = () => {
         setError(null);
       } catch (err: any) {
         setError(
-          "Не удалось получить местоположение. Убедитесь, что на вашем устройстве включена геолокация."
+          'Не удалось получить местоположение. Убедитесь, что на вашем устройстве включена геолокация.',
         );
       } finally {
         setIsLoading(false); // Завершаем загрузку

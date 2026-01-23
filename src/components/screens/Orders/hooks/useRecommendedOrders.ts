@@ -1,8 +1,9 @@
-import { useTypedSelector } from "@/hooks/redux.hooks";
-import { useGetAvailableOrdersQuery } from "@/services/orders/orders.service";
-import routeService from "@/services/route/route.service";
-import { IOrder } from "@/types/order.interface";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
+
+import { useTypedSelector } from '@/hooks/redux.hooks';
+import { useGetAvailableOrdersQuery } from '@/services/orders/orders.service';
+import routeService from '@/services/route/route.service';
+import { IOrder } from '@/types/order.interface';
 
 const AVERAGE_SPEED_KMH = 12;
 
@@ -17,12 +18,10 @@ interface IRecommendedOrders {
 export const useRecommendedOrders = () => {
   const { data: orders = [], isLoading } = useGetAvailableOrdersQuery();
 
-  const routeState = useTypedSelector((state) => state.route);
-  const location = useTypedSelector((state) => state.location);
+  const routeState = useTypedSelector(state => state.route);
+  const location = useTypedSelector(state => state.location);
 
-  const [recommendedOrders, setRecommendedOrders] = useState<
-    IRecommendedOrders[]
-  >([]);
+  const [recommendedOrders, setRecommendedOrders] = useState<IRecommendedOrders[]>([]);
 
   useEffect(() => {
     if (!orders.length || location.isLocationLoading || isLoading) {
@@ -30,12 +29,8 @@ export const useRecommendedOrders = () => {
       return;
     }
 
-    const calculatedOrders = orders.map((order) => {
-      const newRoute = routeService.getRouteWithNewOrder(
-        [...routeState.route],
-        order,
-        location
-      );
+    const calculatedOrders = orders.map(order => {
+      const newRoute = routeService.getRouteWithNewOrder([...routeState.route], order, location);
 
       const currentDistance = routeState.distance || 0;
       const deltaDistance = newRoute.distance - currentDistance;
@@ -53,9 +48,7 @@ export const useRecommendedOrders = () => {
       };
     });
 
-    const sorted = [...calculatedOrders].sort(
-      (a, b) => b.incomePerHour - a.incomePerHour
-    );
+    const sorted = [...calculatedOrders].sort((a, b) => b.incomePerHour - a.incomePerHour);
     setRecommendedOrders(sorted);
   }, [orders, routeState, location]);
 

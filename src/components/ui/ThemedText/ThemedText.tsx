@@ -1,19 +1,13 @@
-import { colors } from "@/constants/colors";
-import { PropsWithChildren } from "react";
-import { StyleSheet, Text, TextProps, useColorScheme } from "react-native";
+import { PropsWithChildren } from 'react';
+import { StyleSheet, Text, TextProps, useColorScheme } from 'react-native';
+
+import { colors } from '@/constants/colors';
 
 interface IProps extends PropsWithChildren<TextProps> {
-  weight?: "semiBold" | "bold" | "medium" | "regular";
-  color?: "gray" | "red" | "black" | "white" | "lightGray";
-  type?:
-    | "heading"
-    | "title"
-    | "subtitle"
-    | "default"
-    | "hint"
-    | "big"
-    | "mediumText";
-  align?: "left" | "center";
+  weight?: 'semiBold' | 'bold' | 'medium' | 'regular';
+  color?: 'gray' | 'red' | 'black' | 'white' | 'lightGray';
+  type?: 'heading' | 'title' | 'subtitle' | 'default' | 'hint' | 'big' | 'mediumText';
+  align?: 'left' | 'center';
   key?: React.Key;
 }
 
@@ -36,29 +30,23 @@ const darkColors = {
 const ThemedText = (props: IProps) => {
   const {
     children,
-    weight = "regular",
-    color = "black",
+    weight = 'regular',
+    color = 'black',
     style,
-    type = "default",
-    align = "center",
+    type = 'default',
+    align = 'center',
     key,
     ...rest
   } = props;
 
-  const colorScheme = useColorScheme() || "light";
-  const colors = colorScheme === "light" ? lightColors : darkColors;
+  const colorScheme = useColorScheme() || 'light';
+  const colors = colorScheme === 'light' ? lightColors : darkColors;
   const textColor = colors[color];
 
   return (
     <Text
       {...rest}
-      style={[
-        styles[weight],
-        styles[type],
-        styles[align],
-        { color: textColor },
-        style,
-      ]}
+      style={[styles[weight], styles[type], styles[align], { color: textColor }, style]}
     >
       {children}
     </Text>
@@ -69,16 +57,16 @@ export default ThemedText;
 
 const styles = StyleSheet.create({
   regular: {
-    fontFamily: "CeraRoundPro-Regular",
+    fontFamily: 'CeraRoundPro-Regular',
   },
   semiBold: {
-    fontFamily: "CeraRoundPro-SemiBold",
+    fontFamily: 'CeraRoundPro-SemiBold',
   },
   medium: {
-    fontFamily: "CeraRoundPro-Medium",
+    fontFamily: 'CeraRoundPro-Medium',
   },
   bold: {
-    fontFamily: "CeraRoundPro-Bold",
+    fontFamily: 'CeraRoundPro-Bold',
   },
   default: {
     fontSize: 14,
@@ -102,9 +90,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   left: {
-    textAlign: "left",
+    textAlign: 'left',
   },
   center: {
-    textAlign: "center",
+    textAlign: 'center',
   },
 });

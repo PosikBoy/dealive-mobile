@@ -1,25 +1,26 @@
-import { colors } from "@/constants/colors";
-import { fonts } from "@/constants/styles";
-import React, { FC, useEffect, useImperativeHandle, useRef } from "react";
-import { Control, InputValidationRules, useController } from "react-hook-form";
+import React, { FC, useEffect, useImperativeHandle, useRef } from 'react';
+import { Control, InputValidationRules, useController } from 'react-hook-form';
 import {
-  View,
-  TextInput,
-  Text,
-  StyleSheet,
-  TouchableWithoutFeedback,
   KeyboardTypeOptions,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
   useColorScheme,
-} from "react-native";
+  View,
+} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
-} from "react-native-reanimated";
+} from 'react-native-reanimated';
+
+import { colors } from '@/constants/colors';
+import { fonts } from '@/constants/styles';
 
 interface IField {
-  type?: "default" | "password";
+  type?: 'default' | 'password';
   placeholder: string;
   error?: any;
   name: string;
@@ -27,15 +28,15 @@ interface IField {
   rules?: any;
   keyboardType?: KeyboardTypeOptions;
 }
-const InputField: FC<IField> = (props) => {
-  const colorScheme = useColorScheme() || "light";
+const InputField: FC<IField> = props => {
+  const colorScheme = useColorScheme() || 'light';
   const {
-    type = "default",
+    type = 'default',
     placeholder,
     name,
     control,
     rules = {},
-    keyboardType = "default",
+    keyboardType = 'default',
   } = props;
 
   const { field } = useController({
@@ -95,7 +96,7 @@ const InputField: FC<IField> = (props) => {
 
   const inputRef = useRef<TextInput>(null);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     field.onChange(e);
   };
   return (
@@ -108,9 +109,9 @@ const InputField: FC<IField> = (props) => {
         ]}
       >
         <TextInput
-          placeholder=""
+          placeholder=''
           ref={inputRef}
-          secureTextEntry={type === "password"}
+          secureTextEntry={type === 'password'}
           style={[styles.input, { color: colors[colorScheme].black }]}
           value={field.value}
           keyboardType={keyboardType}
@@ -122,7 +123,7 @@ const InputField: FC<IField> = (props) => {
 
       <Animated.View
         style={{
-          position: "absolute",
+          position: 'absolute',
           top: placeholderTop,
           left: 12,
           backgroundColor: colors[colorScheme].white,
@@ -143,20 +144,20 @@ export default InputField;
 
 const styles = StyleSheet.create({
   container: {
-    position: "relative",
+    position: 'relative',
     flex: 1,
-    width: "100%",
+    width: '100%',
     height: 60,
   },
   inputContainer: {
-    width: "100%",
+    width: '100%',
     height: 40,
     borderWidth: 1,
     borderRadius: 8,
   },
   input: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
     fontFamily: fonts.regular,
     paddingLeft: 12,
     paddingVertical: 11,

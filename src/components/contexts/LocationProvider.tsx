@@ -1,7 +1,8 @@
-import { useLocation } from "@/hooks/location.hook";
-import { useTypedDispatch } from "@/hooks/redux.hooks";
-import { pushError, pushLocation } from "@/store/location/location.slice";
-import { useEffect } from "react";
+import { useEffect } from 'react';
+
+import { useLocation } from '@/hooks/location.hook';
+import { useTypedDispatch } from '@/hooks/redux.hooks';
+import { pushError, pushLocation } from '@/store/location/location.slice';
 
 const LocationProvider = () => {
   const { location, error, isLoading } = useLocation();

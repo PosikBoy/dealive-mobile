@@ -1,6 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
-import * as SecureStore from "expo-secure-store";
-import { fetchSupportChatId, setSupportChatId } from "./supportChat.actions";
+import { createSlice } from '@reduxjs/toolkit';
+import * as SecureStore from 'expo-secure-store';
+
+import { fetchSupportChatId, setSupportChatId } from './supportChat.actions';
 export type IInitialState = {
   chatId: number | null;
   createdAt: string | null; // Строка вместо Date
@@ -11,10 +12,10 @@ const initialState: IInitialState = {
   createdAt: null,
 };
 export const supportChatSlice = createSlice({
-  name: "supportChat",
+  name: 'supportChat',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder;
     builder
       .addCase(fetchSupportChatId.fulfilled, (state, action) => {

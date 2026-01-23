@@ -1,13 +1,13 @@
-import { Image, StyleSheet, useColorScheme, View } from "react-native";
-import React from "react";
-import Header from "@/components/shared/Header/Header";
-import logo from "@/assets/icon.png";
+import React from 'react';
+import { Image, StyleSheet, useColorScheme, View } from 'react-native';
 
-import { colors } from "@/constants/colors";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import logo from '@/assets/icon.png';
+import Header from '@/components/shared/Header/Header';
+import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { colors } from '@/constants/colors';
 
 const About = () => {
-  const colorScheme = useColorScheme() || "light";
+  const colorScheme = useColorScheme() || 'light';
   return (
     <View
       style={[
@@ -17,7 +17,7 @@ const About = () => {
         },
       ]}
     >
-      <Header title="О приложении" />
+      <Header title='О приложении' />
       <View style={styles.content}>
         <Image source={logo} style={{ width: 200, height: 200 }} />
         <ThemedText>Версия приложения: 1.2.0</ThemedText>
@@ -31,13 +31,13 @@ export default About;
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
   content: {
     marginTop: 150,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     gap: 20,
   },
 });

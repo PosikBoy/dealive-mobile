@@ -1,55 +1,44 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  useColorScheme,
-  View,
-} from "react-native";
-import React from "react";
-import MyButton from "@/components/ui/Button/Button";
-import { router } from "expo-router";
-import { icons } from "@/constants/icons";
-import { fonts } from "@/constants/styles";
-import { colors } from "@/constants/colors";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import { router } from 'expo-router';
+import React from 'react';
+import { Image, StyleSheet, TouchableHighlight, useColorScheme, View } from 'react-native';
+
+import MyButton from '@/components/ui/Button/Button';
+import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { colors } from '@/constants/colors';
+import { icons } from '@/constants/icons';
+import { fonts } from '@/constants/styles';
 
 const index = () => {
-  const colorScheme = useColorScheme() || "light";
+  const colorScheme = useColorScheme() || 'light';
   const handleLogin = () => {
-    router.push("/(auth)/login");
+    router.push('/(auth)/login');
   };
 
   const handleRegister = () => {
-    router.push("/(auth)/register");
+    router.push('/(auth)/register');
   };
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: colors[colorScheme].white }]}
-    >
+    <View style={[styles.container, { backgroundColor: colors[colorScheme].white }]}>
       <View style={styles.textContainer}>
-        <ThemedText type="title" weight="bold" align="left">
+        <ThemedText type='title' weight='bold' align='left'>
           DEALIVE
         </ThemedText>
       </View>
-      <ThemedText type="subtitle" weight="bold" align="left">
+      <ThemedText type='subtitle' weight='bold' align='left'>
         Поможем с работой!
       </ThemedText>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={icons.box} resizeMode="contain" />
+        <Image style={styles.image} source={icons.box} resizeMode='contain' />
       </View>
       <View style={styles.buttonContainer}>
-        <MyButton buttonText="Войти" onPress={handleLogin} />
+        <MyButton buttonText='Войти' onPress={handleLogin} />
         <TouchableHighlight
           style={styles.registerButton}
           onPress={handleRegister}
-          underlayColor="#fff"
+          underlayColor='#fff'
         >
-          <ThemedText style={styles.registerLabel}>
-            {" "}
-            Зарегистрироваться
-          </ThemedText>
+          <ThemedText style={styles.registerLabel}> Зарегистрироваться</ThemedText>
         </TouchableHighlight>
       </View>
     </View>
@@ -80,23 +69,23 @@ const styles = StyleSheet.create({
     marginTop: 50,
     height: 300,
     width: 300,
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   image: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
 
   buttonContainer: {
     marginTop: 50,
-    width: "100%",
+    width: '100%',
     gap: 15,
     flex: 1,
   },
   registerButton: {
     paddingVertical: 10,
     paddingHorizontal: 40,
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   registerLabel: {
     fontFamily: fonts.semiBold,

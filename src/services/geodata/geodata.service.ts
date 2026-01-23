@@ -1,4 +1,4 @@
-import { IAddress, IOrder } from "@/types/order.interface";
+import { IAddress, IOrder } from '@/types/order.interface';
 
 interface ILocation {
   lon: number;
@@ -7,8 +7,8 @@ interface ILocation {
 
 class GeodataService {
   enrichOrders(orders: IOrder[], location: ILocation): IOrder[] {
-    const enrichedOrders = orders?.map((order) => {
-      const enrichedAddresses = order?.addresses.map((address) => {
+    const enrichedOrders = orders?.map(order => {
+      const enrichedAddresses = order?.addresses.map(address => {
         const distance = this.calculateDistanceToAddress(location, address);
         return { ...address, distance };
       });
@@ -19,7 +19,7 @@ class GeodataService {
   }
 
   enrichOrder(order: IOrder, location: ILocation) {
-    const enrichedAddresses = order?.addresses.map((address) => {
+    const enrichedAddresses = order?.addresses.map(address => {
       const distance = this.calculateDistanceToAddress(location, address);
       return { ...address, distance };
     });
@@ -28,18 +28,13 @@ class GeodataService {
 
   calculateDistanceToAddress(location: ILocation, address: IAddress) {
     const { lon: lon1, lat: lat1 } = location;
-    const lat2 = parseFloat(address.geoData?.geoLat || "0");
-    const lon2 = parseFloat(address.geoData?.geoLon || "0");
+    const lat2 = parseFloat(address.geoData?.geoLat || '0');
+    const lon2 = parseFloat(address.geoData?.geoLon || '0');
     const distance = this.calculateDistance(lat1, lon1, lat2, lon2);
     return distance;
   }
 
-  calculateDistance(
-    lat1: number,
-    lon1: number,
-    lat2: number,
-    lon2: number
-  ): number {
+  calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371; // Радиус Земли в километрах
     const dLat = (lat2 - lat1) * (Math.PI / 180);
     const dLon = (lon2 - lon1) * (Math.PI / 180);

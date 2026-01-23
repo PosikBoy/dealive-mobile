@@ -1,13 +1,14 @@
-import MyButton from "@/components/ui/Button/Button";
-import InputField from "@/components/ui/InputField/InputField";
-import PhoneInputField from "@/components/ui/PhoneInputField/PhoneInputField";
-import { colors } from "@/constants/colors";
-import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
-import authService from "@/services/auth/auth.service";
-import arrow from "assets/icons/arrow.png";
-import React, { FC, useState } from "react";
-import { useForm } from "react-hook-form";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import arrow from 'assets/icons/arrow.png';
+import React, { FC, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+import MyButton from '@/components/ui/Button/Button';
+import InputField from '@/components/ui/InputField/InputField';
+import PhoneInputField from '@/components/ui/PhoneInputField/PhoneInputField';
+import { colors } from '@/constants/colors';
+import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
+import authService from '@/services/auth/auth.service';
 
 interface IProps {
   nextPage: () => void;
@@ -22,11 +23,11 @@ interface IFormField {
   repeatPassword: string;
 }
 
-const Register1: FC<IProps> = (props) => {
+const Register1: FC<IProps> = props => {
   const { nextPage, previousPage } = props;
 
-  const [existingError, setExistingError] = useState("");
-  const state = useTypedSelector((state) => state.signupForm);
+  const [existingError, setExistingError] = useState('');
+  const state = useTypedSelector(state => state.signupForm);
   const dispatch = useTypedDispatch();
 
   const {
@@ -36,7 +37,7 @@ const Register1: FC<IProps> = (props) => {
     getValues,
     setError,
   } = useForm<IFormField>({
-    mode: "onChange",
+    mode: 'onChange',
     defaultValues: {
       phoneNumber: state.phoneNumber,
       password: state.password,
@@ -46,11 +47,11 @@ const Register1: FC<IProps> = (props) => {
     },
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async data => {
     if (data.password !== data.repeatPassword) {
-      setError("repeatPassword", {
-        type: "manual",
-        message: "Пароли не совпадают",
+      setError('repeatPassword', {
+        type: 'manual',
+        message: 'Пароли не совпадают',
       });
       return;
     }
@@ -67,7 +68,7 @@ const Register1: FC<IProps> = (props) => {
 
       return;
     }
-    setExistingError("");
+    setExistingError('');
     nextPage();
   };
 
@@ -84,7 +85,7 @@ const Register1: FC<IProps> = (props) => {
             source={arrow}
             width={20}
             height={20}
-            resizeMode="contain"
+            resizeMode='contain'
             style={styles.arrowIcon}
           />
         </TouchableOpacity>
@@ -94,11 +95,7 @@ const Register1: FC<IProps> = (props) => {
       <View style={styles.fieldContainer}>
         <Text style={styles.fieldLabel}>Введите номер телефона</Text>
         <View style={[styles.inputField, styles.phoneNumberField]}>
-          <PhoneInputField
-            control={control}
-            name="phoneNumber"
-            placeholder="Номер телефона"
-          />
+          <PhoneInputField control={control} name='phoneNumber' placeholder='Номер телефона' />
         </View>
 
         {errors?.phoneNumber?.message && (
@@ -110,14 +107,12 @@ const Register1: FC<IProps> = (props) => {
         <View style={styles.inputField}>
           <InputField
             control={control}
-            name="email"
-            placeholder="Электронная почта"
-            rules={{ required: "Электронная почта обязательна" }}
+            name='email'
+            placeholder='Электронная почта'
+            rules={{ required: 'Электронная почта обязательна' }}
           />
         </View>
-        {errors?.email?.message && (
-          <Text style={styles.errorText}>{errors?.email?.message}</Text>
-        )}
+        {errors?.email?.message && <Text style={styles.errorText}>{errors?.email?.message}</Text>}
       </View>
 
       <View style={styles.fieldContainer}>
@@ -125,25 +120,25 @@ const Register1: FC<IProps> = (props) => {
         <View style={styles.inputField}>
           <InputField
             control={control}
-            name="password"
-            placeholder="Пароль"
-            type="password"
+            name='password'
+            placeholder='Пароль'
+            type='password'
             rules={{
               required: {
                 value: true,
-                message: "Введите пароль",
+                message: 'Введите пароль',
               },
               pattern: {
                 value: /^[a-zA-Z0-9]+$/,
-                message: "Только латинские буквы и цифры",
+                message: 'Только латинские буквы и цифры',
               },
               minLength: {
                 value: 6,
-                message: "Минимальная длина пароль - 6 символов",
+                message: 'Минимальная длина пароль - 6 символов',
               },
               maxLength: {
                 value: 32,
-                message: "Максимальная длина пароль - 32 символов",
+                message: 'Максимальная длина пароль - 32 символов',
               },
             }}
           />
@@ -157,23 +152,21 @@ const Register1: FC<IProps> = (props) => {
         <View style={styles.inputField}>
           <InputField
             control={control}
-            name="repeatPassword"
-            placeholder="Пароль повторно"
-            type="password"
+            name='repeatPassword'
+            placeholder='Пароль повторно'
+            type='password'
             rules={{
-              required: "Введите пароль повторно",
+              required: 'Введите пароль повторно',
             }}
           />
         </View>
         {errors?.repeatPassword?.message && (
-          <Text style={styles.errorText}>
-            {errors?.repeatPassword?.message}
-          </Text>
+          <Text style={styles.errorText}>{errors?.repeatPassword?.message}</Text>
         )}
       </View>
       {existingError && <Text style={styles.errorText}>{existingError}</Text>}
       <View style={styles.buttonContainer}>
-        <MyButton buttonText="Далее" onPress={handleSubmit(onSubmit)} />
+        <MyButton buttonText='Далее' onPress={handleSubmit(onSubmit)} />
       </View>
     </View>
   );
@@ -184,14 +177,14 @@ export default Register1;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
     paddingHorizontal: 20,
   },
   header: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginTop: 20,
   },
   arrowButton: {
@@ -204,65 +197,65 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: 'Montserrat-SemiBold',
   },
   title: {
     marginTop: 90,
-    fontFamily: "Montserrat-SemiBold",
+    fontFamily: 'Montserrat-SemiBold',
     fontSize: 24,
   },
   fieldContainer: {
     height: 80,
-    width: "100%",
+    width: '100%',
     marginTop: 10,
   },
   fieldLabel: {
-    fontFamily: "Montserrat-Regular",
+    fontFamily: 'Montserrat-Regular',
     fontSize: 16,
   },
   inputField: {
     marginTop: 10,
     height: 40,
-    width: "100%",
+    width: '100%',
   },
   phoneNumberField: {
-    position: "relative",
+    position: 'relative',
   },
   sendCodeButtonContainer: {
-    position: "absolute",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
+    position: 'absolute',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
     right: 5,
   },
   sendCodeButton: {
     paddingVertical: 5,
     paddingHorizontal: 5,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     width: 120,
     borderRadius: 20,
     backgroundColor: colors.purple,
   },
   sendCodeButtonText: {
-    color: "white",
-    fontFamily: "Montserrat-Bold",
+    color: 'white',
+    fontFamily: 'Montserrat-Bold',
     fontSize: 14,
   },
   codeSentText: {
-    color: "green",
-    fontFamily: "Montserrat-Bold",
+    color: 'green',
+    fontFamily: 'Montserrat-Bold',
     fontSize: 12,
   },
   errorText: {
-    color: "red",
-    fontFamily: "Montserrat-Bold",
+    color: 'red',
+    fontFamily: 'Montserrat-Bold',
     fontSize: 12,
   },
   repeat: {},
   buttonContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 20,
-    width: "100%",
+    width: '100%',
   },
 });

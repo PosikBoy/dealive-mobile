@@ -1,13 +1,14 @@
-import { colors } from "@/constants/colors";
-import { FC, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { FC, useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 import Animated, {
-  useSharedValue,
+  Easing,
   useAnimatedStyle,
+  useSharedValue,
   withRepeat,
   withTiming,
-  Easing,
-} from "react-native-reanimated";
+} from 'react-native-reanimated';
+
+import { colors } from '@/constants/colors';
 
 const Shimmer: FC = () => {
   const shimmerOpacity = useSharedValue(0.3);
@@ -19,7 +20,7 @@ const Shimmer: FC = () => {
         easing: Easing.linear,
       }),
       -1,
-      true
+      true,
     );
   }, []);
 
@@ -40,16 +41,16 @@ export default Shimmer;
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
-    width: "100%",
-    position: "relative",
+    height: '100%',
+    width: '100%',
+    position: 'relative',
   },
   shimmer: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgb(255, 255, 255)", // Полупрозрачный белый
+    backgroundColor: 'rgb(255, 255, 255)', // Полупрозрачный белый
   },
 });

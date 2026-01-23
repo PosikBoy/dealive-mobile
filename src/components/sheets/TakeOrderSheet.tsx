@@ -1,10 +1,12 @@
-import { IOrder } from "@/types/order.interface";
-import { StyleSheet, useColorScheme, View } from "react-native";
-import ActionSheet, { SheetProps } from "react-native-actions-sheet";
-import MyButton from "../ui/Button/Button";
-import { gaps, paddings } from "@/constants/styles";
-import { colors } from "@/constants/colors";
-import ThemedText from "../ui/ThemedText/ThemedText";
+import { StyleSheet, useColorScheme, View } from 'react-native';
+import ActionSheet, { SheetProps } from 'react-native-actions-sheet';
+
+import { colors } from '@/constants/colors';
+import { gaps, paddings } from '@/constants/styles';
+import { IOrder } from '@/types/order.interface';
+
+import MyButton from '../ui/Button/Button';
+import ThemedText from '../ui/ThemedText/ThemedText';
 
 export interface ITakeOrderSheet {
   order: IOrder;
@@ -12,8 +14,8 @@ export interface ITakeOrderSheet {
   error: any;
 }
 
-const TakeOrderSheet = (props: SheetProps<"take-order-sheet">) => {
-  const colorScheme = useColorScheme() || "light";
+const TakeOrderSheet = (props: SheetProps<'take-order-sheet'>) => {
+  const colorScheme = useColorScheme() || 'light';
 
   const { order, takeOrder, error } = props.payload;
 
@@ -21,8 +23,8 @@ const TakeOrderSheet = (props: SheetProps<"take-order-sheet">) => {
     <ActionSheet
       gestureEnabled={true}
       containerStyle={{
-        justifyContent: "center",
-        alignItems: "center",
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: colors[colorScheme].white,
       }}
       openAnimationConfig={{
@@ -31,47 +33,40 @@ const TakeOrderSheet = (props: SheetProps<"take-order-sheet">) => {
         mass: 1, // Масса (оставляем по умолчанию)
       }}
     >
-      <View
-        style={[
-          styles.container,
-          { backgroundColor: colors[colorScheme].white },
-        ]}
-      >
+      <View style={[styles.container, { backgroundColor: colors[colorScheme].white }]}>
         <View style={styles.textContainer}>
-          <ThemedText type="subtitle" weight="bold">
+          <ThemedText type='subtitle' weight='bold'>
             Информация о заказе
           </ThemedText>
           <View>
             <View style={styles.property}>
-              <ThemedText type="mediumText">Вес посылки</ThemedText>
-              <ThemedText type="mediumText">{order?.weight}</ThemedText>
+              <ThemedText type='mediumText'>Вес посылки</ThemedText>
+              <ThemedText type='mediumText'>{order?.weight}</ThemedText>
             </View>
             <View style={styles.property}>
-              <ThemedText type="mediumText">Цена заказа</ThemedText>
-              <ThemedText type="mediumText">{order?.price}</ThemedText>
+              <ThemedText type='mediumText'>Цена заказа</ThemedText>
+              <ThemedText type='mediumText'>{order?.price}</ThemedText>
             </View>
             <View style={styles.property}>
-              <ThemedText type="mediumText">Количество действий</ThemedText>
-              <ThemedText type="mediumText">
-                {order?.actions?.length}
-              </ThemedText>
+              <ThemedText type='mediumText'>Количество действий</ThemedText>
+              <ThemedText type='mediumText'>{order?.actions?.length}</ThemedText>
             </View>
             <View style={styles.property}>
-              <ThemedText type="mediumText">Посылка</ThemedText>
-              <ThemedText type="mediumText">{order?.parcelType}</ThemedText>
+              <ThemedText type='mediumText'>Посылка</ThemedText>
+              <ThemedText type='mediumText'>{order?.parcelType}</ThemedText>
             </View>
           </View>
         </View>
         {error ? (
-          <ThemedText type="hint" color="red">
+          <ThemedText type='hint' color='red'>
             {error}
           </ThemedText>
         ) : (
-          <ThemedText type="mediumText" weight="bold">
+          <ThemedText type='mediumText' weight='bold'>
             Ознакомьтесь с деталями заказа перед тем, как взять его!
           </ThemedText>
         )}
-        <MyButton onPress={takeOrder} buttonText="Взять заказ" />
+        <MyButton onPress={takeOrder} buttonText='Взять заказ' />
       </View>
     </ActionSheet>
   );
@@ -86,13 +81,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: paddings.horizontal,
   },
   textContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     gap: gaps.small,
   },
   property: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     borderColor: colors.inputGray,
     borderBottomWidth: 1,
     paddingVertical: paddings.small,

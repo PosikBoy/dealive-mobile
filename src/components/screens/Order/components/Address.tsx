@@ -1,20 +1,14 @@
-import { FC } from "react";
-import { IAddress } from "@/types/order.interface";
-import {
-  Image,
-  Linking,
-  StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from "react-native";
-import { colors } from "@/constants/colors";
-import { icons } from "@/constants/icons";
-import Hyperlink from "react-native-hyperlink";
-import { getMetroColor } from "@/utils/getColorMetro";
-import copyToClipboard from "@/utils/copyToClipBoard";
-import yandexMaps from "@/utils/yandexMaps";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import { FC } from 'react';
+import { Image, Linking, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native';
+import Hyperlink from 'react-native-hyperlink';
+
+import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { colors } from '@/constants/colors';
+import { icons } from '@/constants/icons';
+import { IAddress } from '@/types/order.interface';
+import copyToClipboard from '@/utils/copyToClipBoard';
+import { getMetroColor } from '@/utils/getColorMetro';
+import yandexMaps from '@/utils/yandexMaps';
 
 interface IAddressProps {
   address: IAddress;
@@ -24,31 +18,26 @@ interface IAddressProps {
   isTypeShown?: boolean;
 }
 
-const Address: FC<IAddressProps> = (props) => {
-  const colorScheme = useColorScheme() || "light";
+const Address: FC<IAddressProps> = props => {
+  const colorScheme = useColorScheme() || 'light';
   const { address, index, price, isActive, isTypeShown = false } = props;
 
   const handleOpenURL = async () => {
     try {
-      yandexMaps.getRouteToPoint(
-        address.geoData.geoLat,
-        address.geoData.geoLon
-      );
+      yandexMaps.getRouteToPoint(address.geoData.geoLat, address.geoData.geoLon);
     } catch (err) {
-      console.error("Ошибка при открытии URL:", err);
+      console.error('Ошибка при открытии URL:', err);
     }
   };
 
   const handleCall = () => {
-    Linking.openURL(
-      `tel:${"phoneNumber" in address ? address.phoneNumber : ""}`
-    );
+    Linking.openURL(`tel:${'phoneNumber' in address ? address.phoneNumber : ''}`);
   };
 
   const metroString = address.geoData?.metro?.[0]?.name
-    ? address.geoData?.metro?.[0]?.name + " |"
-    : "";
-  const distance = address.distance?.toFixed(1) || "";
+    ? address.geoData?.metro?.[0]?.name + ' |'
+    : '';
+  const distance = address.distance?.toFixed(1) || '';
 
   return (
     <View
@@ -59,12 +48,7 @@ const Address: FC<IAddressProps> = (props) => {
       ]}
     >
       {isActive && (
-        <View
-          style={[
-            styles.activeAddressTooltip,
-            { backgroundColor: colors[colorScheme].green },
-          ]}
-        >
+        <View style={[styles.activeAddressTooltip, { backgroundColor: colors[colorScheme].green }]}>
           <ThemedText>Активный адрес</ThemedText>
         </View>
       )}
@@ -75,12 +59,8 @@ const Address: FC<IAddressProps> = (props) => {
         }}
       >
         <View style={styles.addressTextContainer}>
-          <ThemedText type="title">{index + 1}</ThemedText>
-          <ThemedText
-            type="mediumText"
-            weight="bold"
-            style={{ textAlign: "left", flex: 1 }}
-          >
+          <ThemedText type='title'>{index + 1}</ThemedText>
+          <ThemedText type='mediumText' weight='bold' style={{ textAlign: 'left', flex: 1 }}>
             {address.address}
           </ThemedText>
         </View>
@@ -88,18 +68,15 @@ const Address: FC<IAddressProps> = (props) => {
       {address.phoneNumber && (
         <TouchableOpacity
           onPress={handleCall}
-          style={[
-            styles.phoneNumber,
-            { backgroundColor: colors[colorScheme].lightPurple },
-          ]}
+          style={[styles.phoneNumber, { backgroundColor: colors[colorScheme].lightPurple }]}
           onLongPress={() => {
             copyToClipboard(address.phoneNumber);
           }}
         >
-          <ThemedText type="hint" color="black" align="left">
+          <ThemedText type='hint' color='black' align='left'>
             Номер телефона
           </ThemedText>
-          <ThemedText type="mediumText" weight="bold" align="left">
+          <ThemedText type='mediumText' weight='bold' align='left'>
             {`${address.phoneNumber} ${address?.phoneName}`}
           </ThemedText>
         </TouchableOpacity>
@@ -118,12 +95,12 @@ const Address: FC<IAddressProps> = (props) => {
       </View>
       {address.info && (
         <View>
-          <ThemedText type="hint" align="left">
+          <ThemedText type='hint' align='left'>
             Дополнительно
           </ThemedText>
           {/* Я не знаю зачем сюда передавать ключ, но иначе ошибка, */}
-          <Hyperlink onPress={(url) => Linking.openURL(url)}>
-            <ThemedText weight="medium" align="left">
+          <Hyperlink onPress={url => Linking.openURL(url)}>
+            <ThemedText weight='medium' align='left'>
               {address.info}
             </ThemedText>
           </Hyperlink>
@@ -137,7 +114,7 @@ const Address: FC<IAddressProps> = (props) => {
             source={icons.money}
             style={styles.priceIcon}
           />
-          <ThemedText type="mediumText" weight="medium">
+          <ThemedText type='mediumText' weight='medium'>
             {`Получить ${price} ₽`}
           </ThemedText>
         </View>
@@ -149,7 +126,7 @@ const Address: FC<IAddressProps> = (props) => {
             source={icons.building}
             style={styles.floorIcon}
           />
-          <ThemedText type="mediumText" weight="medium">
+          <ThemedText type='mediumText' weight='medium'>
             {`${address.floor} этаж ·  ${address.apartment} кв.`}
           </ThemedText>
         </View>
@@ -161,8 +138,8 @@ const Address: FC<IAddressProps> = (props) => {
             source={icons.settings}
             style={styles.floorIcon}
           />
-          <ThemedText type="mediumText" weight="medium">
-            {address.type == "DELIVER" ? "Отдать заказ" : "Забрать заказ"}
+          <ThemedText type='mediumText' weight='medium'>
+            {address.type == 'DELIVER' ? 'Отдать заказ' : 'Забрать заказ'}
           </ThemedText>
         </View>
       )}
@@ -174,7 +151,7 @@ export default Address;
 
 const styles = StyleSheet.create({
   address: {
-    width: "100%",
+    width: '100%',
     paddingHorizontal: 20,
     paddingVertical: 30,
     borderRadius: 20,
@@ -184,7 +161,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
   },
   activeAddressTooltip: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     paddingVertical: 5,
@@ -193,10 +170,10 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
   },
   addressTextContainer: {
-    width: "100%",
-    flexDirection: "row",
+    width: '100%',
+    flexDirection: 'row',
     gap: 10,
-    alignItems: "center",
+    alignItems: 'center',
     flex: 1,
     paddingRight: 10,
   },
@@ -205,8 +182,8 @@ const styles = StyleSheet.create({
     height: 24,
   },
   addressIcon: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
   phoneNumber: {
     backgroundColor: colors.lightPurple,
@@ -215,7 +192,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   priceContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 5,
   },
   priceIcon: {
@@ -224,9 +201,9 @@ const styles = StyleSheet.create({
   },
 
   floorContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 5,
-    alignItems: "center",
+    alignItems: 'center',
   },
 
   floorIcon: {
@@ -237,7 +214,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   locationInfo: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
     gap: 5,
     backgroundColor: colors.purple,
     paddingHorizontal: 10,
@@ -245,9 +222,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   typeContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 5,
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     backgroundColor: colors.green,

@@ -1,18 +1,20 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { signupFormSlice } from "./signupForm/signupForm.slice";
-import { authSlice } from "./auth/auth.slice";
-import { ordersApi } from "@/services/orders/orders.service";
-import { profileApi } from "@/services/profile/profile.service";
-import { supportChatSlice } from "./supportChat/supportChat.slice";
-import { locationSlice } from "./location/location.slice";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { persistStore, persistReducer } from "redux-persist";
-import routeSlice from "./route/route.slice";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { persistReducer, persistStore } from 'redux-persist';
+
+import { ordersApi } from '@/services/orders/orders.service';
+import { profileApi } from '@/services/profile/profile.service';
+
+import { authSlice } from './auth/auth.slice';
+import { locationSlice } from './location/location.slice';
+import routeSlice from './route/route.slice';
+import { signupFormSlice } from './signupForm/signupForm.slice';
+import { supportChatSlice } from './supportChat/supportChat.slice';
 
 const persistRouteConfig = {
-  key: "root",
+  key: 'root',
   storage: AsyncStorage,
-  whitelist: ["route", "distance"],
+  whitelist: ['route', 'distance'],
 };
 
 const rootReducer = combineReducers({
@@ -27,10 +29,10 @@ const rootReducer = combineReducers({
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ["persist/PERSIST"],
+        ignoredActions: ['persist/PERSIST'],
       },
     })
       .concat(ordersApi.middleware)

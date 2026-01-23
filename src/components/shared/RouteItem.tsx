@@ -1,11 +1,13 @@
-import { FC } from "react";
-import { IAddress } from "@/types/order.interface";
-import { Image, StyleSheet, useColorScheme, View } from "react-native";
-import { colors } from "@/constants/colors";
-import { icons } from "@/constants/icons";
-import { getMetroColor } from "@/utils/getColorMetro";
-import { Link } from "expo-router";
-import ThemedText from "../ui/ThemedText/ThemedText";
+import { Link } from 'expo-router';
+import { FC } from 'react';
+import { Image, StyleSheet, useColorScheme, View } from 'react-native';
+
+import { colors } from '@/constants/colors';
+import { icons } from '@/constants/icons';
+import { IAddress } from '@/types/order.interface';
+import { getMetroColor } from '@/utils/getColorMetro';
+
+import ThemedText from '../ui/ThemedText/ThemedText';
 
 interface IRouteItemProps {
   address: IAddress;
@@ -14,20 +16,20 @@ interface IRouteItemProps {
   isHighlighted?: boolean;
 }
 
-const RouteItem: FC<IRouteItemProps> = (props) => {
-  const colorScheme = useColorScheme() || "light";
+const RouteItem: FC<IRouteItemProps> = props => {
+  const colorScheme = useColorScheme() || 'light';
   const { address, index, isTypeShown = false, isHighlighted } = props;
 
   const metroString = address.geoData?.metro?.[0]?.name
-    ? address.geoData?.metro?.[0]?.name + " |"
-    : "";
-  const distance = address.distance?.toFixed(1) || "";
+    ? address.geoData?.metro?.[0]?.name + ' |'
+    : '';
+  const distance = address.distance?.toFixed(1) || '';
 
   return (
     <Link href={`/orders/${address.orderId}`}>
       <View style={styles.addressContainer}>
         <View style={styles.addressIndexContainer}>
-          <ThemedText style={{ color: colors.white }} weight="bold">
+          <ThemedText style={{ color: colors.white }} weight='bold'>
             {index + 1}
           </ThemedText>
         </View>
@@ -41,14 +43,10 @@ const RouteItem: FC<IRouteItemProps> = (props) => {
           ]}
         >
           <View style={styles.addressTextContainer}>
-            <ThemedText type="title" weight="medium">
+            <ThemedText type='title' weight='medium'>
               {address.orderId}
             </ThemedText>
-            <ThemedText
-              type="mediumText"
-              weight="medium"
-              style={{ textAlign: "left", flex: 1 }}
-            >
+            <ThemedText type='mediumText' weight='medium' style={{ textAlign: 'left', flex: 1 }}>
               {address.address}
             </ThemedText>
           </View>
@@ -67,15 +65,10 @@ const RouteItem: FC<IRouteItemProps> = (props) => {
           </View>
 
           {address.type && isTypeShown && (
-            <View
-              style={[
-                styles.typeContainer,
-                { backgroundColor: colors[colorScheme].green },
-              ]}
-            >
+            <View style={[styles.typeContainer, { backgroundColor: colors[colorScheme].green }]}>
               <Image source={icons.settings} style={styles.floorIcon} />
-              <ThemedText type="hint">
-                {address.type == "DELIVER" ? "Отдать заказ" : "Забрать заказ"}
+              <ThemedText type='hint'>
+                {address.type == 'DELIVER' ? 'Отдать заказ' : 'Забрать заказ'}
               </ThemedText>
             </View>
           )}
@@ -89,7 +82,7 @@ export default RouteItem;
 
 const styles = StyleSheet.create({
   address: {
-    width: "100%",
+    width: '100%',
     paddingHorizontal: 10,
     paddingTop: 10,
     paddingBottom: 10,
@@ -98,15 +91,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   addressContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
-    width: "100%",
+    width: '100%',
     flex: 1,
   },
 
   activeAddressTooltip: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     backgroundColor: colors.green,
@@ -116,22 +109,22 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
   },
   addressTextContainer: {
-    width: "100%",
-    flexDirection: "row",
+    width: '100%',
+    flexDirection: 'row',
     gap: 10,
-    alignItems: "center",
+    alignItems: 'center',
   },
   addressIconContainer: {
     width: 22,
     height: 24,
   },
   addressIcon: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
 
   priceContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 5,
   },
   priceIcon: {
@@ -139,9 +132,9 @@ const styles = StyleSheet.create({
     height: 20,
   },
   floorContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 5,
-    alignItems: "center",
+    alignItems: 'center',
   },
   floorIcon: {
     width: 20,
@@ -152,9 +145,9 @@ const styles = StyleSheet.create({
   },
   locationInfo: {
     flexGrow: 0,
-    flexDirection: "row",
-    alignSelf: "flex-start",
-    width: "auto",
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    width: 'auto',
     gap: 5,
     backgroundColor: colors.purple,
     paddingHorizontal: 10,
@@ -162,9 +155,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   typeContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 5,
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     paddingVertical: 5,
@@ -177,7 +170,7 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 15,
     backgroundColor: colors.purple,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

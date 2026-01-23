@@ -1,21 +1,19 @@
-import { colors } from "@/constants/colors";
-import { fonts } from "@/constants/styles";
-import React, { FC, useEffect, useImperativeHandle, useRef } from "react";
-import { Control, useController } from "react-hook-form";
+import React, { FC, useEffect, useImperativeHandle, useRef } from 'react';
+import { Control, useController } from 'react-hook-form';
 import {
-  View,
-  TextInput,
-  Text,
   StyleSheet,
+  Text,
+  TextInput,
   TouchableWithoutFeedback,
   useColorScheme,
-} from "react-native";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
-import ThemedText from "../ThemedText/ThemedText";
+  View,
+} from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+
+import { colors } from '@/constants/colors';
+import { fonts } from '@/constants/styles';
+
+import ThemedText from '../ThemedText/ThemedText';
 
 export interface PhoneInputFieldRef {
   focus: () => void;
@@ -27,14 +25,14 @@ interface IField {
   error?: any;
   placeholder: string;
 }
-const PhoneInputField: FC<IField> = (props) => {
-  const colorScheme = useColorScheme() || "light";
+const PhoneInputField: FC<IField> = props => {
+  const colorScheme = useColorScheme() || 'light';
   const { name, control, error, placeholder } = props;
   const rules = {
-    required: "Введите номер телефона",
+    required: 'Введите номер телефона',
     pattern: {
       value: /^(?:\+7|\b8)\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/,
-      message: "Введите номер телефона",
+      message: 'Введите номер телефона',
     },
   };
 
@@ -53,31 +51,31 @@ const PhoneInputField: FC<IField> = (props) => {
   const phoneChangeHandler = (newValue: string) => {
     const regex = /[0-9]|\+/;
 
-    const oldValue = field.value ? field.value : "";
+    const oldValue = field.value ? field.value : '';
     if (oldValue.length - newValue.length == 1) {
       field.onChange(newValue);
       return;
     }
-    newValue = newValue.replaceAll(/\D/g, "");
+    newValue = newValue.replaceAll(/\D/g, '');
     const lastSymbol = newValue[newValue.length - 1];
 
     if (regex.test(lastSymbol)) {
-      if (newValue.length == 1 && newValue[0] != "7" && newValue[0] != "8") {
-        newValue = "7" + newValue;
+      if (newValue.length == 1 && newValue[0] != '7' && newValue[0] != '8') {
+        newValue = '7' + newValue;
       }
-      if (newValue[0] == "7" || newValue[0] == "8") {
+      if (newValue[0] == '7' || newValue[0] == '8') {
         newValue =
-          "+7 (" +
-          (newValue[1] ? newValue[1] : "") +
-          (newValue[2] ? newValue[2] : "") +
-          (newValue[3] ? newValue[3] + ") " : "") +
-          (newValue[4] ? newValue[4] : "") +
-          (newValue[5] ? newValue[5] : "") +
-          (newValue[6] ? newValue[6] + "-" : "") +
-          (newValue[7] ? newValue[7] : "") +
-          (newValue[8] ? newValue[8] + "-" : "") +
-          (newValue[9] ? newValue[9] : "") +
-          (newValue[10] ? newValue[10] : "");
+          '+7 (' +
+          (newValue[1] ? newValue[1] : '') +
+          (newValue[2] ? newValue[2] : '') +
+          (newValue[3] ? newValue[3] + ') ' : '') +
+          (newValue[4] ? newValue[4] : '') +
+          (newValue[5] ? newValue[5] : '') +
+          (newValue[6] ? newValue[6] + '-' : '') +
+          (newValue[7] ? newValue[7] : '') +
+          (newValue[8] ? newValue[8] + '-' : '') +
+          (newValue[9] ? newValue[9] : '') +
+          (newValue[10] ? newValue[10] : '');
         field.onChange(newValue);
         return;
       }
@@ -151,10 +149,10 @@ const PhoneInputField: FC<IField> = (props) => {
         ]}
       >
         <TextInput
-          placeholder=""
+          placeholder=''
           ref={inputRef}
           style={[styles.input, { color: colors[colorScheme].black }]}
-          keyboardType="numeric"
+          keyboardType='numeric'
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChangeText={phoneChangeHandler}
@@ -162,9 +160,7 @@ const PhoneInputField: FC<IField> = (props) => {
         />
       </Animated.View>
 
-      <Animated.View
-        style={[styles.placeholderContainer, animatedPlaceholderPosition]}
-      >
+      <Animated.View style={[styles.placeholderContainer, animatedPlaceholderPosition]}>
         <TouchableWithoutFeedback onPress={() => inputRef.current.focus()}>
           <Animated.Text
             style={[
@@ -173,11 +169,11 @@ const PhoneInputField: FC<IField> = (props) => {
               animatedPlaceholderColor,
             ]}
           >
-            {placeholder + "*"}
+            {placeholder + '*'}
           </Animated.Text>
         </TouchableWithoutFeedback>
       </Animated.View>
-      {error && <ThemedText color="red">{error?.message}</ThemedText>}
+      {error && <ThemedText color='red'>{error?.message}</ThemedText>}
     </View>
   );
 };
@@ -186,28 +182,28 @@ export default PhoneInputField;
 
 const styles = StyleSheet.create({
   container: {
-    position: "relative",
+    position: 'relative',
     flex: 1,
-    width: "100%",
+    width: '100%',
     height: 60,
   },
   inputContainer: {
-    width: "100%",
+    width: '100%',
     height: 40,
     backgroundColor: colors.white,
     borderWidth: 1,
     borderRadius: 8,
   },
   input: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
     fontSize: 14,
     fontFamily: fonts.regular,
     paddingLeft: 15,
     paddingVertical: 11,
   },
   placeholderContainer: {
-    position: "absolute",
+    position: 'absolute',
     left: 12,
   },
   placeholder: {

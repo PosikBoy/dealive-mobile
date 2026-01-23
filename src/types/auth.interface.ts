@@ -8,7 +8,7 @@ export interface IImagePickerAsset {
   height: number | null; // Высота изображения
   mimeType: string | null; // MIME-тип файла
   rotation: number | null; // Поворот изображения
-  type: "image" | "video"; // Тип файла
+  type: 'image' | 'video'; // Тип файла
   uri: string; // URI файла
   width: number | null; // Ширина изображения
 }

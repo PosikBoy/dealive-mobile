@@ -1,13 +1,15 @@
-import { ApiError } from "@/axios/api-error";
-import { instance } from "@/axios/interceptor";
-import { SERVER_URL } from "@/constants/urls";
-import { useTypedSelector } from "@/hooks/redux.hooks";
-import { ILocationInitialState } from "@/store/location/location.slice";
-import { TypeRootState } from "@/store/store";
-import { IOrder } from "@/types/order.interface";
-import { BaseQueryFn, createApi } from "@reduxjs/toolkit/query/react";
-import { AxiosRequestConfig } from "axios";
-import geodataService from "../geodata/geodata.service";
+import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
+import { AxiosRequestConfig } from 'axios';
+
+import { ApiError } from '@/axios/api-error';
+import { instance } from '@/axios/interceptor';
+import { SERVER_URL } from '@/constants/urls';
+import { useTypedSelector } from '@/hooks/redux.hooks';
+import { ILocationInitialState } from '@/store/location/location.slice';
+import { TypeRootState } from '@/store/store';
+import { IOrder } from '@/types/order.interface';
+
+import geodataService from '../geodata/geodata.service';
 
 type AxiosArgs = AxiosRequestConfig;
 
@@ -25,11 +27,8 @@ const axiosBaseQuery =
       // создаем чистый объект для Redux
       const serializedError: ApiError = {
         status: error.response?.status ?? 500,
-        message:
-          error.response?.data?.message ||
-          error.message ||
-          "Неизвестная ошибка",
-        error: error.response?.data?.error || "Unknown",
+        message: error.response?.data?.message || error.message || 'Неизвестная ошибка',
+        error: error.response?.data?.error || 'Unknown',
       };
 
       return { error: serializedError };
@@ -37,63 +36,54 @@ const axiosBaseQuery =
   };
 
 export const ordersApi = createApi({
-  reducerPath: "ordersApi",
+  reducerPath: 'ordersApi',
   baseQuery: axiosBaseQuery({ baseUrl: SERVER_URL }),
-  tagTypes: ["completeAction", "takeOrder"],
-  endpoints: (builder) => ({
-    getOrderById: builder.query<
-      IOrder,
-      { id: number; location: ILocationInitialState }
-    >({
+  tagTypes: ['completeAction', 'takeOrder'],
+  endpoints: builder => ({
+    getOrderById: builder.query<IOrder, { id: number; location: ILocationInitialState }>({
       query: ({ id }) => ({
         url: `/order/${id}`,
-        method: "GET",
+        method: 'GET',
       }),
       transformResponse: (
         order: IOrder,
         _meta,
-        { location }: { location: ILocationInitialState }
+        { location }: { location: ILocationInitialState },
       ) => {
         if (!location || location.isLocationLoading) return order;
         return geodataService.enrichOrder(order, location);
       },
-      providesTags: ["completeAction", "takeOrder"],
+      providesTags: ['completeAction', 'takeOrder'],
     }),
 
     getAllOrders: builder.query<IOrder[], void>({
       query: () => ({
-        url: "/orders",
-        method: "GET",
+        url: '/orders',
+        method: 'GET',
       }),
-      providesTags: ["takeOrder"],
+      providesTags: ['takeOrder'],
     }),
 
     getAvailableOrders: builder.query<IOrder[], ILocationInitialState>({
       query: () => ({
-        url: "/orders/available",
-        method: "GET",
+        url: '/orders/available',
+        method: 'GET',
       }),
-      transformResponse: (
-        orders: IOrder[],
-        meta,
-        location: ILocationInitialState
-      ) => {
+      transformResponse: (orders: IOrder[], meta, location: ILocationInitialState) => {
         try {
           if (!location || location.isLocationLoading) return orders;
 
           const ordersWithGeo = geodataService.enrichOrders(orders, location);
 
-          ordersWithGeo.forEach((order) => {
-            const addressMap = new Map(
-              order.addresses.map((addr) => [addr.id, addr])
-            );
+          ordersWithGeo.forEach(order => {
+            const addressMap = new Map(order.addresses.map(addr => [addr.id, addr]));
 
             order.actions.forEach(({ actionType, addressId }) => {
-              if (actionType == "PICKUP") {
-                addressMap.get(addressId).type = "PICKUP";
+              if (actionType == 'PICKUP') {
+                addressMap.get(addressId).type = 'PICKUP';
               }
-              if (actionType == "DELIVER") {
-                addressMap.get(addressId).type = "DELIVER";
+              if (actionType == 'DELIVER') {
+                addressMap.get(addressId).type = 'DELIVER';
               }
             });
           });
@@ -103,35 +93,29 @@ export const ordersApi = createApi({
           console.error(JSON.stringify(error.message));
         }
       },
-      providesTags: ["takeOrder"],
+      providesTags: ['takeOrder'],
     }),
 
     getActiveOrders: builder.query<IOrder[], ILocationInitialState>({
       query: () => ({
-        url: "/orders/active",
-        method: "GET",
+        url: '/orders/active',
+        method: 'GET',
       }),
-      transformResponse: (
-        orders: IOrder[],
-        meta,
-        location: ILocationInitialState
-      ) => {
+      transformResponse: (orders: IOrder[], meta, location: ILocationInitialState) => {
         if (!location || location.isLocationLoading) return orders;
 
         const ordersWithGeo = geodataService.enrichOrders(orders, location);
 
-        ordersWithGeo.forEach((order) => {
-          const addressMap = new Map(
-            order.addresses.map((addr) => [addr.id, addr])
-          );
+        ordersWithGeo.forEach(order => {
+          const addressMap = new Map(order.addresses.map(addr => [addr.id, addr]));
 
           order.actions.forEach(({ actionType, addressId, isCompleted }) => {
-            if (actionType == "PICKUP") {
-              addressMap.get(addressId).type = "PICKUP";
+            if (actionType == 'PICKUP') {
+              addressMap.get(addressId).type = 'PICKUP';
               addressMap.get(addressId).isCompleted = isCompleted;
             }
-            if (actionType == "DELIVER") {
-              addressMap.get(addressId).type = "DELIVER";
+            if (actionType == 'DELIVER') {
+              addressMap.get(addressId).type = 'DELIVER';
               addressMap.get(addressId).isCompleted = isCompleted;
             }
           });
@@ -139,24 +123,24 @@ export const ordersApi = createApi({
 
         return ordersWithGeo;
       },
-      providesTags: ["takeOrder", "completeAction"],
+      providesTags: ['takeOrder', 'completeAction'],
     }),
 
     takeOrder: builder.mutation<IOrder, { orderId: number }>({
       query: (takeOrderDto: { orderId: number }) => ({
-        url: "/order/take",
-        method: "PUT",
+        url: '/order/take',
+        method: 'PUT',
         body: takeOrderDto,
       }),
-      invalidatesTags: ["takeOrder"],
+      invalidatesTags: ['takeOrder'],
     }),
 
     completeAction: builder.mutation<void, number>({
       query: (actionId: number) => ({
         url: `/order/action/${actionId}`,
-        method: "PUT",
+        method: 'PUT',
       }),
-      invalidatesTags: ["completeAction"],
+      invalidatesTags: ['completeAction'],
     }),
   }),
 });
@@ -186,16 +170,15 @@ export const useGetOrderByIdQuery = (id: number) => {
   const { data: cachedAvailableOrders } = useGetAvailableOrdersQuery();
   const { data: cachedActiveOrders } = useGetActiveOrdersQuery();
 
-  const cachedOrder = [
-    ...(cachedAvailableOrders || []),
-    ...(cachedActiveOrders || []),
-  ].find((order) => order.id === id);
+  const cachedOrder = [...(cachedAvailableOrders || []), ...(cachedActiveOrders || [])].find(
+    order => order.id === id,
+  );
 
   const { data, isError, isLoading, error } = ordersApi.useGetOrderByIdQuery(
     { id, location },
     {
       pollingInterval: 120 * 1000,
-    }
+    },
   );
 
   let orderData = data || cachedOrder;
@@ -207,8 +190,4 @@ export const useGetOrderByIdQuery = (id: number) => {
   return { data: orderData, isError, isLoading };
 };
 
-export const {
-  useGetAllOrdersQuery,
-  useTakeOrderMutation,
-  useCompleteActionMutation,
-} = ordersApi;
+export const { useGetAllOrdersQuery, useTakeOrderMutation, useCompleteActionMutation } = ordersApi;
