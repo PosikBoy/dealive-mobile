@@ -59,4 +59,6 @@ export const ServerMessages = {
   ACCESS_DENIED: "Доступ запрещен",
 
   FILE_NOT_FOUND: "Файл не найден",
+
+  UNKNOWN_ERROR: "Произошла неизвестная ошибка",
 };

@@ -44,9 +44,11 @@ const ThemedText = (props: IProps) => {
     key,
     ...rest
   } = props;
+
   const colorScheme = useColorScheme() || "light";
   const colors = colorScheme === "light" ? lightColors : darkColors;
   const textColor = colors[color];
+
   return (
     <Text
       {...rest}

@@ -1,4 +1,4 @@
-interface ICourier {
+export interface ICourier {
   id: number;
   name: string;
   secondName: string;

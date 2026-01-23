@@ -1,11 +1,11 @@
+import { authStorage } from "@/helpers/authStorage";
 import authService from "@/services/auth/auth.service";
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
-  IRegisterRequestData,
-  ILoginRequestData,
   IAuthResponseData,
+  ILoginRequestData,
+  IRegisterRequestData,
 } from "@/types/auth.interface";
-import authStorage from "@/helpers/authStorage";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const register = createAsyncThunk<
   IAuthResponseData,

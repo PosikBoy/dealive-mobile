@@ -1,27 +1,24 @@
-import instance from "@/axios/interceptor";
+import { ApiError } from "@/axios/api-error";
+import { instance } from "@/axios/interceptor";
 import { SERVER_URL } from "@/constants/urls";
-import { errorCatch } from "@/helpers/errorCatch";
-import { createApi } from "@reduxjs/toolkit/query/react";
+import { ICourier } from "@/types/courier.interface";
+import { BaseQueryFn, createApi } from "@reduxjs/toolkit/query/react";
+import { AxiosRequestConfig } from "axios";
+
+type AxiosArgs = AxiosRequestConfig;
 
 const axiosBaseQuery =
-  ({ baseUrl } = { baseUrl: "" }) =>
+  ({ baseUrl }): BaseQueryFn<AxiosArgs, unknown, ApiError> =>
   async (args: any) => {
     try {
       const result = await instance({
+        ...args,
         url: baseUrl + args.url, // создаем полный URL с baseUrl
-        method: args.method || "GET",
-        data: args.body,
-        headers: args.headers,
       });
-      return { data: result.data }; // возвращаем только data
-    } catch (axiosError: any) {
-      return {
-        error: {
-          status: axiosError.response?.status,
-          data: axiosError.response?.data,
-          message: errorCatch(axiosError),
-        },
-      };
+
+      return { data: result.data };
+    } catch (error) {
+      return { error: error as ApiError };
     }
   };
 

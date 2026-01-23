@@ -1,7 +1,7 @@
-import * as SecureStore from "expo-secure-store";
 import { IAuthResponseData } from "@/types/auth.interface";
 import { IChat } from "@/types/chat.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 class AuthStorage {
   saveTokens = async (refreshToken: string, accessToken: string) => {
@@ -75,5 +75,4 @@ class AuthStorage {
   };
 }
 
-const authStorage = new AuthStorage();
-export default authStorage;
+export const authStorage = new AuthStorage();

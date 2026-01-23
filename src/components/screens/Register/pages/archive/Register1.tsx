@@ -1,15 +1,13 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { FC, useEffect, useState } from "react";
-import InputField from "@/components/ui/InputField/InputField";
-import { useForm } from "react-hook-form";
-import PhoneInputField from "@/components/ui/PhoneInputField/PhoneInputField";
 import MyButton from "@/components/ui/Button/Button";
-import arrow from "assets/icons/arrow.png";
+import InputField from "@/components/ui/InputField/InputField";
+import PhoneInputField from "@/components/ui/PhoneInputField/PhoneInputField";
 import { colors } from "@/constants/colors";
-import { useTypedSelector } from "@/hooks/redux.hooks";
-import { useTypedDispatch } from "@/hooks/redux.hooks";
-import { addFirstPageData } from "@/store/signupForm/signupForm.slice";
+import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import authService from "@/services/auth/auth.service";
+import arrow from "assets/icons/arrow.png";
+import React, { FC, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface IProps {
   nextPage: () => void;
@@ -26,25 +24,10 @@ interface IFormField {
 
 const Register1: FC<IProps> = (props) => {
   const { nextPage, previousPage } = props;
-  // const [isCodeSent, setIsCodeSent] = useState(false);
-  // const [timeLeft, setTimeLeft] = useState(60);
-  // const [isActive, setIsActive] = useState(false);
+
   const [existingError, setExistingError] = useState("");
   const state = useTypedSelector((state) => state.signupForm);
   const dispatch = useTypedDispatch();
-
-  // useEffect(() => {
-  //   if (isActive) {
-  //     const interval = setInterval(() => {
-  //       setTimeLeft((prevTime) => prevTime - 1);
-  //     }, 1000);
-  //     if (timeLeft === 0) {
-  //       setIsActive(false);
-  //       setTimeLeft(60);
-  //     }
-  //     return () => clearInterval(interval);
-  //   }
-  // }, [timeLeft, isActive]);
 
   const {
     control,
@@ -62,6 +45,7 @@ const Register1: FC<IProps> = (props) => {
       repeatPassword: state.password,
     },
   });
+
   const onSubmit = async (data) => {
     if (data.password !== data.repeatPassword) {
       setError("repeatPassword", {
@@ -76,27 +60,16 @@ const Register1: FC<IProps> = (props) => {
         email: data.email,
         phoneNumber: data.phoneNumber,
       });
-    } catch (error) {
-      console.log(error.message);
-      setExistingError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setExistingError(error.message);
+      }
+
       return;
     }
     setExistingError("");
     nextPage();
   };
-  // const handleSendCodeButton = () => {
-  //   const phoneNumber = getValues("phoneNumber");
-  //   const regexNumber = /^(\+7|8)\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/;
-  //   if (regexNumber.test(phoneNumber)) {
-  //     setIsActive(true);
-  //     setIsCodeSent(true);
-  //   } else {
-  //     setError("phoneNumber", {
-  //       type: "manual",
-  //       message: "Введите номер телефона",
-  //     });
-  //   }
-  // };
 
   return (
     <View style={styles.container}>
@@ -126,20 +99,8 @@ const Register1: FC<IProps> = (props) => {
             name="phoneNumber"
             placeholder="Номер телефона"
           />
-
-          {/* <View style={styles.sendCodeButtonContainer}>
-            <TouchableOpacity
-              disabled={isActive}
-              onPress={handleSendCodeButton}
-              style={styles.sendCodeButton}
-            >
-              <Text style={styles.sendCodeButtonText}>
-                {isActive ? timeLeft : "Отправить код"}
-              </Text>
-            </TouchableOpacity>
-          </View> */}
         </View>
-        {/* {isCodeSent && <Text style={styles.codeSentText}>Код отправлен</Text>} */}
+
         {errors?.phoneNumber?.message && (
           <Text style={styles.errorText}>{errors?.phoneNumber?.message}</Text>
         )}
@@ -158,20 +119,7 @@ const Register1: FC<IProps> = (props) => {
           <Text style={styles.errorText}>{errors?.email?.message}</Text>
         )}
       </View>
-      {/* <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите код из смс</Text>
-        <View style={styles.inputField}>
-          <InputField
-            control={control}
-            name="code"
-            placeholder="Код из смс"
-            rules={{ required: "Код из смс обязателен" }}
-          />
-        </View>
-        {errors?.code?.message && (
-          <Text style={styles.errorText}>{errors?.code?.message}</Text>
-        )}
-      </View> */}
+
       <View style={styles.fieldContainer}>
         <Text style={styles.fieldLabel}>Введите пароль</Text>
         <View style={styles.inputField}>

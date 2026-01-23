@@ -2,7 +2,6 @@ import OrderPreview from "@/components/features/OrderPreview/OrderPreview";
 import OrderPreviewSkeleton from "@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
 import { colors } from "@/constants/colors";
-import useRecommendedOrders from "@/hooks/recommendation.hook";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
@@ -12,6 +11,8 @@ import {
   useColorScheme,
   View,
 } from "react-native";
+
+import { useRecommendedOrders } from "../hooks/useRecommendedOrders";
 import AvailableOrders from "./AvailableOrders";
 
 const RecommendedOrders = () => {
@@ -85,7 +86,6 @@ const RecommendedOrders = () => {
     <View style={styles.container}>
       <FlashList
         data={recommendedOrders}
-        estimatedItemSize={150} // 🔥 ВАЖНО: FlashList требует указанного размера элемента
         keyExtractor={(item) => item.order.id.toString()}
         renderItem={({ item }) => (
           <OrderPreview order={item.order} incomePerHour={item.incomePerHour} />
@@ -116,10 +116,7 @@ const styles = StyleSheet.create({
   },
   loadingTextContainer: {
     position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    inset: 0,
     backgroundColor: "rgba(0, 0, 0, 0.05)",
     justifyContent: "center",
     alignItems: "center",

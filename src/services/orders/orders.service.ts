@@ -1,32 +1,38 @@
-import instance from "@/axios/interceptor";
+import { ApiError } from "@/axios/api-error";
+import { instance } from "@/axios/interceptor";
 import { SERVER_URL } from "@/constants/urls";
-import { errorCatch } from "@/helpers/errorCatch";
 import { useTypedSelector } from "@/hooks/redux.hooks";
 import { ILocationInitialState } from "@/store/location/location.slice";
 import { TypeRootState } from "@/store/store";
 import { IOrder } from "@/types/order.interface";
-import { createApi } from "@reduxjs/toolkit/query/react";
+import { BaseQueryFn, createApi } from "@reduxjs/toolkit/query/react";
+import { AxiosRequestConfig } from "axios";
 import geodataService from "../geodata/geodata.service";
 
+type AxiosArgs = AxiosRequestConfig;
+
 const axiosBaseQuery =
-  ({ baseUrl } = { baseUrl: "" }) =>
+  ({ baseUrl }): BaseQueryFn<AxiosArgs, unknown, ApiError> =>
   async (args: any) => {
     try {
       const result = await instance({
+        ...args,
         url: baseUrl + args.url,
-        method: args.method || "GET",
-        data: args.body,
-        headers: args.headers,
       });
       return { data: result.data };
-    } catch (axiosError: any) {
-      return {
-        error: {
-          status: axiosError.response?.status,
-          data: axiosError.response?.data,
-          message: errorCatch(axiosError),
-        },
+    } catch (err) {
+      const error = err as any;
+      // создаем чистый объект для Redux
+      const serializedError: ApiError = {
+        status: error.response?.status ?? 500,
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Неизвестная ошибка",
+        error: error.response?.data?.error || "Unknown",
       };
+
+      return { error: serializedError };
     }
   };
 
@@ -45,7 +51,7 @@ export const ordersApi = createApi({
       }),
       transformResponse: (
         order: IOrder,
-        meta,
+        _meta,
         { location }: { location: ILocationInitialState }
       ) => {
         if (!location || location.isLocationLoading) return order;
@@ -53,6 +59,7 @@ export const ordersApi = createApi({
       },
       providesTags: ["completeAction", "takeOrder"],
     }),
+
     getAllOrders: builder.query<IOrder[], void>({
       query: () => ({
         url: "/orders",
@@ -143,6 +150,7 @@ export const ordersApi = createApi({
       }),
       invalidatesTags: ["takeOrder"],
     }),
+
     completeAction: builder.mutation<void, number>({
       query: (actionId: number) => ({
         url: `/order/action/${actionId}`,
@@ -183,12 +191,13 @@ export const useGetOrderByIdQuery = (id: number) => {
     ...(cachedActiveOrders || []),
   ].find((order) => order.id === id);
 
-  const { data, isError, isLoading } = ordersApi.useGetOrderByIdQuery(
+  const { data, isError, isLoading, error } = ordersApi.useGetOrderByIdQuery(
     { id, location },
     {
       pollingInterval: 120 * 1000,
     }
   );
+
   let orderData = data || cachedOrder;
 
   if (orderData && !location.isLocationLoading) {

@@ -1,48 +1,61 @@
-import authHelper from "@/helpers/authStorage";
-import axios from "axios";
-import authService from "@/services/auth/auth.service";
-import { errorCatch } from "@/helpers/errorCatch";
-import { SERVER_URL } from "@/constants/urls";
 import { ServerMessages } from "@/constants/messages";
+import { SERVER_URL } from "@/constants/urls";
+import { authStorage } from "@/helpers/authStorage";
+import { errorCatch } from "@/helpers/errorCatch";
 
-const instance = axios.create({
+import authService from "@/services/auth/auth.service";
+import axios, { AxiosError } from "axios";
+import { ApiError, BackendError } from "./api-error";
+
+export const instance = axios.create({
   baseURL: SERVER_URL,
   headers: { "Content-Type": "application/json" },
 });
 
 instance.interceptors.request.use(async (config) => {
-  const accessToken = await authHelper.getAccessToken();
+  const accessToken = await authStorage.getAccessToken();
+
   if (config.headers && accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
+
   return config;
 });
 
 instance.interceptors.response.use(
   (config) => config,
-  async (error) => {
+  async (error: AxiosError<BackendError>) => {
     const originalRequest = error.config;
+
+    const backendError = error.response?.data;
+
+    const apiError: ApiError = {
+      message:
+        backendError?.message ?? error.message ?? ServerMessages.UNKNOWN_ERROR,
+      status: backendError.statusCode ?? error.response?.status ?? 500,
+      error: backendError?.error,
+    };
+
     if (
-      (error?.response?.status == 401 ||
+      (apiError.status == 401 ||
         errorCatch(error) == ServerMessages.INVALID_TOKEN ||
         errorCatch(error) == ServerMessages.AUTH_REQUIRED) &&
-      error.config &&
-      !error.config._isRetry
+      originalRequest &&
+      !originalRequest._isRetry
     ) {
       originalRequest._isRetry = true;
       try {
         await authService.getNewTokens();
         return instance.request(originalRequest);
-      } catch (error) {
-        if (
-          errorCatch(error) === ServerMessages.INVALID_TOKEN ||
-          errorCatch(error) === ServerMessages.AUTH_REQUIRED
-        ) {
+      } catch (error: unknown) {
+        if (error instanceof AxiosError) {
           await authService.logOut();
+
+          return Promise.reject(error);
         }
       }
     }
-    throw error;
+
+    return Promise.reject(error);
   }
 );
-export default instance;

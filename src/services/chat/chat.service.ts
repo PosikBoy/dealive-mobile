@@ -1,61 +1,36 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
+import { instance } from "@/axios/interceptor";
 import { SERVER_URL } from "@/constants/urls";
-import instance from "@/axios/interceptor";
-import {
-  Attachment,
-  IChat,
-  IMessage,
-  SendMessageDto,
-} from "@/types/chat.interface";
-import { errorCatch } from "@/helpers/errorCatch";
+import { IChat, IMessage, SendMessageDto } from "@/types/chat.interface";
 
 export class ChatService {
   async createChat() {
-    try {
-      const response = await instance.post<{}, { data: IChat }>(
-        SERVER_URL + "/chats/create",
-        {}
-      );
-      return response?.data;
-    } catch (error: any) {
-      console.log("error", JSON.stringify(error));
-
-      throw Error(error.response.data.message);
-    }
+    const response = await instance.post<{}, { data: IChat }>(
+      SERVER_URL + "/chats/create",
+      {}
+    );
+    return response?.data;
   }
 
   async sendMessage(data: SendMessageDto) {
-    try {
-      const response = await instance.post<SendMessageDto, { data: IMessage }>(
-        SERVER_URL + "/messages",
-        data
-      );
-      return response?.data;
-    } catch (error: any) {
-      console.log("error", JSON.stringify(error));
-    }
+    const response = await instance.post<SendMessageDto, { data: IMessage }>(
+      SERVER_URL + "/messages",
+      data
+    );
+    return response?.data;
   }
   async getMessages(chatId: number, page: number) {
-    try {
-      const response = await instance.get<{}, { data: IMessage[] }>(
-        SERVER_URL + `/messages?chatId=${chatId}&page=${page}`
-      );
-      return response.data;
-    } catch (error) {
-      console.log("error", JSON.stringify(error));
-    }
+    const response = await instance.get<{}, { data: IMessage[] }>(
+      SERVER_URL + `/messages?chatId=${chatId}&page=${page}`
+    );
+    return response.data;
   }
 
   async pollMessages(chatId: number) {
-    try {
-      const response = await instance.get(
-        SERVER_URL + `/messages/poll?chatId=${chatId}`
-      );
+    const response = await instance.get(
+      SERVER_URL + `/messages/poll?chatId=${chatId}`
+    );
 
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response.data.message);
-    }
+    return response.data;
   }
 }
 

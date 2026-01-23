@@ -1,3 +1,8 @@
+import Header from "@/components/shared/Header/Header";
+import MyButton from "@/components/ui/Button/Button";
+import { colors } from "@/constants/colors";
+import { fonts } from "@/constants/styles";
+import { useTakeOrderMutation } from "@/services/orders/orders.service";
 import { IAddress, IOrder, IOrderActionType } from "@/types/order.interface";
 import React, {
   FC,
@@ -12,26 +17,23 @@ import {
   Image,
   Linking,
   StyleSheet,
-  Text,
+  ToastAndroid,
   useColorScheme,
   View,
 } from "react-native";
-import { colors } from "@/constants/colors";
-import MyButton from "@/components/ui/Button/Button";
-import { useTakeOrderMutation } from "@/services/orders/orders.service";
-import Header from "@/components/shared/Header/Header";
-import { fonts } from "@/constants/styles";
-import Addresses from "./components/Addresses";
-import Actions from "./components/Actions";
 import { SheetManager } from "react-native-actions-sheet";
+import Actions from "./components/Actions";
+import Addresses from "./components/Addresses";
 
-import { icons } from "@/constants/icons";
-import yandexMaps from "@/utils/yandexMaps";
-import Route from "./components/Route";
-import { useTypedSelector } from "@/hooks/redux.hooks";
-import routeService from "@/services/route/route.service";
+import { ApiError } from "@/axios/api-error";
 import Toggler from "@/components/ui/HorizontalToggler/HorizontalToggler";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import { icons } from "@/constants/icons";
+import { orderStatuses } from "@/constants/orderStatuses";
+import { useTypedSelector } from "@/hooks/redux.hooks";
+import routeService from "@/services/route/route.service";
+import yandexMaps from "@/utils/yandexMaps";
+import Route from "./components/Route";
 
 interface IProps {
   order: IOrder;
@@ -61,11 +63,15 @@ const Order: FC<IProps> = ({ order }) => {
   const [takeOrder, { error }] = useTakeOrderMutation();
   const routeState = useTypedSelector((state) => state.route);
 
+  const showTakeOrderButton = order.statusId === orderStatuses.searchCourier;
+  const showCompleteActionButton = order.statusId === orderStatuses.inProcess;
+
   useEffect(() => {
-    if (order.statusId == 4) {
+    if (order.statusId === orderStatuses.inProcess) {
       setRoute(routeState);
     }
-    if (order.statusId == 3) {
+
+    if (order.statusId === orderStatuses.searchCourier) {
       const route = routeService.getRouteWithNewOrder(routeState.route, order);
       setRoute(route);
     }
@@ -82,8 +88,13 @@ const Order: FC<IProps> = ({ order }) => {
   };
 
   const takeOrderHandler = async () => {
-    await takeOrder({ orderId: order.id }).unwrap();
-    SheetManager.hide("take-order-sheet");
+    try {
+      await takeOrder({ orderId: order.id }).unwrap();
+      SheetManager.hide("take-order-sheet");
+    } catch (err) {
+      const apiError = err as ApiError;
+      ToastAndroid.show(apiError.message, ToastAndroid.SHORT);
+    }
   };
 
   const lastAction = order.actions.find((action) => !action.isCompleted);
@@ -192,6 +203,12 @@ const Order: FC<IProps> = ({ order }) => {
     [tabAnimation]
   );
 
+  if (error) {
+    console.error(error);
+
+    return null;
+  }
+
   return (
     <View style={styles.container}>
       <Header title={"Заказ № " + order.id} />
@@ -246,10 +263,10 @@ const Order: FC<IProps> = ({ order }) => {
           {order.price + "₽ · " + order.weight + " · " + order.parcelType}
         </ThemedText>
         <View style={styles.buttonsContainer}>
-          {order.statusId == 3 && (
+          {showTakeOrderButton && (
             <MyButton buttonText="Взять заказ" onPress={takeOrderModalShow} />
           )}
-          {order.statusId == 4 && (
+          {showCompleteActionButton && (
             <>
               <View style={{ flex: 1 }}>
                 <MyButton

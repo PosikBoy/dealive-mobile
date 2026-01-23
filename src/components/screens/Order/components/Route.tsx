@@ -1,11 +1,11 @@
-import { View, StyleSheet, FlatList } from "react-native";
-import React from "react";
-import { IAddress } from "@/types/order.interface";
-import { colors } from "@/constants/colors";
 import RouteItem from "@/components/shared/RouteItem";
-import yandexMaps from "@/utils/yandexMaps";
 import MyButton from "@/components/ui/Button/Button";
 import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import { colors } from "@/constants/colors";
+import { IAddress } from "@/types/order.interface";
+import yandexMaps from "@/utils/yandexMaps";
+import React from "react";
+import { FlatList, StyleSheet, View } from "react-native";
 
 interface IProps {
   route: IAddress[];
@@ -21,7 +21,7 @@ const Route = (props: IProps) => {
 
       yandexMaps.getRoute(points);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

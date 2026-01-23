@@ -1,12 +1,11 @@
+import MyButton from "@/components/ui/Button/Button";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import formatDate from "@/helpers/formatDate";
 import { IOrder } from "@/types/order.interface";
+import yandexMaps from "@/utils/yandexMaps";
 import React from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import Address from "./Address";
-import { colors } from "@/constants/colors";
-import formatDate from "@/helpers/formatDate";
-import MyButton from "@/components/ui/Button/Button";
-import yandexMaps from "@/utils/yandexMaps";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
 
 type Props = {
   order: IOrder;
@@ -24,7 +23,7 @@ const Addresses = (props: Props) => {
 
       yandexMaps.getRoute(points);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

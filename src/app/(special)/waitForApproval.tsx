@@ -1,3 +1,5 @@
+import MyButton from "@/components/ui/Button/Button";
+import { colors } from "@/constants/colors";
 import {
   ActivityIndicator,
   Image,
@@ -6,17 +8,15 @@ import {
   useColorScheme,
   View,
 } from "react-native";
-import MyButton from "@/components/ui/Button/Button";
-import { colors } from "@/constants/colors";
 
-import { router } from "expo-router";
-import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
+import ThemedText from "@/components/ui/ThemedText/ThemedText";
 import { icons } from "@/constants/icons";
+import { useTypedDispatch, useTypedSelector } from "@/hooks/redux.hooks";
 import {
   fetchAuthStatus,
   fetchIsApprovedStatus,
 } from "@/store/auth/auth.actions";
-import ThemedText from "@/components/ui/ThemedText/ThemedText";
+import { router } from "expo-router";
 
 const waitForApproval = () => {
   const colorScheme = useColorScheme() || "light";
@@ -30,11 +30,12 @@ const waitForApproval = () => {
     try {
       await dispatch(fetchAuthStatus()).unwrap();
       const isApproved = await dispatch(fetchIsApprovedStatus()).unwrap();
+
       if (isApproved) {
         router.replace("/");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 

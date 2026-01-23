@@ -1,8 +1,8 @@
+import { useTypedSelector } from "@/hooks/redux.hooks";
 import { useGetAvailableOrdersQuery } from "@/services/orders/orders.service";
 import routeService from "@/services/route/route.service";
 import { IOrder } from "@/types/order.interface";
 import { useEffect, useState } from "react";
-import { useTypedSelector } from "./redux.hooks";
 
 const AVERAGE_SPEED_KMH = 12;
 
@@ -14,7 +14,7 @@ interface IRecommendedOrders {
   time: number;
 }
 
-const useRecommendedOrders = () => {
+export const useRecommendedOrders = () => {
   const { data: orders = [], isLoading } = useGetAvailableOrdersQuery();
 
   const routeState = useTypedSelector((state) => state.route);
@@ -64,5 +64,3 @@ const useRecommendedOrders = () => {
     isLoading: isLoading || location.isLocationLoading,
   };
 };
-
-export default useRecommendedOrders;

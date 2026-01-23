@@ -2,12 +2,11 @@ import { colors } from "@/constants/colors";
 import { fonts } from "@/constants/styles";
 import React from "react";
 import {
-  TouchableHighlight,
-  Text,
   StyleSheet,
+  Text,
+  TouchableHighlight,
   TouchableHighlightProps,
   View,
-  ActivityIndicator,
 } from "react-native";
 
 interface IProps extends TouchableHighlightProps {
@@ -23,8 +22,9 @@ interface IProps extends TouchableHighlightProps {
 const ACTIVE_COLOR_MAP = {
   purple: colors.hoverPurple,
   red: colors.hoverRed,
-  lightPurple: colors.hoverLightPurple, // Убедитесь что цвет есть в constants/colors
+  lightPurple: colors.hoverLightPurple,
 };
+
 const MyButton: React.FC<IProps> = (props) => {
   const {
     buttonText,
