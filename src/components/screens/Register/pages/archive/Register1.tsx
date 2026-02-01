@@ -3,7 +3,6 @@ import React, { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import MyButton from '@/components/ui/Button/Button';
 import InputField from '@/components/ui/InputField/InputField';
 import PhoneInputField from '@/components/ui/PhoneInputField/PhoneInputField';
 import { colors } from '@/constants/colors';

@@ -1,8 +1,10 @@
 export const passportNumberHandler = (newValue: string, oldValue) => {
   const regex = /[0-9]/;
+
   if (oldValue.length - newValue.length == 1) {
     return newValue;
   }
+
   if (regex.test(newValue[newValue.length - 1]) && newValue.length < 12) {
     newValue = newValue.replaceAll(/\D/g, '');
     newValue =

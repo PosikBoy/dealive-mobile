@@ -1,15 +1,15 @@
 import { Link, router } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
-import { ActivityIndicator, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import MyButton from '@/components/ui/Button/Button';
 import InputField from '@/components/ui/InputField/InputField';
 import PhoneInputField from '@/components/ui/PhoneInputField/PhoneInputField';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
-import { colors } from '@/constants/colors';
-import { fonts, fontSizes, paddings } from '@/constants/styles';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
+import { paddings } from '@/constants/styles';
 import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
+import { useTheme } from '@/hooks/useTheme';
 import { login } from '@/store/auth/auth.actions';
 
 interface IPhoneNumberPassword {
@@ -18,7 +18,8 @@ interface IPhoneNumberPassword {
 }
 
 const Login = () => {
-  const colorScheme = useColorScheme() || 'light';
+  const { colors } = useTheme();
+
   const {
     control,
     formState: { errors },
@@ -36,7 +37,7 @@ const Login = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors[colorScheme].white }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ThemedText style={styles.title} type='title'>
         Войдите в аккаунт
       </ThemedText>
@@ -47,7 +48,7 @@ const Login = () => {
         <PhoneInputField control={control} name='phoneNumber' placeholder='Номер телефона' />
       </View>
       {errors.phoneNumber && (
-        <ThemedText type='hint' color='red'>
+        <ThemedText type='hint' color='error'>
           {errors?.phoneNumber?.message}
         </ThemedText>
       )}
@@ -63,20 +64,17 @@ const Login = () => {
         />
       </View>
       {errors?.password && (
-        <ThemedText type='hint' color='red'>
+        <ThemedText type='hint' color='error'>
           {errors?.password?.message}
         </ThemedText>
       )}
-      {/* НАДО СДЕЛАТЬ СТРАНИЦУ ВОССТАНОВЛЕНИЯ ПАРОЛЯ */}
       {state.error && (
-        <ThemedText type='hint' color='red'>
+        <ThemedText type='hint' color='error'>
           {state.error}
         </ThemedText>
       )}
-      {state.isLoading && <ActivityIndicator size='large' color={colors.purple} />}
-      {/* <Link href={"/(auth)/register"} style={styles.forgotPasswordLabel}>
-        <Text>Забыли пароль?</Text>
-      </Link> */}
+      {state.isLoading && <ActivityIndicator size='large' color={colors.primary} />}
+
       <View style={styles.bottomContainer}>
         <Link href={'/(auth)/register'}>
           <ThemedText type='mediumText' weight='bold'>

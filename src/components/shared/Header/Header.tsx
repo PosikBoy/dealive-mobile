@@ -1,10 +1,10 @@
 import { router } from 'expo-router';
 import React, { FC } from 'react';
-import { Image, Pressable, StyleSheet, useColorScheme, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
-import { colors } from '@/constants/colors';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { icons } from '@/constants/icons';
+import { useTheme } from '@/hooks/useTheme';
 
 type Props = {
   title: string;
@@ -13,7 +13,6 @@ type Props = {
 };
 
 const onPressBackDefault = () => {
-  console.log('asdc');
   router.back();
 };
 
@@ -22,13 +21,14 @@ const Header: FC<Props> = ({
   onPressBack = onPressBackDefault,
   isButtonBackShown = true,
 }) => {
-  const colorScheme = useColorScheme() || 'light';
+  const { colors } = useTheme();
+
   return (
-    <View style={[styles.header, { backgroundColor: colors[colorScheme].white }]}>
+    <View style={[styles.header, { backgroundColor: colors.surface }]}>
       {isButtonBackShown && (
         <Pressable style={styles.backButton} onPress={onPressBack}>
           <Image
-            tintColor={colors[colorScheme].black}
+            tintColor={colors.tint}
             source={icons.arrow}
             style={{ width: '100%', height: '100%' }}
           />
@@ -47,8 +47,7 @@ export default Header;
 
 const styles = StyleSheet.create({
   header: {
-    paddingVertical: 20,
-    paddingHorizontal: 0,
+    paddingVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

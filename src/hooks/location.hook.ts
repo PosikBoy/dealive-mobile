@@ -1,8 +1,6 @@
 import * as Location from 'expo-location';
 import { useEffect, useState } from 'react';
 
-import geodataService from '@/services/geodata/geodata.service';
-
 interface ILocation {
   lon: number;
   lat: number;
@@ -32,7 +30,7 @@ export const useLocation = () => {
     };
 
     const getLocation = async () => {
-      setIsLoading(true); // Начинаем загрузку
+      setIsLoading(true);
 
       const hasPermission = await requestPermissions();
       if (!hasPermission) {
@@ -55,24 +53,25 @@ export const useLocation = () => {
           lat: data.coords.latitude,
         };
 
-        // if (location) {
-        //   // Вычисляем расстояние между текущей и новой локацией
-        //   const distance = geodataService.calculateDistance(
-        //     location.lat,
-        //     location.lon,
-        //     newLocation.lat,
-        //     newLocation.lon
-        //   );
-        //   // Обновляем локацию только если она изменилась на 50 метров или больше
-        //   if (distance > 0.05) {
-        //     setLocation(newLocation);
-        //     setError(null);
-        //   }
-        // } else {
-        //   // Если локации ещё нет, просто сохраняем её
-        //   setLocation(newLocation);
-        //   setError(null);
-        // }
+        if (location) {
+          // Вычисляем расстояние между текущей и новой локацией
+          const distance = geodataService.calculateDistance(
+            location.lat,
+            location.lon,
+            newLocation.lat,
+            newLocation.lon,
+          );
+
+          if (distance > 0.05) {
+            setLocation(newLocation);
+            setError(null);
+          }
+        } else {
+          // Если локации ещё нет, просто сохраняем её
+          setLocation(newLocation);
+          setError(null);
+        }
+
         setLocation(newLocation);
         setError(null);
       } catch (err: any) {

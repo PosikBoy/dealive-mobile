@@ -1,13 +1,15 @@
-import { StyleSheet, useColorScheme, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import Header from '@/components/shared/Header/Header';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
-import { formatDateWithoutTime } from '@/helpers/formatDate';
+import { useTheme } from '@/hooks/useTheme';
 import { useGetProfileQuery } from '@/services/profile/profile.service';
+import { formatDateWithoutTime } from '@/utils/formatDate';
 
 const Profile = () => {
-  const colorScheme = useColorScheme() || 'light';
+  const colorScheme = useTheme();
+
   const { data, isLoading, error } = useGetProfileQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });

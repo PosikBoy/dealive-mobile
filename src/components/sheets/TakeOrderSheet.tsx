@@ -1,9 +1,10 @@
-import { StyleSheet, useColorScheme, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import ActionSheet, { SheetProps } from 'react-native-actions-sheet';
 
 import { colors } from '@/constants/colors';
 import { gaps, paddings } from '@/constants/styles';
-import { IOrder } from '@/types/order.interface';
+import { IOrder } from '@/domain/orders/types';
+import { useTheme } from '@/hooks/useTheme';
 
 import MyButton from '../ui/Button/Button';
 import ThemedText from '../ui/ThemedText/ThemedText';
@@ -15,7 +16,7 @@ export interface ITakeOrderSheet {
 }
 
 const TakeOrderSheet = (props: SheetProps<'take-order-sheet'>) => {
-  const colorScheme = useColorScheme() || 'light';
+  const colorScheme = useTheme();
 
   const { order, takeOrder, error } = props.payload;
 

@@ -1,23 +1,15 @@
 import { Link } from 'expo-router';
 import React from 'react';
-import {
-  Image,
-  Linking,
-  Pressable,
-  StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { Image, Linking, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
 import Header from '@/components/shared/Header/Header';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
-import { colors } from '@/constants/colors';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { icons } from '@/constants/icons';
+import { useTheme } from '@/hooks/useTheme';
 
 const Settings = () => {
-  const colorScheme = useColorScheme() || 'light';
+  const { colors } = useTheme();
 
   const logoutButtonHandler = async () => {
     SheetManager.show('log-out-sheet');
@@ -28,7 +20,7 @@ const Settings = () => {
       style={[
         styles.container,
         {
-          backgroundColor: colors[colorScheme].white,
+          backgroundColor: colors.background,
         },
       ]}
     >
@@ -39,7 +31,7 @@ const Settings = () => {
             <View style={styles.linkTextContainer}>
               <View style={styles.iconContainer}>
                 <Image
-                  tintColor={colors[colorScheme].black}
+                  tintColor={colors.tint}
                   source={icons.profile}
                   resizeMode='contain'
                   style={{ width: 20, height: 20 }}
@@ -51,7 +43,7 @@ const Settings = () => {
             </View>
             <View style={styles.iconContainer}>
               <Image
-                tintColor={colors[colorScheme].black}
+                tintColor={colors.tint}
                 style={styles.arrowIcon}
                 source={icons.arrow}
                 resizeMode='contain'
@@ -64,7 +56,7 @@ const Settings = () => {
             <View style={styles.linkTextContainer}>
               <View style={styles.iconContainer}>
                 <Image
-                  tintColor={colors[colorScheme].black}
+                  tintColor={colors.tint}
                   source={icons.orders}
                   resizeMode='contain'
                   style={{ width: 20, height: 20 }}
@@ -77,7 +69,7 @@ const Settings = () => {
 
             <View style={styles.iconContainer}>
               <Image
-                tintColor={colors[colorScheme].black}
+                tintColor={colors.tint}
                 style={styles.arrowIcon}
                 source={icons.arrow}
                 resizeMode='contain'
@@ -90,7 +82,7 @@ const Settings = () => {
             <View style={styles.linkTextContainer}>
               <View style={styles.iconContainer}>
                 <Image
-                  tintColor={colors[colorScheme].black}
+                  tintColor={colors.tint}
                   source={icons.faq}
                   resizeMode='contain'
                   style={{ width: 20, height: 20 }}
@@ -103,7 +95,7 @@ const Settings = () => {
 
             <View style={styles.iconContainer}>
               <Image
-                tintColor={colors[colorScheme].black}
+                tintColor={colors.tint}
                 style={styles.arrowIcon}
                 source={icons.arrow}
                 resizeMode='contain'
@@ -117,7 +109,7 @@ const Settings = () => {
             <View style={styles.linkTextContainer}>
               <View style={styles.iconContainer}>
                 <Image
-                  tintColor={colors[colorScheme].black}
+                  tintColor={colors.tint}
                   source={icons.application}
                   resizeMode='contain'
                   style={{ width: 20, height: 20 }}
@@ -129,7 +121,7 @@ const Settings = () => {
             </View>
             <View style={styles.iconContainer}>
               <Image
-                tintColor={colors[colorScheme].black}
+                tintColor={colors.tint}
                 style={styles.arrowIcon}
                 source={icons.arrow}
                 resizeMode='contain'
@@ -142,7 +134,7 @@ const Settings = () => {
             <View style={styles.linkTextContainer}>
               <View style={styles.iconContainer}>
                 <Image
-                  tintColor={colors[colorScheme].black}
+                  tintColor={colors.tint}
                   source={icons.telegram}
                   resizeMode='contain'
                   style={{ width: 20, height: 20 }}
@@ -155,7 +147,7 @@ const Settings = () => {
 
             <View style={styles.iconContainer}>
               <Image
-                tintColor={colors[colorScheme].black}
+                tintColor={colors.tint}
                 style={styles.arrowIcon}
                 source={icons.arrow}
                 resizeMode='contain'

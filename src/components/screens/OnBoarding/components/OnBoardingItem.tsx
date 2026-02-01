@@ -1,11 +1,11 @@
 import React from 'react';
 import { Image, StyleSheet, useWindowDimensions, View } from 'react-native';
 
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
-import { colors } from '@/constants/colors';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 
-const OnBoardingItem = ({ title, subtitle, iconUri }) => {
+export const OnBoardingItem = ({ title, subtitle, iconUri }) => {
   const { width } = useWindowDimensions();
+
   return (
     <View style={[styles.container, { width }]}>
       <Image source={iconUri} style={[styles.image, { width, resizeMode: 'contain' }]} />
@@ -20,7 +20,6 @@ const OnBoardingItem = ({ title, subtitle, iconUri }) => {
     </View>
   );
 };
-export default OnBoardingItem;
 
 const styles = StyleSheet.create({
   container: {

@@ -1,14 +1,14 @@
 import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
-import { StyleSheet, useColorScheme, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import Header from '@/components/shared/Header/Header';
-import MyButton from '@/components/ui/Button/Button';
 import DataInputField from '@/components/ui/DataInputField/DataInputField';
 import InputField from '@/components/ui/InputField/InputField';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
+import { useTheme } from '@/hooks/useTheme';
 import { addSecondPageData } from '@/store/signupForm/signupForm.slice';
 
 interface IProps {
@@ -23,10 +23,12 @@ interface IFormField {
 }
 
 const Register2: FC<IProps> = props => {
-  const colorScheme = useColorScheme() || 'light';
   const { nextPage, previousPage } = props;
+
+  const colorScheme = useTheme();
   const state = useTypedSelector(state => state.signupForm);
   const dispatch = useTypedDispatch();
+
   const {
     control,
     formState: { errors },
@@ -41,6 +43,7 @@ const Register2: FC<IProps> = props => {
       birthDate: state.birthDate,
     },
   });
+
   const onSubmit = data => {
     if (isValidDate(data.birthDate)) {
       dispatch(addSecondPageData(data));

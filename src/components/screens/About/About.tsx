@@ -1,19 +1,20 @@
 import React from 'react';
-import { Image, StyleSheet, useColorScheme, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 
 import logo from '@/assets/icon.png';
 import Header from '@/components/shared/Header/Header';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
-import { colors } from '@/constants/colors';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
+import { useTheme } from '@/hooks/useTheme';
 
 const About = () => {
-  const colorScheme = useColorScheme() || 'light';
+  const { colors } = useTheme();
+
   return (
     <View
       style={[
         styles.container,
         {
-          backgroundColor: colors[colorScheme].white,
+          backgroundColor: colors.background,
         },
       ]}
     >

@@ -1,14 +1,14 @@
 import React, { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { ActivityIndicator, StyleSheet, useColorScheme, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import Header from '@/components/shared/Header/Header';
-import MyButton from '@/components/ui/Button/Button';
 import InputField from '@/components/ui/InputField/InputField';
 import PhoneInputField from '@/components/ui/PhoneInputField/PhoneInputField';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
+import { useTheme } from '@/hooks/useTheme';
 import authService from '@/services/auth/auth.service';
 import { addFirstPageData } from '@/store/signupForm/signupForm.slice';
 
@@ -25,7 +25,8 @@ interface IFormField {
 }
 
 const Register1: FC<IProps> = props => {
-  const colorScheme = useColorScheme() || 'light';
+  const colorScheme = useTheme();
+
   const { nextPage, previousPage } = props;
 
   const [existingError, setExistingError] = useState('');

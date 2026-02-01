@@ -1,30 +1,24 @@
 import React from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 
 import OrderPreview from '@/components/features/OrderPreview/OrderPreview';
 import OrderPreviewSkeleton from '@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
+import { useActiveOrders } from '@/domain/orders/api';
 import { useTypedSelector } from '@/hooks/redux.hooks';
-import { useGetActiveOrdersQuery } from '@/services/orders/orders.service';
+import { useTheme } from '@/hooks/useTheme';
 
 import AvailableOrders from './AvailableOrders';
 
 const ActiveOrders = () => {
-  const colorScheme = useColorScheme() || 'light';
+  const { colors } = useTheme();
+
   const location = useTypedSelector(state => state.location);
-  const { data, isLoading, refetch } = useGetActiveOrdersQuery();
+  const { data, isLoading, refetch } = useActiveOrders();
+
   if (location.error) {
     return (
       <View style={styles.container}>
@@ -34,7 +28,7 @@ const ActiveOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View style={[styles.loadingModal, { backgroundColor: colors[colorScheme].white }]}>
+          <View style={[styles.loadingModal, { backgroundColor: colors.background }]}>
             <ThemedText type='big' weight='medium'>
               {location.error}
             </ThemedText>
@@ -52,8 +46,8 @@ const ActiveOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View style={[styles.loadingModal, { backgroundColor: colors[colorScheme].white }]}>
-            <ActivityIndicator size={'large'} color={colors.purple} />
+          <View style={[styles.loadingModal, { backgroundColor: colors.background }]}>
+            <ActivityIndicator size={'large'} color={colors.primary} />
             <ThemedText type='big' weight='medium'>
               {location.isLocationLoading
                 ? 'Пытаемся определить ваше местоположение'
@@ -93,15 +87,15 @@ const ActiveOrders = () => {
         />
       </View>
       <TouchableOpacity
-        style={[styles.update, { backgroundColor: colors[colorScheme].white }]}
+        style={[styles.update, { backgroundColor: colors.background }]}
         onPress={() => refetch()}
         disabled={isLoading}
       >
         {isLoading ? (
-          <ActivityIndicator size='small' color={colors.purple} />
+          <ActivityIndicator size='small' color={colors.primary} />
         ) : (
           <Image
-            tintColor={colors[colorScheme].black}
+            tintColor={colors.tint}
             source={icons.refetch}
             style={{ width: '100%', height: '100%' }}
           />

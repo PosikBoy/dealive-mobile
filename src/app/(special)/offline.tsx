@@ -4,7 +4,7 @@ import React from 'react';
 import { Image, StyleSheet, ToastAndroid, View } from 'react-native';
 
 import MyButton from '@/components/ui/Button/Button';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { icons } from '@/constants/icons';
 
 const index = () => {
@@ -24,7 +24,7 @@ const index = () => {
       <ThemedText type='title' weight='bold'>
         Нет подключения к интернету
       </ThemedText>
-      <ThemedText type='subtitle' weight='bold' color='gray'>
+      <ThemedText type='subtitle' weight='bold'>
         Проверьте соединение и попробуйте еще раз
       </ThemedText>
       <View style={styles.buttonContainer}>

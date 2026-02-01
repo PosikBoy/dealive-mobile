@@ -1,9 +1,9 @@
 import React from 'react';
-import { Animated, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Animated, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { colors } from '@/constants/colors';
 
-const Paginator = ({ data, scrollX }) => {
+export const Paginator = ({ data, scrollX }) => {
   const { width } = useWindowDimensions();
   return (
     <View style={styles.container}>
@@ -43,8 +43,6 @@ const Paginator = ({ data, scrollX }) => {
     </View>
   );
 };
-
-export default Paginator;
 
 const styles = StyleSheet.create({
   container: {

@@ -1,17 +1,11 @@
 import React, { FC, useEffect, useImperativeHandle, useRef } from 'react';
 import { Control, useController } from 'react-hook-form';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableWithoutFeedback,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { colors } from '@/constants/colors';
 import { fonts } from '@/constants/styles';
+import { useTheme } from '@/hooks/useTheme';
 
 interface IField {
   onChange: (value: string) => void;
@@ -19,6 +13,7 @@ interface IField {
   value: string;
   error?: any;
 }
+
 export interface DataInputFieldRef {
   focus: () => void;
 }
@@ -30,7 +25,7 @@ interface IControllerField {
   placeholder: string;
 }
 const DataInputField: FC<IControllerField> = props => {
-  const colorScheme = useColorScheme() || 'light';
+  const colorScheme = useTheme();
   const { name, control, error, placeholder } = props;
   const rules = {
     required: 'Введите дату рождения',

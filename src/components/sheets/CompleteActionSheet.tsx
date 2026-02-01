@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, ToastAndroid, useColorScheme, View } from 'react-native';
+import { StyleSheet, ToastAndroid, View } from 'react-native';
 import ActionSheet, { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
-import MyButton from '@/components/ui/Button/Button';
 import { colors } from '@/constants/colors';
-import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
-import geodataService from '@/services/geodata/geodata.service';
-import { useCompleteActionMutation } from '@/services/orders/orders.service';
-import { IAddress, IOrderAction, IOrderActionType } from '@/types/order.interface';
+import { useCompleteActionMutation } from '@/domain/orders/api';
+import { IAddress, IOrderAction, IOrderActionType } from '@/domain/orders/types';
+import { calculateDistanceToAddress } from '@/domain/orders/utils/enrichOrdersWithGeo';
+import { useTypedSelector } from '@/hooks/redux.hooks';
+import { useTheme } from '@/hooks/useTheme';
 
 import ThemedText from '../ui/ThemedText/ThemedText';
 
@@ -48,17 +48,18 @@ export interface ICompleteActionSheet {
 }
 
 export const CompleteActionSheet = React.memo((props: SheetProps<'complete-action-sheet'>) => {
-  const colorScheme = useColorScheme() || 'light';
   const { action, address } = props.payload;
+
+  const colorScheme = useTheme();
   const location = useTypedSelector(state => state.location);
-  const snippet = ACTION_SNIPPETS[action.actionType];
   const [completeAction, { isLoading }] = useCompleteActionMutation();
   const [error, setError] = useState<string>();
-  const dispatch = useTypedDispatch();
+
+  const snippet = ACTION_SNIPPETS[action.actionType];
 
   const validateLocation = useCallback(async () => {
     try {
-      const distance = geodataService.calculateDistanceToAddress(location, address);
+      const distance = calculateDistanceToAddress(location, address);
       return distance <= LOCATION_DISTANCE_THRESHOLD;
     } catch (error) {
       console.error('Location validation error:', error);

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
+import { useAvailableOrders } from '@/domain/orders/api';
+import { IOrder } from '@/domain/orders/types';
 import { useTypedSelector } from '@/hooks/redux.hooks';
-import { useGetAvailableOrdersQuery } from '@/services/orders/orders.service';
 import routeService from '@/services/route/route.service';
-import { IOrder } from '@/types/order.interface';
 
 const AVERAGE_SPEED_KMH = 12;
 
@@ -16,7 +16,7 @@ interface IRecommendedOrders {
 }
 
 export const useRecommendedOrders = () => {
-  const { data: orders = [], isLoading } = useGetAvailableOrdersQuery();
+  const { data: orders = [], isLoading } = useAvailableOrders();
 
   const routeState = useTypedSelector(state => state.route);
   const location = useTypedSelector(state => state.location);

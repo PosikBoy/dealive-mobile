@@ -1,8 +1,7 @@
 import { forwardRef, ReactNode, Ref } from 'react';
-import { useColorScheme } from 'react-native';
 import ActionSheet, { ActionSheetRef } from 'react-native-actions-sheet';
 
-import { colors } from '@/constants/colors';
+import { useTheme } from '@/hooks/useTheme';
 
 interface IProps {
   children: ReactNode;
@@ -10,14 +9,15 @@ interface IProps {
 }
 
 const CustomBottomSheetModal = forwardRef<ActionSheetRef, IProps>((props, ref) => {
-  const colorScheme = useColorScheme() || 'light';
+  const { colors } = useTheme();
+
   const { children } = props;
 
   return (
     <ActionSheet
       ref={ref}
       gestureEnabled={true}
-      containerStyle={{ backgroundColor: colors[colorScheme].white }}
+      containerStyle={{ backgroundColor: colors.background }}
     >
       {children}
     </ActionSheet>

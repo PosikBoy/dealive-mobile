@@ -1,11 +1,11 @@
 import { FC } from 'react';
-import { StyleSheet, useColorScheme, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import Shimmer from '@/components/ui/Shimmer/Shimmer';
 import { colors } from '@/constants/colors';
 
 const OrderSkeleton: FC = () => {
-  const colorScheme = useColorScheme() || 'light';
+  const colorScheme = useTheme();
   return (
     <View style={[styles.container, { backgroundColor: colors[colorScheme].white }]}>
       <View style={styles.header}>

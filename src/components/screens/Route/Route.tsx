@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, useColorScheme, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
 import Header from '@/components/shared/Header/Header';
 import RouteItem from '@/components/shared/RouteItem';
-import MyButton from '@/components/ui/Button/Button';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { borderRadiuses } from '@/constants/styles';
+import { useActiveOrders } from '@/domain/orders/api';
 import { useTypedSelector } from '@/hooks/redux.hooks';
-import { useGetActiveOrdersQuery } from '@/services/orders/orders.service';
+import { useTheme } from '@/hooks/useTheme';
 import yandexMaps from '@/utils/yandexMaps';
 
 const Route = () => {
-  const colorScheme = useColorScheme() || 'light';
+  const { colors } = useTheme();
   const [sum, setSum] = useState<number>(0);
   const routeData = useTypedSelector(state => state.route);
-  const { data } = useGetActiveOrdersQuery();
+  const { data } = useActiveOrders();
+
   const footerText = `Расстояние ${routeData.distance.toFixed(2)} км | Доход ${sum.toFixed(0)}₽`;
 
   useEffect(() => {
@@ -68,7 +69,7 @@ const Route = () => {
           width: '100%',
         }}
       />
-      <View style={[styles.footer, { backgroundColor: colors[colorScheme].white }]}>
+      <View style={[styles.footer, { backgroundColor: colors.background }]}>
         <ThemedText weight='medium' type='mediumText'>
           {footerText}
         </ThemedText>

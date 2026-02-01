@@ -7,6 +7,7 @@ import Register3 from './pages/Register3';
 
 const RegisterScreen = () => {
   const [currentPage, setCurrentPage] = useState(1);
+
   switch (currentPage) {
     case 1:
       return (

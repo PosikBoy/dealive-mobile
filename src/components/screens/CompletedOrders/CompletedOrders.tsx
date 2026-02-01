@@ -1,37 +1,24 @@
 import { FlashList } from '@shopify/flash-list';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, StyleSheet, useColorScheme, View } from 'react-native';
+import React from 'react';
+import { ActivityIndicator, Image, StyleSheet, View } from 'react-native';
 
 import OrderPreview from '@/components/features/OrderPreview/OrderPreview';
 import Header from '@/components/shared/Header/Header';
 import OrderPreviewSkeleton from '@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
 import { orderStatuses } from '@/constants/orderStatuses';
+import { useAllOrders } from '@/domain/orders/api';
 import { useTypedSelector } from '@/hooks/redux.hooks';
-import geodataService from '@/services/geodata/geodata.service';
-import { useGetAllOrdersQuery } from '@/services/orders/orders.service';
-import { IOrder } from '@/types/order.interface';
+import { useTheme } from '@/hooks/useTheme';
 
 const CompletedOrders = () => {
-  const colorScheme = useColorScheme() || 'light';
-  const [orders, setOrders] = useState<IOrder[]>([]);
+  const { colors } = useTheme();
 
-  const { data, isLoading } = useGetAllOrdersQuery(undefined, {
-    refetchOnFocus: false,
-    refetchOnReconnect: false,
-  });
+  const { data: orders, isLoading } = useAllOrders();
 
   const location = useTypedSelector(state => state.location);
-
-  useEffect(() => {
-    if (!location.isLocationLoading && data) {
-      const enrichedOrders = geodataService.enrichOrders(data, location);
-
-      setOrders(enrichedOrders);
-    }
-  }, [data, location]);
 
   if (location.error) {
     return (
@@ -42,7 +29,7 @@ const CompletedOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View style={[styles.loadingModal, { backgroundColor: colors[colorScheme].white }]}>
+          <View style={[styles.loadingModal, { backgroundColor: colors.background }]}>
             <ThemedText type='big' weight='medium'>
               {location.error}
             </ThemedText>
@@ -62,8 +49,8 @@ const CompletedOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View style={[styles.loadingModal, { backgroundColor: colors[colorScheme].white }]}>
-            <ActivityIndicator size={'large'} color={colors.purple} />
+          <View style={[styles.loadingModal, { backgroundColor: colors.background }]}>
+            <ActivityIndicator size={'large'} color={colors.primary} />
             <ThemedText type='big' weight='bold'>
               {location.isLocationLoading
                 ? 'Пытаемся определить ваше местоположение'
@@ -75,7 +62,7 @@ const CompletedOrders = () => {
     );
   }
 
-  const completedOrders = data.filter(order => order.statusId == orderStatuses.delivered);
+  const completedOrders = orders?.filter(order => order.statusId === orderStatuses.delivered) || [];
 
   return (
     <View style={styles.container}>
@@ -83,8 +70,7 @@ const CompletedOrders = () => {
       <View style={styles.ordersContainer}>
         {completedOrders.length > 0 && (
           <FlashList
-            data={orders}
-            estimatedItemSize={150}
+            data={completedOrders}
             renderItem={({ item }) => <OrderPreview order={item} />}
             keyExtractor={item => item.id.toString()}
             ItemSeparatorComponent={() => <View style={styles.separator} />}

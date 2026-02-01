@@ -5,52 +5,38 @@ import { IAuthResponseData } from '@/types/auth.interface';
 import { IChat } from '@/types/chat.interface';
 
 class AuthStorage {
-  saveTokens = async (refreshToken: string, accessToken: string) => {
-    await SecureStore.setItemAsync('refreshToken', refreshToken);
-    await SecureStore.setItemAsync('accessToken', accessToken);
-  };
+  REFRESH_TOKEN_KEY = 'refreshToken';
+  ACCESS_TOKEN_KEY = 'accessToken';
+  IS_AUTH_KEY = 'isAuth';
+  SUPPORT_CHAT_KEY = 'supportChat';
 
-  saveAuthData = async (authData: IAuthResponseData) => {
-    await this.saveTokens(authData.refreshToken, authData.accessToken);
-    await this.setIsAuth(true);
-  };
-
-  setSupportChat = async (chat: IChat) => {
-    try {
-      await SecureStore.setItemAsync('supportChat', JSON.stringify(chat));
-    } catch (e) {}
-  };
-  getSupportChat = async () => {
-    try {
-      const value = await SecureStore.getItemAsync('supportChat');
-      return JSON.parse(value || '{}');
-    } catch (e) {
-      return null;
-    }
-  };
-  getAccessToken = async () => {
-    try {
-      const value = await SecureStore.getItemAsync('accessToken');
-      return value || null;
-    } catch (e) {
-      return null;
-    }
-  };
-
-  getRefreshToken = async () => {
-    try {
-      const value = await SecureStore.getItemAsync('refreshToken');
-      return value || null;
-    } catch (e) {
-      return null;
-    }
+  setTokens = async (refreshToken: string, accessToken: string) => {
+    await SecureStore.setItemAsync(this.REFRESH_TOKEN_KEY, refreshToken);
+    await SecureStore.setItemAsync(this.ACCESS_TOKEN_KEY, accessToken);
   };
 
   removeTokens = async () => {
-    try {
-      await SecureStore.deleteItemAsync('accessToken');
-      await SecureStore.deleteItemAsync('refreshToken');
-    } catch (e) {}
+    await SecureStore.deleteItemAsync(this.REFRESH_TOKEN_KEY);
+    await SecureStore.deleteItemAsync(this.ACCESS_TOKEN_KEY);
+  };
+
+  getRefreshToken = async () => {
+    const value = await SecureStore.getItemAsync(this.REFRESH_TOKEN_KEY);
+    return value || null;
+  };
+
+  getAccessToken = async () => {
+    const value = await SecureStore.getItemAsync(this.ACCESS_TOKEN_KEY);
+    return value || null;
+  };
+
+  getIsAuth = async () => {
+    const value = await SecureStore.getItemAsync(this.IS_AUTH_KEY);
+    return value === 'true';
+  };
+
+  setIsAuth = async (value: boolean) => {
+    await SecureStore.setItemAsync(this.IS_AUTH_KEY, value.toString());
   };
 
   removeAuthData = async () => {
@@ -60,19 +46,26 @@ class AuthStorage {
     await AsyncStorage.clear();
   };
 
-  setIsAuth = async (value: boolean) => {
-    try {
-      await SecureStore.setItemAsync('isAuth', value.toString());
-    } catch (e) {}
+  removeIsAuth = async () => {
+    await SecureStore.deleteItemAsync(this.IS_AUTH_KEY);
   };
 
-  getIsAuth = async () => {
-    try {
-      const value = await SecureStore.getItemAsync('isAuth');
-      return value === 'true';
-    } catch (e) {
-      return false;
-    }
+  saveAuthData = async (authData: IAuthResponseData) => {
+    await this.setTokens(authData.refreshToken, authData.accessToken);
+    await this.setIsAuth(true);
+  };
+
+  setSupportChat = async (chat: IChat) => {
+    await SecureStore.setItemAsync(this.SUPPORT_CHAT_KEY, JSON.stringify(chat));
+  };
+
+  removeSupportChat = async () => {
+    await SecureStore.deleteItemAsync(this.SUPPORT_CHAT_KEY);
+  };
+
+  getSupportChat = async () => {
+    const value = (await SecureStore.getItemAsync(this.SUPPORT_CHAT_KEY)) || '{}';
+    return JSON.parse(value);
   };
 }
 

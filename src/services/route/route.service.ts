@@ -1,6 +1,5 @@
-import { IAddress, IOrder } from '@/types/order.interface';
-
-import geodataService from '../geodata/geodata.service';
+import { IAddress, IOrder } from '@/domain/orders/types';
+import { calculateDistance } from '@/domain/orders/utils/enrichOrdersWithGeo';
 
 interface IUserLocation {
   lat: number;
@@ -89,7 +88,7 @@ class RouteService {
     let distance = 0;
 
     for (let i = 0; i < route.length - 1; i++) {
-      distance += geodataService.calculateDistance(
+      distance += calculateDistance(
         +route[i].geoData?.geoLat || 0,
         +route[i].geoData?.geoLon || 0,
         +route[i + 1].geoData?.geoLat || 0,

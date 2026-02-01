@@ -3,6 +3,7 @@ import { Animated, StyleSheet, View } from 'react-native';
 
 import Header from '@/components/shared/Header/Header';
 import Toggler from '@/components/ui/HorizontalToggler/HorizontalToggler';
+import { useTheme } from '@/hooks/useTheme';
 
 import ActiveOrders from './components/ActiveOrders';
 import AvailableOrders from './components/AvailableOrders';
@@ -11,6 +12,8 @@ import RecommendedOrders from './components/RecommendedOrders';
 const options = ['Доступные', 'Лучшие', 'Активные'];
 
 const OrdersScreen = () => {
+  const { theme, colors } = useTheme();
+  // console.log(theme);
   const [activeTab, setActiveTab] = useState<string>('Доступные');
 
   const tabAnimation = useRef(new Animated.Value(options.indexOf(activeTab))).current;
@@ -79,9 +82,11 @@ const OrdersScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.backgroundSecondary }]}>
       <Header title='Заказы' isButtonBackShown={false} />
-      <Toggler options={options} activeTab={activeTab} onChange={setActiveTab} />
+      <View style={[styles.togglerContainer]}>
+        <Toggler options={options} activeTab={activeTab} onChange={setActiveTab} />
+      </View>
 
       <View style={styles.ordersContainer}>
         <Animated.View
@@ -130,7 +135,10 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
   },
-
+  togglerContainer: {
+    paddingHorizontal: 5,
+    paddingTop: 16,
+  },
   ordersContainer: {
     flex: 1,
   },

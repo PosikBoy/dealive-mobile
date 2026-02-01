@@ -1,15 +1,16 @@
 import { router } from 'expo-router';
-import { ActivityIndicator, Image, Linking, StyleSheet, useColorScheme, View } from 'react-native';
+import { ActivityIndicator, Image, Linking, StyleSheet, View } from 'react-native';
 
 import MyButton from '@/components/ui/Button/Button';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
 import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
+import { useTheme } from '@/hooks/useTheme';
 import { fetchAuthStatus, fetchIsApprovedStatus } from '@/store/auth/auth.actions';
 
 const waitForApproval = () => {
-  const colorScheme = useColorScheme() || 'light';
+  const { colors } = useTheme();
   const { isApproved, isLoading, error } = useTypedSelector(state => state.auth);
 
   const dispatch = useTypedDispatch();
@@ -28,7 +29,7 @@ const waitForApproval = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors[colorScheme].white }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <ThemedText type='title' weight='bold'>
           Вы успешно зарегистрировались
@@ -47,10 +48,10 @@ const waitForApproval = () => {
         </ThemedText>
       </View>
 
-      {error && <ThemedText color='red'>{error}</ThemedText>}
+      {error && <ThemedText color='error'>{error}</ThemedText>}
       {}
       {isLoading ? (
-        <ActivityIndicator size='large' color={colors.purple} />
+        <ActivityIndicator size='large' color={colors.primary} />
       ) : (
         !isApproved && <ThemedText type='subtitle'>Мы все еще проверяем ваш аккаунт </ThemedText>
       )}

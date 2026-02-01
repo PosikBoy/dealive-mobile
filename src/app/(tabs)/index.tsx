@@ -36,7 +36,6 @@ const TabsLayout = () => {
     dispatch(logOut());
   }
 
-  // Ничего не рендерим, пока не проверили авторизацию.
   if (!isAppReady) {
     return null;
   }

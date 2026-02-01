@@ -33,9 +33,6 @@ const Message: FC<IProps> = (props: IProps) => {
 
           return fileUri;
         } catch (error) {
-          console.log(`Файл ${file.fileName} не найден, скачиваем с сервера.`);
-          // Если файл не найден, скачиваем его с сервера
-
           const downloadedFileUri = await fileService.downloadFile(file.fileName);
 
           return downloadedFileUri;

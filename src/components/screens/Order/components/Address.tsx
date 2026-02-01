@@ -1,11 +1,12 @@
-import { FC } from 'react';
-import { Image, Linking, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native';
+import React, { FC } from 'react';
+import { Image, Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Hyperlink from 'react-native-hyperlink';
 
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
-import { IAddress } from '@/types/order.interface';
+import { IAddress } from '@/domain/orders/types';
+import { useTheme } from '@/hooks/useTheme';
 import copyToClipboard from '@/utils/copyToClipBoard';
 import { getMetroColor } from '@/utils/getColorMetro';
 import yandexMaps from '@/utils/yandexMaps';
@@ -19,8 +20,9 @@ interface IAddressProps {
 }
 
 const Address: FC<IAddressProps> = props => {
-  const colorScheme = useColorScheme() || 'light';
   const { address, index, price, isActive, isTypeShown = false } = props;
+
+  const colorScheme = useTheme();
 
   const handleOpenURL = async () => {
     try {

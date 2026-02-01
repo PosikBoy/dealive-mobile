@@ -1,13 +1,6 @@
 import React, { FC, useEffect, useImperativeHandle, useRef } from 'react';
 import { Control, useController } from 'react-hook-form';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableWithoutFeedback,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { colors } from '@/constants/colors';
@@ -27,7 +20,7 @@ interface IControllerField {
   rules?: any;
 }
 const InputFieldWithHandler: FC<IControllerField> = props => {
-  const colorScheme = useColorScheme() || 'light';
+  const colorScheme = useTheme();
   const { name, control, error, placeholder, handler, rules = {} } = props;
 
   const { field } = useController({

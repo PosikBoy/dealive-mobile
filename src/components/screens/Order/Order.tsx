@@ -1,75 +1,80 @@
 import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Animated,
-  Image,
-  Linking,
-  StyleSheet,
-  ToastAndroid,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { Animated, Image, Linking, Platform, StyleSheet, ToastAndroid, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
 import { ApiError } from '@/axios/api-error';
 import Header from '@/components/shared/Header/Header';
-import MyButton from '@/components/ui/Button/Button';
 import Toggler from '@/components/ui/HorizontalToggler/HorizontalToggler';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
 import { orderStatuses } from '@/constants/orderStatuses';
 import { fonts } from '@/constants/styles';
+import { useTakeOrderMutation } from '@/domain/orders/api';
+import { IAddress, IOrder } from '@/domain/orders/types';
 import { useTypedSelector } from '@/hooks/redux.hooks';
-import { useTakeOrderMutation } from '@/services/orders/orders.service';
+import { useTheme } from '@/hooks/useTheme';
 import routeService from '@/services/route/route.service';
-import { IAddress, IOrder, IOrderActionType } from '@/types/order.interface';
 import yandexMaps from '@/utils/yandexMaps';
 
 import Actions from './components/Actions';
 import Addresses from './components/Addresses';
 import Route from './components/Route';
+import { TEXTS } from './constants/texts';
 
 interface IProps {
   order: IOrder;
 }
-const options = ['Адреса', 'Действия', 'Маршрут'];
-
-const ACTION_SNIPPETS = {
-  [IOrderActionType.GO_TO]: '✅ Выезжаю на адрес',
-  [IOrderActionType.ARRIVED_AT]: '📍 Я на месте',
-  [IOrderActionType.PICKUP]: '📦 Посылка получена',
-  [IOrderActionType.DELIVER]: '🏁 Доставлено',
-  [IOrderActionType.COLLECT_PAYMENT]: '💵 Получена оплата',
-  [IOrderActionType.PAY_COMMISION]: '📝 Оплатить комиссию',
-  [IOrderActionType.COMPLETE_ORDER]: '🎉 Завершить заказ',
-};
 
 interface IRouteState {
   distance: number;
   route: IAddress[];
 }
 
-const Order: FC<IProps> = ({ order }) => {
-  const colorScheme = useColorScheme();
+const ANIMATION_OFFSET = 20;
 
-  const [activeTab, setActiveTab] = useState<string>('Адреса');
+const Order: FC<IProps> = ({ order }) => {
+  const colorScheme = useTheme();
+
+  const [tabs, setTabs] = useState<string[]>([TEXTS.tabs.addresses, TEXTS.tabs.actions]);
+  const [activeTab, setActiveTab] = useState<string>(TEXTS.tabs.addresses);
   const [route, setRoute] = useState<IRouteState>({ distance: 0, route: [] });
   const [takeOrder, { error }] = useTakeOrderMutation();
   const routeState = useTypedSelector(state => state.route);
 
-  const showTakeOrderButton = order.statusId === orderStatuses.searchCourier;
-  const showCompleteActionButton = order.statusId === orderStatuses.inProcess;
+  const showTakeOrderButton = order?.statusId === orderStatuses.searchCourier;
+  const showCompleteActionButton = order?.statusId === orderStatuses.inProcess;
 
   useEffect(() => {
-    if (order.statusId === orderStatuses.inProcess) {
+    if (order?.statusId === orderStatuses.inProcess) {
       setRoute(routeState);
     }
 
-    if (order.statusId === orderStatuses.searchCourier) {
+    if (order?.statusId === orderStatuses.searchCourier) {
       const route = routeService.getRouteWithNewOrder(routeState.route, order);
       setRoute(route);
     }
-  }, []);
+  }, [order, routeState]);
+
+  useEffect(() => {
+    if (route.route.length > 0) {
+      setTabs([TEXTS.tabs.addresses, TEXTS.tabs.actions, TEXTS.tabs.route]);
+    }
+  }, [route]);
+
+  const takeOrderHandler = async () => {
+    try {
+      await takeOrder({ orderId: order.id }).unwrap();
+      SheetManager.hide('take-order-sheet');
+    } catch (err) {
+      const apiError = err as ApiError;
+      if (Platform.OS === 'android') {
+        ToastAndroid.show(apiError.message, ToastAndroid.SHORT);
+      } else {
+        console.error('Take order error:', apiError.message);
+      }
+    }
+  };
 
   const takeOrderModalShow = () => {
     SheetManager.show('take-order-sheet', {
@@ -81,19 +86,9 @@ const Order: FC<IProps> = ({ order }) => {
     });
   };
 
-  const takeOrderHandler = async () => {
-    try {
-      await takeOrder({ orderId: order.id }).unwrap();
-      SheetManager.hide('take-order-sheet');
-    } catch (err) {
-      const apiError = err as ApiError;
-      ToastAndroid.show(apiError.message, ToastAndroid.SHORT);
-    }
-  };
+  const lastAction = order?.actions?.find(action => !action.isCompleted);
 
-  const lastAction = order.actions.find(action => !action.isCompleted);
-
-  const lastAddress = order.addresses.find(address => address.id == lastAction?.addressId);
+  const lastAddress = order?.addresses?.find(address => address.id === lastAction?.addressId);
 
   const completeActionPayload = useMemo(
     () => ({
@@ -110,6 +105,11 @@ const Order: FC<IProps> = ({ order }) => {
   }, [completeActionPayload]);
 
   const openMaps = async () => {
+    if (!lastAddress?.geoData) {
+      console.error('No address or geodata available');
+      return;
+    }
+
     try {
       yandexMaps.getRouteToPoint(lastAddress.geoData.geoLat, lastAddress.geoData.geoLon);
     } catch (err) {
@@ -118,27 +118,35 @@ const Order: FC<IProps> = ({ order }) => {
   };
 
   const callPhone = () => {
-    Linking.openURL(`tel:${'phoneNumber' in lastAddress ? lastAddress.phoneNumber : ''}`);
+    if (!lastAddress) {
+      console.error('No address available');
+      return;
+    }
+
+    const phoneNumber = 'phoneNumber' in lastAddress ? lastAddress.phoneNumber : '';
+    if (phoneNumber) {
+      Linking.openURL(`tel:${phoneNumber}`);
+    }
   };
 
   //Анимации
 
-  const tabAnimation = useRef(new Animated.Value(options.indexOf(activeTab))).current;
+  const tabAnimation = useRef(new Animated.Value(tabs.indexOf(activeTab))).current;
 
   useEffect(() => {
     Animated.spring(tabAnimation, {
-      toValue: options.indexOf(activeTab),
+      toValue: tabs.indexOf(activeTab),
       useNativeDriver: true,
       bounciness: 5,
       speed: 12,
     }).start();
-  }, [activeTab, tabAnimation]);
+  }, [activeTab, tabs, tabAnimation]);
 
   const availableTranslate = useMemo(
     () =>
       tabAnimation.interpolate({
         inputRange: [0, 1, 2],
-        outputRange: [0, -20, -20],
+        outputRange: [0, -ANIMATION_OFFSET, -ANIMATION_OFFSET],
       }),
     [tabAnimation],
   );
@@ -147,7 +155,7 @@ const Order: FC<IProps> = ({ order }) => {
     () =>
       tabAnimation.interpolate({
         inputRange: [0, 1, 2],
-        outputRange: [20, 0, -20],
+        outputRange: [ANIMATION_OFFSET, 0, -ANIMATION_OFFSET],
       }),
     [tabAnimation],
   );
@@ -156,7 +164,7 @@ const Order: FC<IProps> = ({ order }) => {
     () =>
       tabAnimation.interpolate({
         inputRange: [0, 1, 2],
-        outputRange: [20, -20, 0],
+        outputRange: [ANIMATION_OFFSET, -ANIMATION_OFFSET, 0],
       }),
     [tabAnimation],
   );
@@ -188,16 +196,10 @@ const Order: FC<IProps> = ({ order }) => {
     [tabAnimation],
   );
 
-  if (error) {
-    console.error(error);
-
-    return null;
-  }
-
   return (
     <View style={styles.container}>
-      <Header title={'Заказ № ' + order.id} />
-      <Toggler options={options} activeTab={activeTab} onChange={setActiveTab} />
+      <Header title={TEXTS.header(order?.id)} />
+      <Toggler options={tabs} activeTab={activeTab} onChange={setActiveTab} />
       <View style={styles.orderContainer}>
         <Animated.View
           style={[
@@ -205,7 +207,7 @@ const Order: FC<IProps> = ({ order }) => {
             {
               opacity: availableOpacity,
               transform: [{ translateX: availableTranslate }],
-              pointerEvents: activeTab === 'Адреса' ? 'auto' : 'none',
+              pointerEvents: activeTab === TEXTS.tabs.addresses ? 'auto' : 'none',
             },
           ]}
         >
@@ -218,7 +220,7 @@ const Order: FC<IProps> = ({ order }) => {
             {
               opacity: activeOpacity,
               transform: [{ translateX: activeTranslate }],
-              pointerEvents: activeTab === 'Действия' ? 'auto' : 'none',
+              pointerEvents: activeTab === TEXTS.tabs.actions ? 'auto' : 'none',
             },
           ]}
         >
@@ -230,43 +232,43 @@ const Order: FC<IProps> = ({ order }) => {
             {
               opacity: routeOpacity,
               transform: [{ translateX: routeTranslate }],
-              pointerEvents: activeTab === 'Маршрут' ? 'auto' : 'none',
+              pointerEvents: activeTab === TEXTS.tabs.route ? 'auto' : 'none',
             },
           ]}
         >
-          <Route route={route.route} orderId={order.id} />
+          <Route route={route.route} orderId={order?.id} />
         </Animated.View>
       </View>
       <View style={[styles.footer, { backgroundColor: colors[colorScheme].white }]}>
         <ThemedText style={styles.footerInfo}>
-          {order.price + '₽ · ' + order.weight + ' · ' + order.parcelType}
+          {TEXTS.orderInfo(order.price, order.weight, order.parcelType)}
         </ThemedText>
         <View style={styles.buttonsContainer}>
           {showTakeOrderButton && (
-            <MyButton buttonText='Взять заказ' onPress={takeOrderModalShow} />
+            <MyButton buttonText={TEXTS.buttons.takeOrder} onPress={takeOrderModalShow} />
           )}
           {showCompleteActionButton && (
             <>
-              <View style={{ flex: 1 }}>
+              <View style={styles.actionButton}>
                 <MyButton
-                  buttonText={ACTION_SNIPPETS[lastAction.actionType]}
+                  buttonText={TEXTS.actionSnippets[lastAction.actionType]}
                   onPress={completeActionModalShow}
                 />
               </View>
 
               {lastAddress?.geoData && (
-                <View style={{ width: '20%' }}>
+                <View style={styles.iconButton}>
                   <MyButton
-                    icon={<Image style={{ width: '100%', height: 20 }} source={icons.location} />}
+                    icon={<Image style={styles.iconFull} source={icons.location} />}
                     color='lightPurple'
                     onPress={openMaps}
                   />
                 </View>
               )}
               {lastAddress?.phoneNumber && (
-                <View style={{ width: '20%' }}>
+                <View style={styles.iconButton}>
                   <MyButton
-                    icon={<Image style={{ width: 20, height: 20 }} source={icons.phone} />}
+                    icon={<Image style={styles.icon} source={icons.phone} />}
                     color='lightPurple'
                     onPress={callPhone}
                   />
@@ -299,7 +301,6 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     width: '100%',
     gap: 10,
-    boxShadow: '0px -4px 4px rgba(0, 0, 0, 0.10)',
   },
   footerInfo: {
     fontSize: 18,
@@ -317,5 +318,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 10,
+  },
+  actionButton: {
+    flex: 1,
+  },
+  iconButton: {
+    width: '20%',
+  },
+  icon: {
+    width: 20,
+    height: 20,
+  },
+  iconFull: {
+    width: '100%',
+    height: 20,
   },
 });

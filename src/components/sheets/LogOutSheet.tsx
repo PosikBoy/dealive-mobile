@@ -1,11 +1,10 @@
 import { router } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 
-import { colors } from '@/constants/colors';
-import { fonts, fontSizes } from '@/constants/styles';
 import { useTypedDispatch } from '@/hooks/redux.hooks';
+import { useTheme } from '@/hooks/useTheme';
 import { logOut } from '@/store/auth/auth.actions';
 
 import MyButton from '../ui/Button/Button';
@@ -19,7 +18,7 @@ const STRINGS = {
 };
 
 const LogOutSheet = () => {
-  const colorScheme = useColorScheme() || 'light';
+  const { colors } = useTheme();
   const dispatch = useTypedDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,7 +39,7 @@ const LogOutSheet = () => {
     <ActionSheet
       gestureEnabled={true}
       containerStyle={{
-        backgroundColor: colors[colorScheme].white,
+        backgroundColor: colors.background,
       }}
       openAnimationConfig={{
         stiffness: 1000, // Уменьшаем жесткость
@@ -52,7 +51,7 @@ const LogOutSheet = () => {
         style={[
           styles.container,
           {
-            backgroundColor: colors[colorScheme].white,
+            backgroundColor: colors.background,
           },
         ]}
       >

@@ -29,12 +29,13 @@ class AuthService {
 
     return response.data;
   }
+
   async register(data: IRegisterRequestData) {
     const formData = new FormData();
 
     Object.entries(data).forEach(([key, value]) => {
       if (key === 'documentFiles' && Array.isArray(value)) {
-        value.forEach((file, index) => {
+        value.forEach(file => {
           formData.append(`documentFiles`, {
             uri: file.uri,
             name: file.fileName,
@@ -78,6 +79,7 @@ class AuthService {
     });
     return response?.data?.isApproved;
   }
+
   async getNewTokens() {
     const refreshToken = await authStorage.getRefreshToken();
     const response = await axios.post<string, { data: IAuthResponseData }>(
@@ -91,6 +93,7 @@ class AuthService {
 
     return response.data;
   }
+
   async logOut() {
     try {
       await authStorage.removeAuthData();

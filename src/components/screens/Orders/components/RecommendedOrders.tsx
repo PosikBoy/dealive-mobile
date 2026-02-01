@@ -1,18 +1,19 @@
 import { FlashList } from '@shopify/flash-list';
 import React from 'react';
-import { ActivityIndicator, StyleSheet, useColorScheme, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import OrderPreview from '@/components/features/OrderPreview/OrderPreview';
 import OrderPreviewSkeleton from '@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
-import { colors } from '@/constants/colors';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { useTypedSelector } from '@/hooks/redux.hooks';
+import { useTheme } from '@/hooks/useTheme';
 
 import { useRecommendedOrders } from '../hooks/useRecommendedOrders';
 import AvailableOrders from './AvailableOrders';
 
 const RecommendedOrders = () => {
-  const colorScheme = useColorScheme() || 'light';
+  const { colors } = useTheme();
+
   const location = useTypedSelector(state => state.location);
   const { recommendedOrders, isLoading } = useRecommendedOrders();
 
@@ -25,7 +26,7 @@ const RecommendedOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View style={[styles.loadingModal, { backgroundColor: colors[colorScheme].white }]}>
+          <View style={[styles.loadingModal, { backgroundColor: colors.background }]}>
             <ThemedText type='big' weight='medium'>
               {location.error}
             </ThemedText>
@@ -44,8 +45,8 @@ const RecommendedOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View style={[styles.loadingModal, { backgroundColor: colors[colorScheme].white }]}>
-            <ActivityIndicator size={'large'} color={colors.purple} />
+          <View style={[styles.loadingModal, { backgroundColor: colors.background }]}>
+            <ActivityIndicator size={'large'} color={colors.primary} />
             <ThemedText type='big' weight='medium'>
               {location.isLocationLoading
                 ? 'Пытаемся определить ваше местоположение'

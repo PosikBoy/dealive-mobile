@@ -1,47 +1,38 @@
 import { PropsWithChildren } from 'react';
-import { StyleSheet, Text, TextProps, useColorScheme } from 'react-native';
+import { StyleSheet, Text, TextProps } from 'react-native';
 
-import { colors } from '@/constants/colors';
+import { useTheme } from '@/hooks/useTheme';
 
 interface IProps extends PropsWithChildren<TextProps> {
   weight?: 'semiBold' | 'bold' | 'medium' | 'regular';
-  color?: 'gray' | 'red' | 'black' | 'white' | 'lightGray';
+  color?: 'primary' | 'secondary' | 'error' | 'success' | 'onPrimary';
   type?: 'heading' | 'title' | 'subtitle' | 'default' | 'hint' | 'big' | 'mediumText';
   align?: 'left' | 'center';
   key?: React.Key;
 }
 
-const lightColors = {
-  gray: colors.light.gray,
-  lightGray: colors.light.lightGray,
-  white: colors.light.white,
-  black: colors.light.black,
-  red: colors.light.red,
-};
-
-const darkColors = {
-  gray: colors.dark.gray,
-  lightGray: colors.dark.lightGray,
-  white: colors.dark.white,
-  black: colors.dark.black,
-  red: colors.dark.red,
-};
-
-const ThemedText = (props: IProps) => {
+export const ThemedText = (props: IProps) => {
   const {
     children,
     weight = 'regular',
-    color = 'black',
+    color = 'primary',
     style,
     type = 'default',
     align = 'center',
-    key,
     ...rest
   } = props;
 
-  const colorScheme = useColorScheme() || 'light';
-  const colors = colorScheme === 'light' ? lightColors : darkColors;
-  const textColor = colors[color];
+  const { colors: themeColors } = useTheme();
+
+  const colorMap = {
+    primary: themeColors.text,
+    secondary: themeColors.textSecondary,
+    error: themeColors.error,
+    success: themeColors.success,
+    onPrimary: themeColors.textOnPrimary,
+  };
+
+  const textColor = colorMap[color];
 
   return (
     <Text
@@ -52,8 +43,6 @@ const ThemedText = (props: IProps) => {
     </Text>
   );
 };
-
-export default ThemedText;
 
 const styles = StyleSheet.create({
   regular: {

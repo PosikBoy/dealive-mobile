@@ -1,12 +1,10 @@
 import React, { FC, useEffect, useImperativeHandle, useRef } from 'react';
-import { Control, InputValidationRules, useController } from 'react-hook-form';
+import { Control, useController } from 'react-hook-form';
 import {
   KeyboardTypeOptions,
   StyleSheet,
-  Text,
   TextInput,
   TouchableWithoutFeedback,
-  useColorScheme,
   View,
 } from 'react-native';
 import Animated, {
@@ -29,7 +27,7 @@ interface IField {
   keyboardType?: KeyboardTypeOptions;
 }
 const InputField: FC<IField> = props => {
-  const colorScheme = useColorScheme() || 'light';
+  const colorScheme = useTheme();
   const {
     type = 'default',
     placeholder,

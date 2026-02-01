@@ -2,8 +2,7 @@ import React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
 import RouteItem from '@/components/shared/RouteItem';
-import MyButton from '@/components/ui/Button/Button';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { IAddress } from '@/types/order.interface';
 import yandexMaps from '@/utils/yandexMaps';

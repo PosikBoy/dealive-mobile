@@ -1,10 +1,11 @@
 import { Link } from 'expo-router';
 import { FC } from 'react';
-import { Image, StyleSheet, useColorScheme, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
-import { IAddress } from '@/types/order.interface';
+import { IAddress } from '@/domain/orders/types';
+import { useTheme } from '@/hooks/useTheme';
 import { getMetroColor } from '@/utils/getColorMetro';
 
 import ThemedText from '../ui/ThemedText/ThemedText';
@@ -17,7 +18,8 @@ interface IRouteItemProps {
 }
 
 const RouteItem: FC<IRouteItemProps> = props => {
-  const colorScheme = useColorScheme() || 'light';
+  const { colors } = useTheme();
+
   const { address, index, isTypeShown = false, isHighlighted } = props;
 
   const metroString = address.geoData?.metro?.[0]?.name
@@ -29,7 +31,7 @@ const RouteItem: FC<IRouteItemProps> = props => {
     <Link href={`/orders/${address.orderId}`}>
       <View style={styles.addressContainer}>
         <View style={styles.addressIndexContainer}>
-          <ThemedText style={{ color: colors.white }} weight='bold'>
+          <ThemedText style={{ color: colors.textOnPrimary }} weight='bold'>
             {index + 1}
           </ThemedText>
         </View>
@@ -37,8 +39,8 @@ const RouteItem: FC<IRouteItemProps> = props => {
         <View
           style={[
             styles.address,
-            { backgroundColor: colors[colorScheme].white },
-            isHighlighted && { backgroundColor: colors[colorScheme].green },
+            { backgroundColor: colors.surface },
+            isHighlighted && { backgroundColor: colors.success },
             isTypeShown && { paddingTop: 30 },
           ]}
         >
@@ -60,12 +62,12 @@ const RouteItem: FC<IRouteItemProps> = props => {
             ]}
           >
             <ThemedText
-              style={{ color: colors.white }}
+              style={{ color: colors.textOnPrimary }}
             >{`${metroString} ${distance} км от вас`}</ThemedText>
           </View>
 
           {address.type && isTypeShown && (
-            <View style={[styles.typeContainer, { backgroundColor: colors[colorScheme].green }]}>
+            <View style={[styles.typeContainer, { backgroundColor: colors.success }]}>
               <Image source={icons.settings} style={styles.floorIcon} />
               <ThemedText type='hint'>
                 {address.type == 'DELIVER' ? 'Отдать заказ' : 'Забрать заказ'}

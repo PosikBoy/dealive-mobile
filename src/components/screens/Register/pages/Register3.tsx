@@ -1,19 +1,19 @@
 import { router } from 'expo-router';
 import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
-import { ActivityIndicator, StyleSheet, useColorScheme, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import Header from '@/components/shared/Header/Header';
-import MyButton from '@/components/ui/Button/Button';
 import ImagePicker from '@/components/ui/ImagePicker/ImagePicker';
 import InputFieldWithHandler from '@/components/ui/InputFieldWithHandler/InputFieldWIthHandler';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
-import { passportNumberHandler } from '@/helpers/passportHandler';
 import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
 import { register } from '@/store/auth/auth.actions';
 import { addThirdPageData } from '@/store/signupForm/signupForm.slice';
 import store from '@/store/store';
+
+import { passportNumberHandler } from '../utils';
 
 interface IProps {
   nextPage: () => void;
@@ -42,7 +42,7 @@ interface IFormField {
 }
 
 const Register3: FC<IProps> = props => {
-  const colorScheme = useColorScheme() || 'light';
+  const colorScheme = useTheme();
   const { previousPage } = props;
 
   const signupFormState = useTypedSelector(state => state.signupForm);

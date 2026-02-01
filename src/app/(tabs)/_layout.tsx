@@ -1,9 +1,10 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Image, Pressable, StyleSheet, useColorScheme, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
+import { useTheme } from '@/hooks/useTheme';
 
 const TabIcon = ({ icon, color, focused }) => {
   return (
@@ -29,17 +30,18 @@ const CustomTabButton = props => (
 );
 
 const TabsLayout = () => {
-  const colorScheme = useColorScheme() || 'light';
+  const { theme, colors } = useTheme();
+
   return (
     <Tabs
       initialRouteName='index'
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarActiveTintColor: colors.purple,
-        tabBarInactiveTintColor: colors.gray,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textSecondary,
         tabBarButton: props => <CustomTabButton {...props} />,
         tabBarStyle: {
-          backgroundColor: colors[colorScheme].white,
+          backgroundColor: colors.background,
           borderTopWidth: 1,
           shadowOpacity: 2,
           height: 60,
@@ -54,7 +56,7 @@ const TabsLayout = () => {
           headerShown: false,
           title: 'Техподдержка',
           tabBarIcon: ({ focused }) => (
-            <TabIcon icon={icons.chat} color={colors.purple} focused={focused} />
+            <TabIcon icon={icons.chat} color={colors.primary} focused={focused} />
           ),
         }}
       />
@@ -65,7 +67,7 @@ const TabsLayout = () => {
           headerShown: false,
           title: 'Заказы',
           tabBarIcon: ({ focused }) => (
-            <TabIcon icon={icons.orders} color={colors.purple} focused={focused} />
+            <TabIcon icon={icons.orders} color={colors.primary} focused={focused} />
           ),
         }}
       />
@@ -76,7 +78,7 @@ const TabsLayout = () => {
           headerShown: false,
           title: 'Маршрут',
           tabBarIcon: ({ focused }) => (
-            <TabIcon icon={icons.mapDot} color={colors.purple} focused={focused} />
+            <TabIcon icon={icons.mapDot} color={colors.primary} focused={focused} />
           ),
         }}
       />
@@ -87,7 +89,7 @@ const TabsLayout = () => {
           headerShown: false,
           title: 'Настройки',
           tabBarIcon: ({ focused }) => (
-            <TabIcon icon={icons.settings} color={colors.purple} focused={focused} />
+            <TabIcon icon={icons.settings} color={colors.primary} focused={focused} />
           ),
         }}
       />

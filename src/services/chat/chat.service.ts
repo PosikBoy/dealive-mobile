@@ -15,6 +15,7 @@ export class ChatService {
     );
     return response?.data;
   }
+
   async getMessages(chatId: number, page: number) {
     const response = await instance.get<{}, { data: IMessage[] }>(
       SERVER_URL + `/messages?chatId=${chatId}&page=${page}`,

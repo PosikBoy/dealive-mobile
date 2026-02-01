@@ -1,24 +1,18 @@
 import { FlashList } from '@shopify/flash-list';
 import React, { useMemo, useRef, useState } from 'react';
-import {
-  ActivityIndicator,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ActionSheetRef } from 'react-native-actions-sheet';
 
 import OrderPreview from '@/components/features/OrderPreview/OrderPreview';
 import CustomBottomSheetModal from '@/components/shared/CustomBottomSheetModal/CustomBottomSheetModal';
 import OrderPreviewSkeleton from '@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton';
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
 import { borderRadiuses } from '@/constants/styles';
+import { useAvailableOrders } from '@/domain/orders/api';
 import { useTypedSelector } from '@/hooks/redux.hooks';
-import { useGetAvailableOrdersQuery } from '@/services/orders/orders.service';
+import { useTheme } from '@/hooks/useTheme';
 
 const sortingRuleOptions = ['lastDate', 'priceASC', 'priceDESC', 'distance'] as const;
 
@@ -32,14 +26,15 @@ const sortingRulesOptionsText = {
 type SortingRulesTypes = (typeof sortingRuleOptions)[number];
 
 const AvailableOrders = () => {
-  const colorScheme = useColorScheme() || 'light';
+  const { colors } = useTheme();
+
   const location = useTypedSelector(state => state.location);
 
   const [sortingRules, setSortingRules] = useState<SortingRulesTypes>('lastDate');
 
   const sortingRulesModalRef = useRef<ActionSheetRef>(null);
 
-  const { data, isLoading, refetch, isFetching } = useGetAvailableOrdersQuery();
+  const { data, isLoading, refetch, isFetching } = useAvailableOrders();
 
   const handleSortingRulePress = (type: SortingRulesTypes) => {
     setSortingRules(type);
@@ -74,7 +69,7 @@ const AvailableOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View style={[styles.loadingModal, { backgroundColor: colors[colorScheme].white }]}>
+          <View style={[styles.loadingModal]}>
             <ThemedText type='big' weight='medium'>
               {location.error}
             </ThemedText>
@@ -92,8 +87,8 @@ const AvailableOrders = () => {
           <OrderPreviewSkeleton />
         </View>
         <View style={styles.loadingTextContainer}>
-          <View style={[styles.loadingModal, { backgroundColor: colors[colorScheme].white }]}>
-            <ActivityIndicator size={'large'} color={colors.purple} />
+          <View style={[styles.loadingModal, { backgroundColor: colors.background }]}>
+            <ActivityIndicator size={'large'} color={colors.primary} />
             <ThemedText type='big' weight='bold'>
               {location.isLocationLoading
                 ? 'Пытаемся определить ваше местоположение'
@@ -106,11 +101,11 @@ const AvailableOrders = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       <View style={{ flex: 1 }}>
         <TouchableOpacity
           onPress={() => sortingRulesModalRef.current.show()}
-          style={[styles.sortButton, { backgroundColor: colors[colorScheme].white }]}
+          style={[styles.sortButton, { backgroundColor: colors.background }]}
         >
           <ThemedText weight='medium' type='mediumText'>
             Сортировка заказов
@@ -118,7 +113,6 @@ const AvailableOrders = () => {
         </TouchableOpacity>
         <FlashList
           data={sortedOrders}
-          estimatedItemSize={150}
           keyExtractor={item => item.id.toString()}
           renderItem={({ item }) => <OrderPreview order={item} />}
           showsVerticalScrollIndicator={false}
@@ -126,22 +120,22 @@ const AvailableOrders = () => {
         />
       </View>
       <TouchableOpacity
-        style={[styles.update, { backgroundColor: colors[colorScheme].white }]}
+        style={[styles.update, { backgroundColor: colors.background }]}
         onPress={() => refetch()}
         disabled={isFetching}
       >
         {isFetching ? (
-          <ActivityIndicator size='small' color={colors.purple} />
+          <ActivityIndicator size='small' color={colors.primary} />
         ) : (
           <Image
-            tintColor={colors[colorScheme].black}
+            tintColor={colors.tint}
             source={icons.refetch}
             style={{ width: '100%', height: '100%' }}
           />
         )}
       </TouchableOpacity>
       <CustomBottomSheetModal ref={sortingRulesModalRef}>
-        <View style={{ backgroundColor: colors[colorScheme].white }}>
+        <View style={{ backgroundColor: colors.background }}>
           <ThemedText weight='semiBold' type='mediumText'>
             Как отсортировать?
           </ThemedText>

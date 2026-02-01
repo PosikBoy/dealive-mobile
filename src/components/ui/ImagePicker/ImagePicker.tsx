@@ -1,6 +1,8 @@
+import * as ExpoImagePicker from 'expo-image-picker';
 import { Link } from 'expo-router';
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { Control, useController } from 'react-hook-form';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 interface IProps {
   title: string;
   linkSuggestion?: string;
@@ -9,8 +11,6 @@ interface IProps {
   name: string;
   rules?: any;
 }
-import * as ExpoImagePicker from 'expo-image-picker';
-import { Control, useController } from 'react-hook-form';
 
 import { icons } from '@/constants/icons';
 import { fonts } from '@/constants/styles';
@@ -18,7 +18,7 @@ import { fonts } from '@/constants/styles';
 import ThemedText from '../ThemedText/ThemedText';
 
 const ImagePicker = (props: IProps) => {
-  const colorScheme = useColorScheme() || 'light';
+  const colorScheme = useTheme();
   const { title, linkSuggestion, control, name, rules = {} } = props;
 
   const { field } = useController({ control, name, rules });

@@ -1,9 +1,10 @@
-import { Image, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
-import { IAddress, IOrderAction, IOrderActionType } from '@/types/order.interface';
+import { IAddress, IOrderAction, IOrderActionType } from '@/domain/orders/types';
+import { useTheme } from '@/hooks/useTheme';
 
 type Props = {
   action: IOrderAction;
@@ -22,7 +23,7 @@ const actionIcons = {
 };
 
 export const Action = (props: Props) => {
-  const colorScheme = useColorScheme() || 'light';
+  const colorScheme = useTheme();
   const { action, disabled } = props;
   const icon = actionIcons[action.actionType];
 

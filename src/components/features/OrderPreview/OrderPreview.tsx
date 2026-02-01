@@ -1,37 +1,37 @@
 import { router } from 'expo-router';
-import { FC, memo } from 'react';
-import { StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { FC, memo, useCallback } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInLeft } from 'react-native-reanimated';
 
-import ThemedText from '@/components/ui/ThemedText/ThemedText';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { borderRadiuses, gaps, paddings } from '@/constants/styles';
-import formatDate from '@/helpers/formatDate';
-import { IOrder } from '@/types/order.interface';
+import { IOrder } from '@/domain/orders/types';
+import { useTheme } from '@/hooks/useTheme';
+import formatDate from '@/utils/formatDate';
 import { getMetroColor } from '@/utils/getColorMetro';
+
+import { getOrderHeaderText } from './utils';
 
 interface OrderDetailsProps {
   order: IOrder;
   incomePerHour?: number;
 }
 
-const getOrderHeaderText = (length, id, income) => {
-  return length + ' адреса | № ' + id + (income ? ' | +' + income.toFixed(0) + '₽/ч' : '');
-};
-// Оборачиваем в memo для оптимизации
 const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
-  const colorScheme = useColorScheme() || 'light';
   const { id, date, parcelType, weight, price, addresses } = order;
+
+  const { colors } = useTheme();
   const createdAtString = formatDate(date);
 
-  const navigateToOrder = () => {
+  const navigateToOrder = useCallback(() => {
     router.push(`/orders/${id}`);
-  };
+  }, [id]);
 
   return (
     <Animated.View
       entering={FadeInLeft.duration(500)}
-      style={[styles.container, { backgroundColor: colors[colorScheme].white }]}
+      style={[styles.container, { backgroundColor: colors.background }]}
     >
       <TouchableOpacity activeOpacity={0.8} onPress={navigateToOrder}>
         <View style={styles.innerContainer}>
@@ -67,7 +67,7 @@ const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
                       ]}
                     >
                       <ThemedText
-                        style={{ color: colors.white }}
+                        style={{ color: colors.textOnPrimary }}
                       >{`${metroString} ${distance} км от вас`}</ThemedText>
                     </View>
                   </View>
@@ -82,14 +82,14 @@ const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
               </ThemedText>
               <View style={styles.price}>
                 <ThemedText
-                  style={{ color: colors.white }}
+                  style={{ color: colors.textOnPrimary }}
                   type='mediumText'
                   weight='medium'
                 >{`${price} ₽`}</ThemedText>
               </View>
             </View>
             <View style={styles.meta}>
-              <ThemedText color='gray' type='hint'>
+              <ThemedText color='secondary' type='hint'>
                 {`Заказ создан ${createdAtString}`}
               </ThemedText>
             </View>

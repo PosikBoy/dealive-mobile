@@ -1,13 +1,6 @@
 import React, { FC, useEffect, useImperativeHandle, useRef } from 'react';
 import { Control, useController } from 'react-hook-form';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableWithoutFeedback,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { StyleSheet, TextInput, TouchableWithoutFeedback, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { colors } from '@/constants/colors';
@@ -26,7 +19,7 @@ interface IField {
   placeholder: string;
 }
 const PhoneInputField: FC<IField> = props => {
-  const colorScheme = useColorScheme() || 'light';
+  const colorScheme = useTheme();
   const { name, control, error, placeholder } = props;
   const rules = {
     required: 'Введите номер телефона',
