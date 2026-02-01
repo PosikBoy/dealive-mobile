@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useImperativeHandle, useRef } from 'react';
-import { Control, useController } from 'react-hook-form';
+import React, { useEffect, useImperativeHandle, useRef } from 'react';
+import { Control, FieldError, FieldValues, Path, useController } from 'react-hook-form';
 import { StyleSheet, TextInput, TouchableWithoutFeedback, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
@@ -12,13 +12,15 @@ export interface PhoneInputFieldRef {
   focus: () => void;
 }
 
-interface IField {
-  name: string;
-  control: Control<any>;
-  error?: any;
+interface IField<TFieldValues extends FieldValues = FieldValues> {
+  name: Path<TFieldValues>;
+  control: Control<TFieldValues>;
+  error?: FieldError;
   placeholder: string;
 }
-const PhoneInputField: FC<IField> = props => {
+const PhoneInputField = <TFieldValues extends FieldValues = FieldValues>(
+  props: IField<TFieldValues>,
+) => {
   const { colors } = useTheme();
   const { name, control, error, placeholder } = props;
   const rules = {
