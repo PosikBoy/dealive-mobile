@@ -23,7 +23,7 @@ const actionIcons = {
 };
 
 export const Action = (props: Props) => {
-  const colorScheme = useTheme();
+  const { colors } = useTheme();
   const { action, disabled } = props;
   const icon = actionIcons[action.actionType];
 
@@ -34,16 +34,12 @@ export const Action = (props: Props) => {
         disabled={disabled}
         style={[
           styles.action,
-          { backgroundColor: colors[colorScheme].white },
+          { backgroundColor: colors.background },
           action.isCompleted && styles.actionCompleted,
         ]}
       >
         <View style={styles.iconContainer}>
-          <Image
-            tintColor={colors[colorScheme].black}
-            source={icon}
-            style={{ width: 20, height: 20 }}
-          />
+          <Image tintColor={colors.tint} source={icon} style={{ width: 20, height: 20 }} />
         </View>
         <ThemedText type='mediumText' weight='medium' style={{ textAlign: 'left', flex: 1 }}>
           {action.description}

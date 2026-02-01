@@ -12,13 +12,11 @@ interface IProps {
   rules?: any;
 }
 
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { icons } from '@/constants/icons';
 import { fonts } from '@/constants/styles';
 
-import ThemedText from '../ThemedText/ThemedText';
-
 const ImagePicker = (props: IProps) => {
-  const colorScheme = useTheme();
   const { title, linkSuggestion, control, name, rules = {} } = props;
 
   const { field } = useController({ control, name, rules });

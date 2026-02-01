@@ -3,10 +3,10 @@ import { Control, useController } from 'react-hook-form';
 import { StyleSheet, TextInput, TouchableWithoutFeedback, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { fonts } from '@/constants/styles';
-
-import ThemedText from '../ThemedText/ThemedText';
+import { useTheme } from '@/hooks/useTheme';
 
 export interface PhoneInputFieldRef {
   focus: () => void;
@@ -19,7 +19,7 @@ interface IField {
   placeholder: string;
 }
 const PhoneInputField: FC<IField> = props => {
-  const colorScheme = useTheme();
+  const { colors } = useTheme();
   const { name, control, error, placeholder } = props;
   const rules = {
     required: 'Введите номер телефона',
@@ -76,7 +76,7 @@ const PhoneInputField: FC<IField> = props => {
   };
 
   const placeholderTop = useSharedValue(11);
-  const inputColor = useSharedValue(colors.inputGray);
+  const inputColor = useSharedValue(colors.inputPlaceholder);
   const raisePlaceholder = () => {
     placeholderTop.value = withTiming(-9);
   };
@@ -86,12 +86,13 @@ const PhoneInputField: FC<IField> = props => {
   };
 
   const makeInputColorFocused = () => {
-    inputColor.value = withTiming(colors.purple);
+    inputColor.value = withTiming(colors.primary);
   };
 
   const makeInputColorUnfocused = () => {
-    inputColor.value = withTiming(colors.gray);
+    inputColor.value = withTiming(colors.text);
   };
+
   const animatedBorderColor = useAnimatedStyle(() => {
     return {
       borderColor: inputColor.value,
@@ -135,16 +136,12 @@ const PhoneInputField: FC<IField> = props => {
   return (
     <View style={styles.container}>
       <Animated.View
-        style={[
-          styles.inputContainer,
-          { backgroundColor: colors[colorScheme].white },
-          animatedBorderColor,
-        ]}
+        style={[styles.inputContainer, { backgroundColor: colors.background }, animatedBorderColor]}
       >
         <TextInput
           placeholder=''
           ref={inputRef}
-          style={[styles.input, { color: colors[colorScheme].black }]}
+          style={[styles.input, { color: colors.text }]}
           keyboardType='numeric'
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -158,7 +155,7 @@ const PhoneInputField: FC<IField> = props => {
           <Animated.Text
             style={[
               styles.placeholder,
-              { backgroundColor: colors[colorScheme].white },
+              { backgroundColor: colors.background },
               animatedPlaceholderColor,
             ]}
           >
@@ -166,7 +163,7 @@ const PhoneInputField: FC<IField> = props => {
           </Animated.Text>
         </TouchableWithoutFeedback>
       </Animated.View>
-      {error && <ThemedText color='red'>{error?.message}</ThemedText>}
+      {error && <ThemedText color='error'>{error?.message}</ThemedText>}
     </View>
   );
 };

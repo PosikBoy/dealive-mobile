@@ -2,13 +2,12 @@ import { Link } from 'expo-router';
 import { FC } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
 import { IAddress } from '@/domain/orders/types';
 import { useTheme } from '@/hooks/useTheme';
 import { getMetroColor } from '@/utils/getColorMetro';
-
-import ThemedText from '../ui/ThemedText/ThemedText';
 
 interface IRouteItemProps {
   address: IAddress;

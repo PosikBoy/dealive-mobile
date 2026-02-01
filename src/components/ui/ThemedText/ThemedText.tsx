@@ -22,14 +22,14 @@ export const ThemedText = (props: IProps) => {
     ...rest
   } = props;
 
-  const { colors: themeColors } = useTheme();
+  const { colors } = useTheme();
 
   const colorMap = {
-    primary: themeColors.text,
-    secondary: themeColors.textSecondary,
-    error: themeColors.error,
-    success: themeColors.success,
-    onPrimary: themeColors.textOnPrimary,
+    primary: colors.text,
+    secondary: colors.textSecondary,
+    error: colors.error,
+    success: colors.success,
+    onPrimary: colors.textOnPrimary,
   };
 
   const textColor = colorMap[color];

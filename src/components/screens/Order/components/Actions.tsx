@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, View } from 'react-native';
 
-import { IOrder } from '@/types/order.interface';
+import { IOrder } from '@/domain/orders/types';
 
 import { Action } from './Action';
 

@@ -14,8 +14,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { colors } from '@/constants/colors';
 import { fonts } from '@/constants/styles';
+import { useTheme } from '@/hooks/useTheme';
 
 interface IField {
   type?: 'default' | 'password';
@@ -27,7 +27,7 @@ interface IField {
   keyboardType?: KeyboardTypeOptions;
 }
 const InputField: FC<IField> = props => {
-  const colorScheme = useTheme();
+  const { colors } = useTheme();
   const {
     type = 'default',
     placeholder,
@@ -49,7 +49,8 @@ const InputField: FC<IField> = props => {
     }
   });
   const placeholderTop = useSharedValue(11);
-  const inputColor = useSharedValue(colors.inputGray);
+  const inputColor = useSharedValue(colors.inputPlaceholder);
+
   const raisePlaceholder = () => {
     placeholderTop.value = withTiming(-9);
   };
@@ -57,10 +58,10 @@ const InputField: FC<IField> = props => {
     placeholderTop.value = withTiming(11);
   };
   const makeInputColorFocused = () => {
-    inputColor.value = withSpring(colors.purple);
+    inputColor.value = withSpring(colors.primary);
   };
   const makeInputColorUnFocused = () => {
-    inputColor.value = withSpring(colors.gray);
+    inputColor.value = withSpring(colors.inputBorder);
   };
   const animatedBorderColor = useAnimatedStyle(() => {
     return {
@@ -100,17 +101,13 @@ const InputField: FC<IField> = props => {
   return (
     <View style={styles.container}>
       <Animated.View
-        style={[
-          styles.inputContainer,
-          { backgroundColor: colors[colorScheme].white },
-          animatedBorderColor,
-        ]}
+        style={[styles.inputContainer, { backgroundColor: colors.background }, animatedBorderColor]}
       >
         <TextInput
           placeholder=''
           ref={inputRef}
           secureTextEntry={type === 'password'}
-          style={[styles.input, { color: colors[colorScheme].black }]}
+          style={[styles.input, { color: colors.text }]}
           value={field.value}
           keyboardType={keyboardType}
           onFocus={handleFocus}
@@ -124,7 +121,7 @@ const InputField: FC<IField> = props => {
           position: 'absolute',
           top: placeholderTop,
           left: 12,
-          backgroundColor: colors[colorScheme].white,
+          backgroundColor: colors.background,
           paddingHorizontal: 5,
         }}
       >

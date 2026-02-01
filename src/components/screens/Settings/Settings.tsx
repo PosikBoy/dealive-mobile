@@ -156,7 +156,7 @@ const Settings = () => {
           </View>
         </Pressable>
         <TouchableOpacity onPress={logoutButtonHandler} style={styles.logoutButton}>
-          <ThemedText weight='bold' type='mediumText' color='red' align='left'>
+          <ThemedText weight='bold' type='mediumText' color='error' align='left'>
             Выйти из профиля
           </ThemedText>
         </TouchableOpacity>

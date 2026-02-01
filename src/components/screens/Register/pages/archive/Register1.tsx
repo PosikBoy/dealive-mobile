@@ -1,12 +1,14 @@
 import arrow from 'assets/icons/arrow.png';
 import React, { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
+import MyButton from '@/components/ui/Button/Button';
 import InputField from '@/components/ui/InputField/InputField';
 import PhoneInputField from '@/components/ui/PhoneInputField/PhoneInputField';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
-import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
+import { useTypedSelector } from '@/hooks/redux.hooks';
 import authService from '@/services/auth/auth.service';
 
 interface IProps {
@@ -27,13 +29,11 @@ const Register1: FC<IProps> = props => {
 
   const [existingError, setExistingError] = useState('');
   const state = useTypedSelector(state => state.signupForm);
-  const dispatch = useTypedDispatch();
 
   const {
     control,
     formState: { errors },
     handleSubmit,
-    getValues,
     setError,
   } = useForm<IFormField>({
     mode: 'onChange',
@@ -88,21 +88,29 @@ const Register1: FC<IProps> = props => {
             style={styles.arrowIcon}
           />
         </TouchableOpacity>
-        <Text style={styles.headerText}>Создать аккаунт</Text>
+        <ThemedText type='subtitle' weight='semiBold'>
+          Создать аккаунт
+        </ThemedText>
         <View style={{ width: 20 }}></View>
       </View>
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите номер телефона</Text>
+        <ThemedText type='mediumText' align='left'>
+          Введите номер телефона
+        </ThemedText>
         <View style={[styles.inputField, styles.phoneNumberField]}>
           <PhoneInputField control={control} name='phoneNumber' placeholder='Номер телефона' />
         </View>
 
         {errors?.phoneNumber?.message && (
-          <Text style={styles.errorText}>{errors?.phoneNumber?.message}</Text>
+          <ThemedText type='hint' color='error' align='left'>
+            {errors?.phoneNumber?.message}
+          </ThemedText>
         )}
       </View>
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите почту</Text>
+        <ThemedText type='mediumText' align='left'>
+          Введите почту
+        </ThemedText>
         <View style={styles.inputField}>
           <InputField
             control={control}
@@ -111,11 +119,17 @@ const Register1: FC<IProps> = props => {
             rules={{ required: 'Электронная почта обязательна' }}
           />
         </View>
-        {errors?.email?.message && <Text style={styles.errorText}>{errors?.email?.message}</Text>}
+        {errors?.email?.message && (
+          <ThemedText type='hint' color='error' align='left'>
+            {errors?.email?.message}
+          </ThemedText>
+        )}
       </View>
 
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите пароль</Text>
+        <ThemedText type='mediumText' align='left'>
+          Введите пароль
+        </ThemedText>
         <View style={styles.inputField}>
           <InputField
             control={control}
@@ -143,11 +157,15 @@ const Register1: FC<IProps> = props => {
           />
         </View>
         {errors?.password?.message && (
-          <Text style={styles.errorText}>{errors?.password?.message}</Text>
+          <ThemedText type='hint' color='error' align='left'>
+            {errors?.password?.message}
+          </ThemedText>
         )}
       </View>
       <View style={styles.fieldContainer}>
-        <Text style={styles.fieldLabel}>Введите пароль повторно</Text>
+        <ThemedText type='mediumText' align='left'>
+          Введите пароль повторно
+        </ThemedText>
         <View style={styles.inputField}>
           <InputField
             control={control}
@@ -160,10 +178,16 @@ const Register1: FC<IProps> = props => {
           />
         </View>
         {errors?.repeatPassword?.message && (
-          <Text style={styles.errorText}>{errors?.repeatPassword?.message}</Text>
+          <ThemedText type='hint' color='error' align='left'>
+            {errors?.repeatPassword?.message}
+          </ThemedText>
         )}
       </View>
-      {existingError && <Text style={styles.errorText}>{existingError}</Text>}
+      {existingError && (
+        <ThemedText type='hint' color='error'>
+          {existingError}
+        </ThemedText>
+      )}
       <View style={styles.buttonContainer}>
         <MyButton buttonText='Далее' onPress={handleSubmit(onSubmit)} />
       </View>

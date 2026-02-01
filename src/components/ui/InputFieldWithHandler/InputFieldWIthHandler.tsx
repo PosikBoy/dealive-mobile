@@ -1,10 +1,12 @@
 import React, { FC, useEffect, useImperativeHandle, useRef } from 'react';
 import { Control, useController } from 'react-hook-form';
-import { StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, TextInput, TouchableWithoutFeedback, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { fonts } from '@/constants/styles';
+import { useTheme } from '@/hooks/useTheme';
 
 export interface DataInputFieldRef {
   focus: () => void;
@@ -20,7 +22,7 @@ interface IControllerField {
   rules?: any;
 }
 const InputFieldWithHandler: FC<IControllerField> = props => {
-  const colorScheme = useTheme();
+  const { colors } = useTheme();
   const { name, control, error, placeholder, handler, rules = {} } = props;
 
   const { field } = useController({
@@ -35,7 +37,8 @@ const InputFieldWithHandler: FC<IControllerField> = props => {
   };
 
   const placeholderTop = useSharedValue(11);
-  const inputColor = useSharedValue(colors.inputGray);
+  const inputColor = useSharedValue(colors.inputPlaceholder);
+
   const raisePlaceholder = () => {
     placeholderTop.value = withTiming(-9);
   };
@@ -45,12 +48,13 @@ const InputFieldWithHandler: FC<IControllerField> = props => {
   };
 
   const makeInputColorFocused = () => {
-    inputColor.value = withTiming(colors.purple);
+    inputColor.value = withTiming(colors.primary);
   };
 
   const makeInputColorUnfocused = () => {
-    inputColor.value = withTiming(colors.gray);
+    inputColor.value = withTiming(colors.inputBorder);
   };
+
   const animatedBorderColor = useAnimatedStyle(() => {
     return {
       borderColor: inputColor.value,
@@ -100,16 +104,12 @@ const InputFieldWithHandler: FC<IControllerField> = props => {
   return (
     <View style={styles.container}>
       <Animated.View
-        style={[
-          styles.inputContainer,
-          animatedBorderColor,
-          { backgroundColor: colors[colorScheme].white },
-        ]}
+        style={[styles.inputContainer, animatedBorderColor, { backgroundColor: colors.background }]}
       >
         <TextInput
           placeholder=''
           ref={inputRef}
-          style={[styles.input, { color: colors[colorScheme].black }]}
+          style={[styles.input, { color: colors.text }]}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChangeText={changeHandler}
@@ -122,7 +122,7 @@ const InputFieldWithHandler: FC<IControllerField> = props => {
           <Animated.Text
             style={[
               styles.placeholder,
-              { backgroundColor: colors[colorScheme].white },
+              { backgroundColor: colors.background },
               animatedPlaceholderColor,
             ]}
           >
@@ -130,7 +130,7 @@ const InputFieldWithHandler: FC<IControllerField> = props => {
           </Animated.Text>
         </TouchableWithoutFeedback>
       </Animated.View>
-      {error && <Text style={{ color: colors.red }}>{error?.message}</Text>}
+      {error && <ThemedText color='error'>{error?.message}</ThemedText>}
     </View>
   );
 };

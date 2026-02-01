@@ -2,13 +2,13 @@ import { router } from 'expo-router';
 import React from 'react';
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native';
 
+import MyButton from '@/components/ui/Button/Button';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
 import { fonts } from '@/constants/styles';
 import { useTheme } from '@/hooks/useTheme';
 
-import MyButton from '@/components/ui/Button/Button';
 import { t } from './i18n';
 
 export const Main = () => {

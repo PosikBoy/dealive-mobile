@@ -4,6 +4,7 @@ import { SheetManager } from 'react-native-actions-sheet';
 
 import { ApiError } from '@/axios/api-error';
 import Header from '@/components/shared/Header/Header';
+import MyButton from '@/components/ui/Button/Button';
 import Toggler from '@/components/ui/HorizontalToggler/HorizontalToggler';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
@@ -34,7 +35,7 @@ interface IRouteState {
 const ANIMATION_OFFSET = 20;
 
 const Order: FC<IProps> = ({ order }) => {
-  const colorScheme = useTheme();
+  const { colors } = useTheme();
 
   const [tabs, setTabs] = useState<string[]>([TEXTS.tabs.addresses, TEXTS.tabs.actions]);
   const [activeTab, setActiveTab] = useState<string>(TEXTS.tabs.addresses);
@@ -239,7 +240,7 @@ const Order: FC<IProps> = ({ order }) => {
           <Route route={route.route} orderId={order?.id} />
         </Animated.View>
       </View>
-      <View style={[styles.footer, { backgroundColor: colors[colorScheme].white }]}>
+      <View style={[styles.footer, { backgroundColor: colors.background }]}>
         <ThemedText style={styles.footerInfo}>
           {TEXTS.orderInfo(order.price, order.weight, order.parcelType)}
         </ThemedText>

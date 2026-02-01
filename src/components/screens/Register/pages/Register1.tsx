@@ -3,10 +3,10 @@ import { useForm } from 'react-hook-form';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import Header from '@/components/shared/Header/Header';
+import MyButton from '@/components/ui/Button/Button';
 import InputField from '@/components/ui/InputField/InputField';
 import PhoneInputField from '@/components/ui/PhoneInputField/PhoneInputField';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
-import { colors } from '@/constants/colors';
 import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
 import { useTheme } from '@/hooks/useTheme';
 import authService from '@/services/auth/auth.service';
@@ -25,7 +25,7 @@ interface IFormField {
 }
 
 const Register1: FC<IProps> = props => {
-  const colorScheme = useTheme();
+  const { colors } = useTheme();
 
   const { nextPage, previousPage } = props;
 
@@ -78,7 +78,7 @@ const Register1: FC<IProps> = props => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors[colorScheme].white }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Header title='Регистрация' onPressBack={previousPage} />
       <View style={styles.fieldContainer}>
         <ThemedText type='mediumText' align='left'>
@@ -88,7 +88,7 @@ const Register1: FC<IProps> = props => {
           <PhoneInputField control={control} name='phoneNumber' placeholder='Номер телефона' />
         </View>
         {errors?.phoneNumber?.message && (
-          <ThemedText type='hint' color='red' align='left'>
+          <ThemedText type='hint' color='error' align='left'>
             {errors?.phoneNumber?.message}
           </ThemedText>
         )}
@@ -114,7 +114,7 @@ const Register1: FC<IProps> = props => {
           />
         </View>
         {errors?.email?.message && (
-          <ThemedText type='hint' color='red' align='left'>
+          <ThemedText type='hint' color='error' align='left'>
             {errors?.email?.message}
           </ThemedText>
         )}
@@ -153,7 +153,7 @@ const Register1: FC<IProps> = props => {
           />
         </View>
         {errors?.password?.message && (
-          <ThemedText type='hint' color='red' align='left'>
+          <ThemedText type='hint' color='error' align='left'>
             {errors?.password?.message}
           </ThemedText>
         )}
@@ -175,7 +175,7 @@ const Register1: FC<IProps> = props => {
           />
         </View>
         {errors?.repeatPassword?.message && (
-          <ThemedText type='hint' color='red' align='left'>
+          <ThemedText type='hint' color='error' align='left'>
             {errors?.repeatPassword?.message}
           </ThemedText>
         )}
@@ -189,7 +189,7 @@ const Register1: FC<IProps> = props => {
         )}
         {existingError && (
           <View style={styles.errorContainer}>
-            <ThemedText type='hint' color='red'>
+            <ThemedText type='hint' color='error'>
               {existingError}
             </ThemedText>
           </View>

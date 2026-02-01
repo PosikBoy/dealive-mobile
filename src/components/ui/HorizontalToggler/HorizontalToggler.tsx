@@ -9,10 +9,9 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { useTheme } from '@/hooks/useTheme';
-
-import ThemedText from '../ThemedText/ThemedText';
 
 interface ITogglerProps {
   options: string[];

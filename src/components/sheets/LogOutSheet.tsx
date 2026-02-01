@@ -3,12 +3,11 @@ import React, { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 
+import MyButton from '@/components/ui/Button/Button';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { useTypedDispatch } from '@/hooks/redux.hooks';
 import { useTheme } from '@/hooks/useTheme';
 import { logOut } from '@/store/auth/auth.actions';
-
-import MyButton from '../ui/Button/Button';
-import ThemedText from '../ui/ThemedText/ThemedText';
 
 const STRINGS = {
   TITLE: 'Вы уверены, что хотите выйти из аккаунта?',

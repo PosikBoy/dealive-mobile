@@ -22,7 +22,7 @@ interface IAddressProps {
 const Address: FC<IAddressProps> = props => {
   const { address, index, price, isActive, isTypeShown = false } = props;
 
-  const colorScheme = useTheme();
+  const { colors } = useTheme();
 
   const handleOpenURL = async () => {
     try {
@@ -43,14 +43,10 @@ const Address: FC<IAddressProps> = props => {
 
   return (
     <View
-      style={[
-        styles.address,
-        { backgroundColor: colors[colorScheme].white },
-        isActive && styles.active,
-      ]}
+      style={[styles.address, { backgroundColor: colors.background }, isActive && styles.active]}
     >
       {isActive && (
-        <View style={[styles.activeAddressTooltip, { backgroundColor: colors[colorScheme].green }]}>
+        <View style={[styles.activeAddressTooltip, { backgroundColor: colors.green }]}>
           <ThemedText>Активный адрес</ThemedText>
         </View>
       )}
@@ -70,12 +66,12 @@ const Address: FC<IAddressProps> = props => {
       {address.phoneNumber && (
         <TouchableOpacity
           onPress={handleCall}
-          style={[styles.phoneNumber, { backgroundColor: colors[colorScheme].lightPurple }]}
+          style={[styles.phoneNumber, { backgroundColor: colors.lightPurple }]}
           onLongPress={() => {
             copyToClipboard(address.phoneNumber);
           }}
         >
-          <ThemedText type='hint' color='black' align='left'>
+          <ThemedText type='hint' color='primary' align='left'>
             Номер телефона
           </ThemedText>
           <ThemedText type='mediumText' weight='bold' align='left'>
@@ -111,11 +107,7 @@ const Address: FC<IAddressProps> = props => {
 
       {index == 0 && (
         <View style={styles.priceContainer}>
-          <Image
-            tintColor={colors[colorScheme].black}
-            source={icons.money}
-            style={styles.priceIcon}
-          />
+          <Image tintColor={colors.tint} source={icons.money} style={styles.priceIcon} />
           <ThemedText type='mediumText' weight='medium'>
             {`Получить ${price} ₽`}
           </ThemedText>
@@ -123,11 +115,7 @@ const Address: FC<IAddressProps> = props => {
       )}
       {address.floor && (
         <View style={styles.floorContainer}>
-          <Image
-            tintColor={colors[colorScheme].black}
-            source={icons.building}
-            style={styles.floorIcon}
-          />
+          <Image tintColor={colors.black} source={icons.building} style={styles.floorIcon} />
           <ThemedText type='mediumText' weight='medium'>
             {`${address.floor} этаж ·  ${address.apartment} кв.`}
           </ThemedText>
@@ -135,11 +123,7 @@ const Address: FC<IAddressProps> = props => {
       )}
       {address.type && isTypeShown && (
         <View style={styles.typeContainer}>
-          <Image
-            tintColor={colors[colorScheme].black}
-            source={icons.settings}
-            style={styles.floorIcon}
-          />
+          <Image tintColor={colors.tint} source={icons.settings} style={styles.floorIcon} />
           <ThemedText type='mediumText' weight='medium'>
             {address.type == 'DELIVER' ? 'Отдать заказ' : 'Забрать заказ'}
           </ThemedText>

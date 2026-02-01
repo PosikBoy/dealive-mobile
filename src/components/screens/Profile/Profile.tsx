@@ -8,7 +8,7 @@ import { useGetProfileQuery } from '@/services/profile/profile.service';
 import { formatDateWithoutTime } from '@/utils/formatDate';
 
 const Profile = () => {
-  const colorScheme = useTheme();
+  const { colors } = useTheme();
 
   const { data, isLoading, error } = useGetProfileQuery(undefined, {
     refetchOnMountOrArgChange: true,
@@ -23,12 +23,12 @@ const Profile = () => {
     return (
       <View style={styles.container}>
         <Header title='Профиль' />
-        <ThemedText color='red'>Произошла ошибка</ThemedText>
+        <ThemedText color='error'>Произошла ошибка</ThemedText>
       </View>
     );
 
   return (
-    <View style={[styles.container, { backgroundColor: colors[colorScheme].white }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Header title='Профиль' />
       <View style={styles.content}>
         <View style={styles.infoContainer}>

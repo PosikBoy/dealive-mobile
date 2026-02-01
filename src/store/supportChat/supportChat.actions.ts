@@ -8,6 +8,7 @@ interface IChat {
 
 export const fetchSupportChatId = createAsyncThunk<IChat, void, { rejectValue: string }>(
   'supportChat/fetchSupportChatId',
+
   async (_, thunkAPI) => {
     try {
       const supportChat = await SecureStore.getItemAsync('supportChat');
@@ -17,10 +18,9 @@ export const fetchSupportChatId = createAsyncThunk<IChat, void, { rejectValue: s
 
       const parsedChat: { chatId: number; createdAt: string } = JSON.parse(supportChat);
 
-      // Возвращаем сериализуемые данные (создаем строку из даты)
       return {
         chatId: parsedChat.chatId,
-        createdAt: parsedChat.createdAt, // Уже строка
+        createdAt: new Date(parsedChat.createdAt),
       };
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message || 'Failed to fetch support chat');

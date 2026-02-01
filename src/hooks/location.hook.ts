@@ -1,6 +1,8 @@
 import * as Location from 'expo-location';
 import { useEffect, useState } from 'react';
 
+import { calculateDistance } from '@/domain/orders/utils/enrichOrdersWithGeo';
+
 interface ILocation {
   lon: number;
   lat: number;
@@ -55,7 +57,7 @@ export const useLocation = () => {
 
         if (location) {
           // Вычисляем расстояние между текущей и новой локацией
-          const distance = geodataService.calculateDistance(
+          const distance = calculateDistance(
             location.lat,
             location.lon,
             newLocation.lat,

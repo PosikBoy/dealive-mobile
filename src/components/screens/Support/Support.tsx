@@ -4,7 +4,7 @@ import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'reac
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
 import { fonts } from '@/constants/styles';
-import authStorage from '@/helpers/authStorage';
+import { authStorage } from '@/helpers/authStorage';
 import chatService from '@/services/chat/chat.service';
 import { Attachment } from '@/types/chat.interface';
 

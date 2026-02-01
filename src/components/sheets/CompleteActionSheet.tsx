@@ -2,14 +2,14 @@ import React, { useCallback, useState } from 'react';
 import { StyleSheet, ToastAndroid, View } from 'react-native';
 import ActionSheet, { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
-import { colors } from '@/constants/colors';
 import { useCompleteActionMutation } from '@/domain/orders/api';
 import { IAddress, IOrderAction, IOrderActionType } from '@/domain/orders/types';
 import { calculateDistanceToAddress } from '@/domain/orders/utils/enrichOrdersWithGeo';
 import { useTypedSelector } from '@/hooks/redux.hooks';
 import { useTheme } from '@/hooks/useTheme';
 
-import ThemedText from '../ui/ThemedText/ThemedText';
+import MyButton from '../ui/Button/Button';
+import { ThemedText } from '../ui/ThemedText/ThemedText';
 
 const ACTION_SNIPPETS = {
   [IOrderActionType.GO_TO]: '✅ Выезжаю на адрес',
@@ -50,7 +50,7 @@ export interface ICompleteActionSheet {
 export const CompleteActionSheet = React.memo((props: SheetProps<'complete-action-sheet'>) => {
   const { action, address } = props.payload;
 
-  const colorScheme = useTheme();
+  const { colors } = useTheme();
   const location = useTypedSelector(state => state.location);
   const [completeAction, { isLoading }] = useCompleteActionMutation();
   const [error, setError] = useState<string>();
@@ -109,10 +109,10 @@ export const CompleteActionSheet = React.memo((props: SheetProps<'complete-actio
         mass: 1, // Масса (оставляем по умолчанию)
       }}
       containerStyle={{
-        backgroundColor: colors[colorScheme].white,
+        backgroundColor: colors.white,
       }}
     >
-      <View style={[styles.sheetContainer, { backgroundColor: colors[colorScheme].white }]}>
+      <View style={[styles.sheetContainer, { backgroundColor: colors.background }]}>
         <View style={styles.sheetTextGroup}>
           <ThemedText type='subtitle' weight='medium'>
             Подтверждение выполнения
@@ -122,7 +122,7 @@ export const CompleteActionSheet = React.memo((props: SheetProps<'complete-actio
         </View>
         {renderAdditionalInfo()}
         {error && (
-          <ThemedText type='hint' color='red'>
+          <ThemedText type='hint' color='error'>
             {error}
           </ThemedText>
         )}

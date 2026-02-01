@@ -1,6 +1,7 @@
 import React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
+import MyButton from '@/components/ui/Button/Button';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { IOrder } from '@/domain/orders/types';
 import formatDate from '@/utils/formatDate';

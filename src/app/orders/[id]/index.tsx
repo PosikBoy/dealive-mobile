@@ -9,6 +9,6 @@ const index = () => {
   const { data } = useOrderById(+id);
 
   return <Order order={data} />;
-}; 
+};
 
 export default index;

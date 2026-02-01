@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
 import Header from '@/components/shared/Header/Header';
+import MyButton from '@/components/ui/Button/Button';
 import DataInputField from '@/components/ui/DataInputField/DataInputField';
 import InputField from '@/components/ui/InputField/InputField';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
@@ -25,7 +26,7 @@ interface IFormField {
 const Register2: FC<IProps> = props => {
   const { nextPage, previousPage } = props;
 
-  const colorScheme = useTheme();
+  const { colors } = useTheme();
   const state = useTypedSelector(state => state.signupForm);
   const dispatch = useTypedDispatch();
 
@@ -76,7 +77,7 @@ const Register2: FC<IProps> = props => {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: colors[colorScheme].white }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Header title='Регистрация' onPressBack={previousPage} />
       <View style={styles.fieldContainer}>
         <ThemedText type='mediumText' align='left'>
@@ -92,7 +93,7 @@ const Register2: FC<IProps> = props => {
           />
         </View>
         {errors?.secondName?.message && (
-          <ThemedText color='red' type='hint' align='left'>
+          <ThemedText color='error' type='hint' align='left'>
             {errors?.secondName?.message}
           </ThemedText>
         )}
@@ -110,7 +111,7 @@ const Register2: FC<IProps> = props => {
           />
         </View>
         {errors?.name?.message && (
-          <ThemedText color='red' type='hint' align='left'>
+          <ThemedText color='error' type='hint' align='left'>
             {errors?.name?.message}
           </ThemedText>
         )}
@@ -128,7 +129,7 @@ const Register2: FC<IProps> = props => {
           />
         </View>
         {errors?.lastName?.message && (
-          <ThemedText color='red' type='hint' align='left'>
+          <ThemedText color='error' type='hint' align='left'>
             {errors?.lastName?.message}
           </ThemedText>
         )}
@@ -141,7 +142,7 @@ const Register2: FC<IProps> = props => {
           <DataInputField control={control} name='birthDate' placeholder='ДД.ММ.ГГГГ' />
         </View>
         {errors?.birthDate?.message && (
-          <ThemedText color='red' type='hint' align='left'>
+          <ThemedText color='error' type='hint' align='left'>
             {errors?.birthDate?.message}
           </ThemedText>
         )}

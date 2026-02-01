@@ -51,6 +51,12 @@ const lightTheme = {
   statusBar: palette.white,
 
   tint: palette.black,
+
+  white: palette.white,
+  black: palette.black,
+  purple: palette.purple,
+  lightPurple: palette.purpleLight,
+  green: palette.green,
 };
 
 const darkTheme = {
@@ -82,6 +88,12 @@ const darkTheme = {
   statusBar: palette.whiteDark,
 
   tint: palette.white,
+
+  white: palette.whiteDark,
+  black: palette.white,
+  purple: palette.purple,
+  lightPurple: palette.purpleHover,
+  green: palette.greenDark,
 };
 
 export const colors = {

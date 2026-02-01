@@ -4,11 +4,13 @@ import { useForm } from 'react-hook-form';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import Header from '@/components/shared/Header/Header';
+import MyButton from '@/components/ui/Button/Button';
 import ImagePicker from '@/components/ui/ImagePicker/ImagePicker';
 import InputFieldWithHandler from '@/components/ui/InputFieldWithHandler/InputFieldWIthHandler';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
+import { useTheme } from '@/hooks/useTheme';
 import { register } from '@/store/auth/auth.actions';
 import { addThirdPageData } from '@/store/signupForm/signupForm.slice';
 import store from '@/store/store';
@@ -42,7 +44,7 @@ interface IFormField {
 }
 
 const Register3: FC<IProps> = props => {
-  const colorScheme = useTheme();
+  const { colors } = useTheme();
   const { previousPage } = props;
 
   const signupFormState = useTypedSelector(state => state.signupForm);
@@ -74,7 +76,7 @@ const Register3: FC<IProps> = props => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors[colorScheme].white }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Header title='Регистрация' onPressBack={previousPage} />
       <View style={styles.fieldContainer}>
         <ThemedText type='mediumText' align='left'>
@@ -97,7 +99,7 @@ const Register3: FC<IProps> = props => {
           />
         </View>
         {errors?.documentNumber?.message && (
-          <ThemedText color='red' type='hint' align='left'>
+          <ThemedText color='error' type='hint' align='left'>
             {errors?.documentNumber?.message}
           </ThemedText>
         )}
@@ -112,7 +114,7 @@ const Register3: FC<IProps> = props => {
           rules={{ required: 'Загрузите селфи с паспортом' }}
         />
         {errors?.selfieWithPassportImage?.message && (
-          <ThemedText color='red' type='hint' align='left'>
+          <ThemedText color='error' type='hint' align='left'>
             {errors?.selfieWithPassportImage?.message}
           </ThemedText>
         )}
@@ -127,7 +129,7 @@ const Register3: FC<IProps> = props => {
           rules={{ required: 'Загрузите фото паспорта' }}
         />
         {errors?.passportPhotoImage?.message && (
-          <ThemedText color='red' type='hint' align='left'>
+          <ThemedText color='error' type='hint' align='left'>
             {errors?.passportPhotoImage?.message}
           </ThemedText>
         )}
@@ -142,7 +144,7 @@ const Register3: FC<IProps> = props => {
 
         {error && (
           <View style={styles.errorContainer}>
-            <ThemedText color='red' type='hint' align='left'>
+            <ThemedText color='error' type='hint' align='left'>
               {error}
             </ThemedText>
           </View>

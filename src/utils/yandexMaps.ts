@@ -1,6 +1,6 @@
 import { Linking } from 'react-native';
 
-import { IAddress } from '@/types/order.interface';
+import { IAddress } from '@/domain/orders/types';
 
 interface IPoint {
   lat: string;

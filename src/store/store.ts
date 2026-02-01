@@ -2,9 +2,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 
+import { ordersApi } from '@/domain/orders/api';
 import { profileApi } from '@/services/profile/profile.service';
 
-import { ordersApi } from '@/domain/orders/api';
 import { authSlice } from './auth/auth.slice';
 import { locationSlice } from './location/location.slice';
 import routeSlice from './route/route.slice';

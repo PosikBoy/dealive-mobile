@@ -1,13 +1,13 @@
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import ActionSheet, { SheetProps } from 'react-native-actions-sheet';
 
+import MyButton from '@/components/ui/Button/Button';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { gaps, paddings } from '@/constants/styles';
 import { IOrder } from '@/domain/orders/types';
 import { useTheme } from '@/hooks/useTheme';
-
-import MyButton from '../ui/Button/Button';
-import ThemedText from '../ui/ThemedText/ThemedText';
 
 export interface ITakeOrderSheet {
   order: IOrder;
@@ -16,7 +16,7 @@ export interface ITakeOrderSheet {
 }
 
 const TakeOrderSheet = (props: SheetProps<'take-order-sheet'>) => {
-  const colorScheme = useTheme();
+  const { colors } = useTheme();
 
   const { order, takeOrder, error } = props.payload;
 
@@ -26,7 +26,7 @@ const TakeOrderSheet = (props: SheetProps<'take-order-sheet'>) => {
       containerStyle={{
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colors[colorScheme].white,
+        backgroundColor: colors.background,
       }}
       openAnimationConfig={{
         stiffness: 1000, // Уменьшаем жесткость
@@ -34,7 +34,7 @@ const TakeOrderSheet = (props: SheetProps<'take-order-sheet'>) => {
         mass: 1, // Масса (оставляем по умолчанию)
       }}
     >
-      <View style={[styles.container, { backgroundColor: colors[colorScheme].white }]}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.textContainer}>
           <ThemedText type='subtitle' weight='bold'>
             Информация о заказе
@@ -59,7 +59,7 @@ const TakeOrderSheet = (props: SheetProps<'take-order-sheet'>) => {
           </View>
         </View>
         {error ? (
-          <ThemedText type='hint' color='red'>
+          <ThemedText type='hint' color='error'>
             {error}
           </ThemedText>
         ) : (

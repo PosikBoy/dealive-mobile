@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import { Animated, FlatList, StyleSheet, TouchableHighlight, View } from 'react-native';
 
-import { Button } from '@/components/ui/Button/Button';
+import Button from '@/components/ui/Button/Button';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { useTheme } from '@/hooks/useTheme';
