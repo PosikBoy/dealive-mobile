@@ -1,7 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { authStorage } from '@/helpers/authStorage';
-import authService from '@/services/auth/auth.service';
+import { errorCatch } from '@/helpers/errorCatch';
+import { authService } from '@/services/auth/auth.service';
 import { IAuthResponseData, ILoginRequestData, IRegisterRequestData } from '@/types/auth.interface';
 
 export const register = createAsyncThunk<
@@ -13,7 +14,8 @@ export const register = createAsyncThunk<
     const response = await authService.register(data);
     return response;
   } catch (error: any) {
-    return thunkApi.rejectWithValue(error.message);
+    const errorMessage = errorCatch(error);
+    return thunkApi.rejectWithValue(errorMessage);
   }
 });
 
@@ -24,9 +26,13 @@ export const login = createAsyncThunk<
 >('auth/login', async (data, thunkApi) => {
   try {
     const response = await authService.login(data);
+
     return response;
   } catch (error: any) {
-    return thunkApi.rejectWithValue(error.message);
+    console.log('Error in login action', JSON.stringify(error));
+
+    const errorMessage = errorCatch(error);
+    return thunkApi.rejectWithValue(errorMessage);
   }
 });
 

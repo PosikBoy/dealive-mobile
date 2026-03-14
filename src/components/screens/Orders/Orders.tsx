@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
-import Header from '@/components/shared/Header/Header';
-import Toggler from '@/components/ui/HorizontalToggler/HorizontalToggler';
+import { Header } from '@/components/shared/Header/Header';
+import { Toggler } from '@/components/ui/HorizontalToggler/HorizontalToggler';
 import { useTheme } from '@/hooks/useTheme';
 
 import ActiveOrders from './components/ActiveOrders';
@@ -11,9 +11,8 @@ import RecommendedOrders from './components/RecommendedOrders';
 
 const options = ['Доступные', 'Лучшие', 'Активные'];
 
-const OrdersScreen = () => {
-  const { theme, colors } = useTheme();
-  // console.log(theme);
+export const Orders = () => {
+  const { colors } = useTheme();
   const [activeTab, setActiveTab] = useState<string>('Доступные');
 
   const tabAnimation = useRef(new Animated.Value(options.indexOf(activeTab))).current;
@@ -136,8 +135,9 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   togglerContainer: {
+    paddingTop: 10,
+    paddingBottom: 5,
     paddingHorizontal: 5,
-    paddingTop: 16,
   },
   ordersContainer: {
     flex: 1,
@@ -150,5 +150,3 @@ const styles = StyleSheet.create({
     left: 0,
   },
 });
-
-export default OrdersScreen;

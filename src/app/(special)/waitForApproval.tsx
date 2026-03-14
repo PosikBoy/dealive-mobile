@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { ActivityIndicator, Image, Linking, StyleSheet, View } from 'react-native';
 
-import MyButton from '@/components/ui/Button/Button';
+import { Button } from '@/components/ui/Button/Button';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
@@ -57,13 +57,13 @@ const waitForApproval = () => {
       )}
 
       <View style={styles.supportButton}>
-        <MyButton
+        <Button
           buttonText='Связаться с техподдержкой'
           onPress={() => Linking.openURL('https://t.me/DealiveSupport')}
         />
       </View>
       <View style={styles.buttonContainer}>
-        <MyButton buttonText='Проверить подтверждение' onPress={checkApproval} />
+        <Button buttonText='Проверить подтверждение' onPress={checkApproval} />
       </View>
     </View>
   );

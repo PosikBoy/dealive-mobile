@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import ActionSheet, { SheetProps } from 'react-native-actions-sheet';
 
-import MyButton from '@/components/ui/Button/Button';
+import { Button } from '@/components/ui/Button/Button';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { gaps, paddings } from '@/constants/styles';
@@ -67,7 +67,7 @@ const TakeOrderSheet = (props: SheetProps<'take-order-sheet'>) => {
             Ознакомьтесь с деталями заказа перед тем, как взять его!
           </ThemedText>
         )}
-        <MyButton onPress={takeOrder} buttonText='Взять заказ' />
+        <Button onPress={takeOrder} buttonText='Взять заказ' />
       </View>
     </ActionSheet>
   );

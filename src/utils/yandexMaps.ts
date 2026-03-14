@@ -11,7 +11,6 @@ class YandexMaps {
   private async openURL(primaryUrl: string, fallbackUrl: string) {
     try {
       const supported = await Linking.canOpenURL(primaryUrl);
-      console.log(supported);
       await Linking.openURL(supported ? primaryUrl : fallbackUrl);
     } catch (err) {
       console.error('Ошибка открытия URL:', err);
@@ -39,5 +38,4 @@ class YandexMaps {
   }
 }
 
-const yandexMaps = new YandexMaps();
-export default yandexMaps;
+export const yandexMaps = new YandexMaps();

@@ -56,6 +56,7 @@ const Support = () => {
   }, []);
 
   if (!chatId) return <></>;
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>

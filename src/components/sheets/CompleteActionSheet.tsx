@@ -8,7 +8,7 @@ import { calculateDistanceToAddress } from '@/domain/orders/utils/enrichOrdersWi
 import { useTypedSelector } from '@/hooks/redux.hooks';
 import { useTheme } from '@/hooks/useTheme';
 
-import MyButton from '../ui/Button/Button';
+import { Button } from '../ui/Button/Button';
 import { ThemedText } from '../ui/ThemedText/ThemedText';
 
 const ACTION_SNIPPETS = {
@@ -126,7 +126,7 @@ export const CompleteActionSheet = React.memo((props: SheetProps<'complete-actio
             {error}
           </ThemedText>
         )}
-        <MyButton onPress={handleCompleteAction} buttonText={snippet} disabled={isLoading} />
+        <Button onPress={handleCompleteAction} buttonText={snippet} disabled={isLoading} />
       </View>
     </ActionSheet>
   );

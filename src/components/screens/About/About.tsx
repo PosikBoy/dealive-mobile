@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 
 import logo from '@/assets/icon.png';
-import Header from '@/components/shared/Header/Header';
+import { Header } from '@/components/shared/Header/Header';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { useTheme } from '@/hooks/useTheme';
 

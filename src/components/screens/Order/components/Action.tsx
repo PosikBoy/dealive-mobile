@@ -28,34 +28,29 @@ export const Action = (props: Props) => {
   const icon = actionIcons[action.actionType];
 
   return (
-    <View style={styles.actionContainer}>
-      <TouchableOpacity
-        activeOpacity={0.7}
-        disabled={disabled}
-        style={[
-          styles.action,
-          { backgroundColor: colors.background },
-          action.isCompleted && styles.actionCompleted,
-        ]}
-      >
-        <View style={styles.iconContainer}>
-          <Image tintColor={colors.tint} source={icon} style={{ width: 20, height: 20 }} />
-        </View>
-        <ThemedText type='mediumText' weight='medium' style={{ textAlign: 'left', flex: 1 }}>
-          {action.description}
-        </ThemedText>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      disabled={disabled}
+      style={[
+        styles.action,
+        { backgroundColor: colors.background },
+        action.isCompleted && styles.actionCompleted,
+      ]}
+    >
+      <View style={styles.iconContainer}>
+        <Image tintColor={colors.tint} source={icon} style={{ width: 20, height: 20 }} />
+      </View>
+      <ThemedText type='mediumText' weight='medium' style={{ textAlign: 'left', flex: 1 }}>
+        {action.description}
+      </ThemedText>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  actionContainer: {
-    paddingHorizontal: 10,
-  },
   action: {
     borderRadius: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',

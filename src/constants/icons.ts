@@ -14,7 +14,6 @@ import mapDot from '@/assets/icons/mapDot.png';
 import money from '@/assets/icons/moneyBlack.png';
 import moneyPurple from '@/assets/icons/moneyPurple.png';
 import noConnection from '@/assets/icons/noConnection.png';
-import noOrders from '@/assets/icons/noOrders.png';
 import notifications from '@/assets/icons/notifications.png';
 import check from '@/assets/icons/okay.png';
 import orders from '@/assets/icons/orders.png';
@@ -29,6 +28,7 @@ import success from '@/assets/icons/success.png';
 import telegram from '@/assets/icons/telegram.png';
 import time from '@/assets/icons/time.png';
 import upload from '@/assets/icons/upload.png';
+import noOrders from '@/assets/no-orders.png';
 const letter = invite; // используем тот же импорт
 
 export const icons = {

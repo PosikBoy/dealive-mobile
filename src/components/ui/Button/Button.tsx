@@ -1,105 +1,280 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableHighlight, TouchableHighlightProps, View } from 'react-native';
+import React, { FC, ReactNode } from 'react';
+import {
+  ActivityIndicator,
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+  ViewStyle,
+} from 'react-native';
 
-import { colors } from '@/constants/colors';
-import { fonts } from '@/constants/styles';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
+import { useTheme } from '@/hooks/useTheme';
 
-interface IProps extends TouchableHighlightProps {
+type ButtonVariant = 'filled' | 'outlined' | 'text' | 'ghost';
+type ButtonColor = 'primary' | 'error' | 'success';
+type ButtonSize = 'small' | 'medium' | 'large';
+
+interface IProps extends Omit<TouchableOpacityProps, 'onPress' | 'style'> {
+  /**
+   * Текст кнопки
+   */
   buttonText?: string;
+
+  /**
+   * Обработчик нажатия
+   */
   onPress: () => void;
-  color?: 'purple' | 'red' | 'lightPurple';
-  disabled?: boolean;
+
+  /**
+   * Вариант отображения кнопки
+   * @default 'filled'
+   */
+  variant?: ButtonVariant;
+
+  /**
+   * Цветовая схема кнопки
+   * @default 'primary'
+   */
+  color?: ButtonColor;
+
+  /**
+   * Размер кнопки
+   * @default 'medium'
+   */
+  size?: ButtonSize;
+
+  /**
+   * Состояние загрузки
+   */
   isLoading?: boolean;
-  icon?: React.ReactNode;
-  isIconOnly?: boolean;
+
+  /**
+   * Иконка слева от текста
+   */
+  leftIcon?: ReactNode;
+
+  /**
+   * Иконка справа от текста
+   */
+  rightIcon?: ReactNode;
+
+  /**
+   * Кнопка только с иконкой (без текста)
+   */
+  iconOnly?: boolean;
+
+  /**
+   * Кнопка на всю ширину
+   * @default true
+   */
+  fullWidth?: boolean;
+
+  /**
+   * Дополнительные стили для кнопки
+   */
+  style?: StyleProp<ViewStyle>;
 }
 
-const ACTIVE_COLOR_MAP = {
-  purple: colors.hoverPurple,
-  red: colors.hoverRed,
-  lightPurple: colors.hoverLightPurple,
-};
+export const Button: FC<IProps> = ({
+  buttonText,
+  onPress,
+  variant = 'filled',
+  color = 'primary',
+  size = 'medium',
+  disabled = false,
+  isLoading = false,
+  leftIcon,
+  rightIcon,
+  iconOnly = false,
+  fullWidth = true,
+  children,
+  style,
+  ...rest
+}) => {
+  const { colors } = useTheme();
 
-const MyButton: React.FC<IProps> = props => {
-  const {
-    buttonText,
-    onPress,
-    color = 'purple',
-    disabled,
-    isLoading,
-    children,
-    icon,
-    isIconOnly = false,
-    ...rest
-  } = props;
+  // Маппинг цветов на семантические цвета темы
+  const colorMap = {
+    primary: {
+      main: colors.primary,
+      active: colors.primaryActive,
+      light: colors.primaryLight,
+      text: colors.textOnPrimary,
+    },
+    error: {
+      main: colors.error,
+      hover: colors.errorHover,
+      light: colors.errorLight,
+      text: colors.textOnPrimary,
+    },
+    success: {
+      main: colors.success,
+      hover: colors.success,
+      light: colors.success,
+      text: colors.text,
+    },
+  };
+
+  const currentColor = colorMap[color];
+
+  const getVariantStyles = () => {
+    switch (variant) {
+      case 'filled':
+        return {
+          backgroundColor: disabled ? colors.border : currentColor.main,
+          borderWidth: 0,
+        };
+      case 'outlined':
+        return {
+          backgroundColor: 'transparent',
+          borderWidth: 1,
+          borderColor: disabled ? colors.border : currentColor.main,
+        };
+      case 'text':
+        return {
+          backgroundColor: 'transparent',
+          borderWidth: 0,
+        };
+      case 'ghost':
+        return {
+          backgroundColor: disabled ? colors.backgroundSecondary : currentColor.light,
+          borderWidth: 0,
+        };
+      default:
+        return {};
+    }
+  };
+
+  // Стили в зависимости от размера
+  const getSizeStyles = () => {
+    switch (size) {
+      case 'small':
+        return {
+          height: 40,
+          paddingHorizontal: 16,
+          borderRadius: 12,
+        };
+      case 'medium':
+        return {
+          height: 56,
+          paddingHorizontal: 20,
+          borderRadius: 20,
+        };
+      case 'large':
+        return {
+          height: 64,
+          paddingHorizontal: 24,
+          borderRadius: 24,
+        };
+      default:
+        return {};
+    }
+  };
+
+  // Цвет текста в зависимости от варианта
+  const getTextColor = (): 'primary' | 'error' | 'success' | 'onPrimary' => {
+    if (disabled) return 'primary';
+
+    switch (variant) {
+      case 'filled':
+        return 'onPrimary';
+      case 'outlined':
+      case 'text':
+      case 'ghost':
+        return color as 'primary' | 'error' | 'success';
+      default:
+        return 'primary';
+    }
+  };
 
   const renderContent = () => {
+    if (isLoading) {
+      return (
+        <ActivityIndicator
+          color={variant === 'filled' ? currentColor.text : currentColor.main}
+          size={size === 'small' ? 'small' : 'large'}
+        />
+      );
+    }
+
     return (
       <View style={styles.contentWrapper}>
-        {icon && <View style={styles.iconSize}>{icon}</View>}
-        {!isIconOnly && buttonText && <Text style={styles.buttonText}>{buttonText}</Text>}
+        {leftIcon && <View style={styles.iconContainer}>{leftIcon}</View>}
+
+        {!iconOnly && buttonText && (
+          <ThemedText
+            type={size === 'small' ? 'default' : 'mediumText'}
+            weight='bold'
+            color={getTextColor()}
+            style={styles.buttonText}
+          >
+            {buttonText}
+          </ThemedText>
+        )}
+
+        {children}
+
+        {rightIcon && <View style={styles.iconContainer}>{rightIcon}</View>}
       </View>
     );
   };
 
   return (
-    <TouchableHighlight
-      style={[styles.baseButton, styles[color]]}
+    <TouchableOpacity
       onPress={onPress}
-      underlayColor={ACTIVE_COLOR_MAP[color]}
       disabled={disabled || isLoading}
+      activeOpacity={0.7}
       accessibilityLabel={buttonText}
+      accessibilityRole='button'
+      accessibilityState={{ disabled: disabled || isLoading }}
+      style={[
+        styles.baseButton,
+        getVariantStyles(),
+        getSizeStyles(),
+        fullWidth && styles.fullWidth,
+        iconOnly && styles.iconOnly,
+        (disabled || isLoading) && styles.disabled,
+        style,
+      ]}
       {...rest}
     >
       {renderContent()}
-    </TouchableHighlight>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   baseButton: {
-    borderRadius: 20,
-    padding: 10,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 56,
+    minWidth: 48,
+  },
+  fullWidth: {
     width: '100%',
-    minWidth: 48, // Минимальный размер для иконки
   },
   iconOnly: {
-    padding: 12, // Меньшие отступы для компактности
+    width: 56,
+    paddingHorizontal: 0,
   },
-  buttonPurple: {
-    backgroundColor: colors.purple,
-  },
-  buttonRed: {
-    backgroundColor: colors.red,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontFamily: fonts.bold,
-    width: '100%',
-    textAlign: 'center',
+  disabled: {
+    opacity: 0.5,
   },
   contentWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
   },
-  iconSize: {
+  buttonText: {
+    textAlign: 'center',
+  },
+  iconContainer: {
     width: 24,
     height: 24,
-  },
-  purple: {
-    backgroundColor: colors.purple,
-  },
-  red: {
-    backgroundColor: colors.red,
-  },
-  lightPurple: {
-    backgroundColor: colors.lightPurple,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
-
-export default MyButton;

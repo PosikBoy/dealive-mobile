@@ -1,10 +1,9 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { Image, StyleSheet, TouchableHighlight, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 
-import MyButton from '@/components/ui/Button/Button';
+import { Button } from '@/components/ui/Button/Button';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
-import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
 import { fonts } from '@/constants/styles';
 import { useTheme } from '@/hooks/useTheme';
@@ -12,7 +11,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { t } from './i18n';
 
 export const Main = () => {
-  const { theme, colors } = useTheme();
+  const { colors } = useTheme();
 
   const handleLogin = () => {
     router.push('/(auth)/login');
@@ -36,15 +35,13 @@ export const Main = () => {
         <Image style={styles.image} source={icons.box} resizeMode='contain' />
       </View>
       <View style={styles.buttonContainer}>
-        <MyButton buttonText={t('button-sign-in-text')} onPress={handleLogin} />
-        <MyButton buttonText={t('button-register-text')} onPress={handleRegister} />
-        <TouchableHighlight
+        <Button buttonText={t('button-sign-in-text')} onPress={handleLogin} />
+        <Button
           style={styles.registerButton}
           onPress={handleRegister}
-          underlayColor={colors.background}
-        >
-          <ThemedText style={styles.registerLabel}>{t('button-register-text')}</ThemedText>
-        </TouchableHighlight>
+          variant='text'
+          buttonText={t('button-register-text')}
+        />
       </View>
     </View>
   );
@@ -54,7 +51,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: colors.white,
   },
   textContainer: {
     marginTop: 64,

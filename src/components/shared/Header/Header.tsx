@@ -1,30 +1,32 @@
 import { router } from 'expo-router';
 import React, { FC } from 'react';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View, ViewProps } from 'react-native';
 
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { icons } from '@/constants/icons';
 import { useTheme } from '@/hooks/useTheme';
 
-type Props = {
+interface Props extends ViewProps {
   title: string;
   onPressBack?: () => void;
   isButtonBackShown?: boolean;
-};
+}
 
 const onPressBackDefault = () => {
   router.back();
 };
 
-const Header: FC<Props> = ({
+export const Header: FC<Props> = ({
   title,
   onPressBack = onPressBackDefault,
   isButtonBackShown = true,
+  style,
+  ...rest
 }) => {
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.header, { backgroundColor: colors.surface }]}>
+    <View style={[styles.header, { backgroundColor: colors.background }, style]} {...rest}>
       {isButtonBackShown && (
         <Pressable style={styles.backButton} onPress={onPressBack}>
           <Image
@@ -42,8 +44,6 @@ const Header: FC<Props> = ({
     </View>
   );
 };
-
-export default Header;
 
 const styles = StyleSheet.create({
   header: {

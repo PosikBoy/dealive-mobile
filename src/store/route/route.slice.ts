@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { IAddress, IOrder } from '@/domain/orders/types';
-import routeService from '@/services/route/route.service';
+import { routeService } from '@/services/route/route.service';
 
 export interface IInitialState {
   route: IAddress[];

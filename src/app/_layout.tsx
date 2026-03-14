@@ -7,7 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { SheetProvider } from 'react-native-actions-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import ConnectionCheck from '@/components/contexts/ConnectionCheck';
@@ -20,7 +20,7 @@ import { persistor } from '@/store/store';
 SplashScreen.preventAutoHideAsync();
 
 const Layout = () => {
-  const { theme, colors } = useTheme();
+  const { colors } = useTheme();
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
@@ -44,24 +44,29 @@ const Layout = () => {
 
   return (
     <GestureHandlerRootView>
-      <SafeAreaView style={{ flex: 1 }}>
-        <StoreProvider>
-          <PersistGate loading={null} persistor={persistor}>
-            <SheetProvider>
-              <ConnectionCheck>
-                <StatusBar backgroundColor={theme === 'dark' ? colors.statusBar : colors.surface} />
-                <Stack
-                  screenOptions={{
-                    headerShown: false,
-                    animation: 'fade_from_bottom',
-                  }}
-                />
-                <LocationProvider />
-              </ConnectionCheck>
-            </SheetProvider>
-          </PersistGate>
-        </StoreProvider>
-      </SafeAreaView>
+      <SafeAreaProvider>
+        <SafeAreaView
+          style={{ flex: 1, backgroundColor: colors.background }}
+          edges={['top', 'left']}
+        >
+          <StoreProvider>
+            <PersistGate loading={null} persistor={persistor}>
+              <SheetProvider>
+                <ConnectionCheck>
+                  <StatusBar style='auto' />
+                  <Stack
+                    screenOptions={{
+                      headerShown: false,
+                      animation: 'fade_from_bottom',
+                    }}
+                  />
+                  <LocationProvider />
+                </ConnectionCheck>
+              </SheetProvider>
+            </PersistGate>
+          </StoreProvider>
+        </SafeAreaView>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 };

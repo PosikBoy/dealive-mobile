@@ -16,7 +16,7 @@ interface IRouteItemProps {
   isHighlighted?: boolean;
 }
 
-const RouteItem: FC<IRouteItemProps> = props => {
+export const RouteItem: FC<IRouteItemProps> = props => {
   const { colors } = useTheme();
 
   const { address, index, isTypeShown = false, isHighlighted } = props;
@@ -28,7 +28,7 @@ const RouteItem: FC<IRouteItemProps> = props => {
 
   return (
     <Link href={`/orders/${address.orderId}`}>
-      <View style={styles.addressContainer}>
+      <View style={[styles.addressContainer]}>
         <View style={styles.addressIndexContainer}>
           <ThemedText style={{ color: colors.textOnPrimary }} weight='bold'>
             {index + 1}
@@ -38,7 +38,7 @@ const RouteItem: FC<IRouteItemProps> = props => {
         <View
           style={[
             styles.address,
-            { backgroundColor: colors.surface },
+            { backgroundColor: colors.background },
             isHighlighted && { backgroundColor: colors.success },
             isTypeShown && { paddingTop: 30 },
           ]}
@@ -79,8 +79,6 @@ const RouteItem: FC<IRouteItemProps> = props => {
   );
 };
 
-export default RouteItem;
-
 const styles = StyleSheet.create({
   address: {
     width: '100%',
@@ -103,11 +101,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    backgroundColor: colors.green,
+    alignItems: 'center',
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderTopLeftRadius: 20,
     borderBottomRightRadius: 20,
+    backgroundColor: colors.green,
   },
   addressTextContainer: {
     width: '100%',
@@ -138,8 +137,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   floorIcon: {
-    width: 20,
-    height: 20,
+    width: 16,
+    height: 16,
   },
   cancelOrderButton: {
     padding: 10,
@@ -161,6 +160,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
+    alignItems: 'center',
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderTopLeftRadius: 20,

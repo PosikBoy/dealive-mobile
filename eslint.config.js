@@ -34,23 +34,19 @@ module.exports = [
     plugins: {
       '@typescript-eslint': typescriptPlugin,
       'simple-import-sort': simpleImportSort,
-      'import': importPlugin,
-      'prettier': prettierPlugin,
+      import: importPlugin,
+      prettier: prettierPlugin,
     },
     rules: {
-      // TypeScript - смягчаем правила для существующего кода
-      '@typescript-eslint/no-explicit-any': 'warn', // предупреждение вместо ошибки
-      '@typescript-eslint/explicit-function-return-type': 'off', // отключаем
-      '@typescript-eslint/strict-boolean-expressions': 'off', // отключаем
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/strict-boolean-expressions': 'off',
 
-      // Сортировка импортов - используем только simple-import-sort
       'simple-import-sort/imports': 'warn',
       'simple-import-sort/exports': 'warn',
       'import/no-duplicates': 'error',
-      // Отключаем import/order чтобы избежать конфликта с simple-import-sort
       'import/order': 'off',
 
-      // Prettier
       'prettier/prettier': [
         'error',
         {
@@ -62,9 +58,7 @@ module.exports = [
         },
       ],
 
-      // Best practices
       'no-console': 'warn',
-      'no-unused-vars': 'off', // отключаем базовое правило
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {

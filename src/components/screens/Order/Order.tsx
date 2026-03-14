@@ -3,11 +3,10 @@ import { Animated, Image, Linking, Platform, StyleSheet, ToastAndroid, View } fr
 import { SheetManager } from 'react-native-actions-sheet';
 
 import { ApiError } from '@/axios/api-error';
-import Header from '@/components/shared/Header/Header';
-import MyButton from '@/components/ui/Button/Button';
-import Toggler from '@/components/ui/HorizontalToggler/HorizontalToggler';
+import { Header } from '@/components/shared/Header/Header';
+import { Button } from '@/components/ui/Button/Button';
+import { Toggler } from '@/components/ui/HorizontalToggler/HorizontalToggler';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
-import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
 import { orderStatuses } from '@/constants/orderStatuses';
 import { fonts } from '@/constants/styles';
@@ -15,8 +14,8 @@ import { useTakeOrderMutation } from '@/domain/orders/api';
 import { IAddress, IOrder } from '@/domain/orders/types';
 import { useTypedSelector } from '@/hooks/redux.hooks';
 import { useTheme } from '@/hooks/useTheme';
-import routeService from '@/services/route/route.service';
-import yandexMaps from '@/utils/yandexMaps';
+import { routeService } from '@/services/route/route.service';
+import { yandexMaps } from '@/utils/yandexMaps';
 
 import Actions from './components/Actions';
 import Addresses from './components/Addresses';
@@ -37,31 +36,29 @@ const ANIMATION_OFFSET = 20;
 const Order: FC<IProps> = ({ order }) => {
   const { colors } = useTheme();
 
-  const [tabs, setTabs] = useState<string[]>([TEXTS.tabs.addresses, TEXTS.tabs.actions]);
   const [activeTab, setActiveTab] = useState<string>(TEXTS.tabs.addresses);
-  const [route, setRoute] = useState<IRouteState>({ distance: 0, route: [] });
   const [takeOrder, { error }] = useTakeOrderMutation();
   const routeState = useTypedSelector(state => state.route);
 
   const showTakeOrderButton = order?.statusId === orderStatuses.searchCourier;
-  const showCompleteActionButton = order?.statusId === orderStatuses.inProcess;
+  const showCompleteActionButton = order?.statusId === orderStatuses.courierInTransit;
 
-  useEffect(() => {
-    if (order?.statusId === orderStatuses.inProcess) {
-      setRoute(routeState);
+  const tabs = useMemo(() => {
+    if (order?.statusId == orderStatuses.delivered) {
+      return [TEXTS.tabs.addresses, TEXTS.tabs.actions];
     }
 
+    return [TEXTS.tabs.addresses, TEXTS.tabs.actions, TEXTS.tabs.route];
+  }, [order?.statusId]);
+
+  const route = useMemo(() => {
     if (order?.statusId === orderStatuses.searchCourier) {
       const route = routeService.getRouteWithNewOrder(routeState.route, order);
-      setRoute(route);
+      return route;
     }
-  }, [order, routeState]);
 
-  useEffect(() => {
-    if (route.route.length > 0) {
-      setTabs([TEXTS.tabs.addresses, TEXTS.tabs.actions, TEXTS.tabs.route]);
-    }
-  }, [route]);
+    return routeState;
+  }, [order, routeState]);
 
   const takeOrderHandler = async () => {
     try {
@@ -198,9 +195,12 @@ const Order: FC<IProps> = ({ order }) => {
   );
 
   return (
-    <View style={styles.container}>
-      <Header title={TEXTS.header(order?.id)} />
-      <Toggler options={tabs} activeTab={activeTab} onChange={setActiveTab} />
+    <View style={[styles.container, { backgroundColor: colors.backgroundSecondary }]}>
+      <Header title={TEXTS.header(order?.id)} style={styles.header} />
+      <View style={styles.togglerContainer}>
+        <Toggler options={tabs} activeTab={activeTab} onChange={setActiveTab} />
+      </View>
+
       <View style={styles.orderContainer}>
         <Animated.View
           style={[
@@ -246,34 +246,32 @@ const Order: FC<IProps> = ({ order }) => {
         </ThemedText>
         <View style={styles.buttonsContainer}>
           {showTakeOrderButton && (
-            <MyButton buttonText={TEXTS.buttons.takeOrder} onPress={takeOrderModalShow} />
+            <Button buttonText={TEXTS.buttons.takeOrder} onPress={takeOrderModalShow} />
           )}
           {showCompleteActionButton && (
             <>
               <View style={styles.actionButton}>
-                <MyButton
+                <Button
                   buttonText={TEXTS.actionSnippets[lastAction.actionType]}
                   onPress={completeActionModalShow}
                 />
               </View>
 
               {lastAddress?.geoData && (
-                <View style={styles.iconButton}>
-                  <MyButton
-                    icon={<Image style={styles.iconFull} source={icons.location} />}
-                    color='lightPurple'
-                    onPress={openMaps}
-                  />
-                </View>
+                <Button
+                  leftIcon={<Image style={styles.iconFull} source={icons.location} />}
+                  variant='outlined'
+                  iconOnly
+                  onPress={openMaps}
+                />
               )}
               {lastAddress?.phoneNumber && (
-                <View style={styles.iconButton}>
-                  <MyButton
-                    icon={<Image style={styles.icon} source={icons.phone} />}
-                    color='lightPurple'
-                    onPress={callPhone}
-                  />
-                </View>
+                <Button
+                  leftIcon={<Image style={styles.icon} source={icons.phone} />}
+                  variant='outlined'
+                  iconOnly
+                  onPress={callPhone}
+                />
               )}
             </>
           )}
@@ -288,9 +286,13 @@ export default Order;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.backgroundColor,
   },
-
+  header: {
+    marginBlockEnd: 10,
+  },
+  togglerContainer: {
+    paddingHorizontal: 5,
+  },
   orderContainer: {
     flex: 1,
   },
@@ -309,6 +311,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   tabContent: {
+    paddingHorizontal: 5,
+
     position: 'absolute',
     width: '100%',
     height: '100%',
@@ -322,9 +326,6 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     flex: 1,
-  },
-  iconButton: {
-    width: '20%',
   },
   icon: {
     width: 20,

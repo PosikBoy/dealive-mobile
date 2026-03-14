@@ -4,7 +4,7 @@ import { ServerMessages } from '@/constants/messages';
 import { SERVER_URL } from '@/constants/urls';
 import { authStorage } from '@/helpers/authStorage';
 import { errorCatch } from '@/helpers/errorCatch';
-import authService from '@/services/auth/auth.service';
+import { authService } from '@/services/auth/auth.service';
 
 import { ApiError, BackendError } from './api-error';
 

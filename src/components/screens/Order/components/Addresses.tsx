@@ -1,11 +1,11 @@
 import React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
-import MyButton from '@/components/ui/Button/Button';
+import { Button } from '@/components/ui/Button/Button';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { IOrder } from '@/domain/orders/types';
 import formatDate from '@/utils/formatDate';
-import yandexMaps from '@/utils/yandexMaps';
+import { yandexMaps } from '@/utils/yandexMaps';
 
 import Address from './Address';
 
@@ -47,7 +47,7 @@ const Addresses = (props: Props) => {
         }}
         ListFooterComponent={
           <>
-            <MyButton buttonText='Открыть маршрут на карте' onPress={openRoute} color='purple' />
+            <Button buttonText='Открыть маршрут на карте' onPress={openRoute} color='primary' />
             <View style={styles.creationDateContainer}>
               <ThemedText type='mediumText' weight='medium'>
                 {`Создан ${formatDate(order.date)}`}
@@ -68,7 +68,6 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     gap: 10,
-    paddingHorizontal: 10,
   },
   creationDateContainer: {
     paddingVertical: 20,

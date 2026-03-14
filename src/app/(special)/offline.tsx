@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import React from 'react';
 import { Image, StyleSheet, ToastAndroid, View } from 'react-native';
 
-import MyButton from '@/components/ui/Button/Button';
+import { Button } from '@/components/ui/Button/Button';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { icons } from '@/constants/icons';
 
@@ -28,7 +28,7 @@ const index = () => {
         Проверьте соединение и попробуйте еще раз
       </ThemedText>
       <View style={styles.buttonContainer}>
-        <MyButton buttonText='Проверить соединение' onPress={handleCheckConnection} />
+        <Button buttonText='Проверить соединение' onPress={handleCheckConnection} />
       </View>
     </View>
   );

@@ -77,7 +77,6 @@ const styles = StyleSheet.create({
   linkSuggestion: {
     fontFamily: fonts.semiBold,
     fontSize: 16,
-    color: 'blue',
     marginTop: 5,
   },
   button: {

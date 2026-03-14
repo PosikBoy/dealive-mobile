@@ -1,96 +1,137 @@
 import { router } from 'expo-router';
-import { FC, memo, useCallback } from 'react';
+import { FC, memo, useCallback, useMemo } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInLeft } from 'react-native-reanimated';
 
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { borderRadiuses, gaps, paddings } from '@/constants/styles';
-import { IOrder } from '@/domain/orders/types';
+import { IAddress, IOrder } from '@/domain/orders/types';
 import { useTheme } from '@/hooks/useTheme';
 import formatDate from '@/utils/formatDate';
 import { getMetroColor } from '@/utils/getColorMetro';
 
 import { getOrderHeaderText } from './utils';
 
-interface OrderDetailsProps {
+interface OrderPreviewProps {
   order: IOrder;
   incomePerHour?: number;
 }
 
-const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
+interface AddressItemProps {
+  address: IAddress;
+  index: number;
+  textOnPrimaryColor: string;
+}
+
+const ANIMATION_DURATION = 500;
+
+// Вынесен в отдельный компонент для оптимизации
+const AddressItem: FC<AddressItemProps> = memo(({ address, index, textOnPrimaryColor }) => {
+  const metroInfo = useMemo(() => {
+    const metroName = address.geoData?.metro?.[0]?.name;
+    return metroName ? `${metroName} |` : '';
+  }, [address.geoData?.metro]);
+
+  const distanceText = useMemo(() => {
+    return address.distance ? `${address.distance.toFixed(1)} км от вас` : '';
+  }, [address.distance]);
+
+  const metroBackgroundColor = useMemo(() => {
+    return address.geoData?.metro?.[0]
+      ? getMetroColor(address.geoData.metro[0].line)
+      : colors.purple;
+  }, [address.geoData?.metro]);
+
+  return (
+    <View style={styles.address}>
+      <View style={styles.addressIndexContainer}>
+        <ThemedText weight='medium' type='title'>
+          {index + 1}
+        </ThemedText>
+      </View>
+      <View style={styles.addressTextContainer}>
+        <ThemedText type='mediumText' weight='medium' style={styles.addressText}>
+          {address.address}
+        </ThemedText>
+        <View style={[styles.locationBadge, { backgroundColor: metroBackgroundColor }]}>
+          <ThemedText style={{ color: textOnPrimaryColor }}>
+            {`${metroInfo} ${distanceText}`}
+          </ThemedText>
+        </View>
+      </View>
+    </View>
+  );
+});
+
+AddressItem.displayName = 'AddressItem';
+
+const OrderPreview: FC<OrderPreviewProps> = memo(({ order, incomePerHour }) => {
   const { id, date, parcelType, weight, price, addresses } = order;
-
   const { colors } = useTheme();
-  const createdAtString = formatDate(date);
 
+  // Computed values
+  const createdAtString = useMemo(() => formatDate(date), [date]);
+
+  const headerText = useMemo(
+    () => getOrderHeaderText(addresses.length, id, incomePerHour),
+    [addresses.length, id, incomePerHour],
+  );
+
+  const orderInfo = useMemo(() => `${parcelType} · ${weight}`, [parcelType, weight]);
+
+  const priceText = useMemo(() => `${price} ₽`, [price]);
+
+  const createdAtText = useMemo(() => `Заказ создан ${createdAtString}`, [createdAtString]);
+
+  // Handlers
   const navigateToOrder = useCallback(() => {
     router.push(`/orders/${id}`);
   }, [id]);
 
   return (
     <Animated.View
-      entering={FadeInLeft.duration(500)}
+      entering={FadeInLeft.duration(ANIMATION_DURATION)}
       style={[styles.container, { backgroundColor: colors.background }]}
     >
       <TouchableOpacity activeOpacity={0.8} onPress={navigateToOrder}>
         <View style={styles.innerContainer}>
+          {/* Header */}
           <ThemedText weight='bold' type='heading'>
-            {getOrderHeaderText(order.addresses.length, id, incomePerHour)}
+            {headerText}
           </ThemedText>
-          <View style={styles.addresses}>
-            {addresses.map((address, index) => {
-              const metroString = address.geoData?.metro?.[0]?.name
-                ? address.geoData?.metro?.[0]?.name + ' |'
-                : '';
-              const distance = address.distance?.toFixed(1) || '';
 
-              return (
-                <View key={address.id} style={styles.address}>
-                  <View style={styles.addressIndexContainer}>
-                    <ThemedText weight='medium' type='title'>
-                      {index + 1}
-                    </ThemedText>
-                  </View>
-                  <View style={styles.addressTextContainer}>
-                    <ThemedText type='mediumText' weight='medium' style={{ textAlign: 'left' }}>
-                      {address.address}
-                    </ThemedText>
-
-                    <View
-                      style={[
-                        styles.locationInfo,
-
-                        address.geoData?.metro && {
-                          backgroundColor: getMetroColor(address.geoData.metro[0].line),
-                        },
-                      ]}
-                    >
-                      <ThemedText
-                        style={{ color: colors.textOnPrimary }}
-                      >{`${metroString} ${distance} км от вас`}</ThemedText>
-                    </View>
-                  </View>
-                </View>
-              );
-            })}
+          {/* Addresses List */}
+          <View style={styles.addressesList}>
+            {addresses.map((address, index) => (
+              <AddressItem
+                key={address.id}
+                address={address}
+                index={index}
+                textOnPrimaryColor={colors.textOnPrimary}
+              />
+            ))}
           </View>
+
+          {/* Footer */}
           <View style={styles.footer}>
-            <View style={styles.info}>
+            <View style={styles.infoRow}>
               <ThemedText weight='semiBold' type='mediumText'>
-                {`${parcelType} · ${weight}`}
+                {orderInfo}
               </ThemedText>
-              <View style={styles.price}>
+              <View style={[styles.priceBadge, { backgroundColor: colors.purple }]}>
                 <ThemedText
                   style={{ color: colors.textOnPrimary }}
                   type='mediumText'
                   weight='medium'
-                >{`${price} ₽`}</ThemedText>
+                >
+                  {priceText}
+                </ThemedText>
               </View>
             </View>
-            <View style={styles.meta}>
+            <View style={styles.metaRow}>
               <ThemedText color='secondary' type='hint'>
-                {`Заказ создан ${createdAtString}`}
+                {createdAtText}
               </ThemedText>
             </View>
           </View>
@@ -100,7 +141,8 @@ const OrderPreview: FC<OrderDetailsProps> = memo(({ order, incomePerHour }) => {
   );
 });
 
-// Экспортируем уже обернутый компонент
+OrderPreview.displayName = 'OrderPreview';
+
 export default OrderPreview;
 
 const styles = StyleSheet.create({
@@ -114,25 +156,25 @@ const styles = StyleSheet.create({
     gap: gaps.medium,
     justifyContent: 'center',
   },
-
-  addresses: {
+  addressesList: {
     gap: 5,
   },
   address: {
     flexDirection: 'row',
     gap: 10,
   },
+  addressIndexContainer: {
+    width: 30,
+  },
   addressTextContainer: {
     flex: 1,
     gap: 5,
   },
-  addressIndexContainer: {
-    width: 30,
+  addressText: {
+    textAlign: 'left',
   },
-  locationInfo: {
+  locationBadge: {
     alignSelf: 'flex-start',
-    gap: 5,
-    backgroundColor: colors.purple,
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 20,
@@ -141,17 +183,17 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: 5,
   },
-  info: {
+  infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  price: {
-    backgroundColor: colors.purple,
+  priceBadge: {
     borderRadius: 20,
-    padding: 2,
+    paddingVertical: 2,
     paddingHorizontal: 10,
   },
-  meta: {
+  metaRow: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAvailableOrders } from '@/domain/orders/api';
 import { IOrder } from '@/domain/orders/types';
 import { useTypedSelector } from '@/hooks/redux.hooks';
-import routeService from '@/services/route/route.service';
+import { routeService } from '@/services/route/route.service';
 
 const AVERAGE_SPEED_KMH = 12;
 
@@ -16,7 +16,7 @@ interface IRecommendedOrders {
 }
 
 export const useRecommendedOrders = () => {
-  const { data: orders = [], isLoading } = useAvailableOrders();
+  const { data: orders = [], isLoading, refetch, isFetching } = useAvailableOrders();
 
   const routeState = useTypedSelector(state => state.route);
   const location = useTypedSelector(state => state.location);
@@ -55,5 +55,7 @@ export const useRecommendedOrders = () => {
   return {
     recommendedOrders,
     isLoading: isLoading || location.isLocationLoading,
+    refetch,
+    isFetching,
   };
 };

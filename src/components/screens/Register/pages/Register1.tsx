@@ -2,15 +2,17 @@ import React, { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
-import Header from '@/components/shared/Header/Header';
-import MyButton from '@/components/ui/Button/Button';
-import InputField from '@/components/ui/InputField/InputField';
-import PhoneInputField from '@/components/ui/PhoneInputField/PhoneInputField';
+import { Header } from '@/components/shared/Header/Header';
+import { Button } from '@/components/ui/Button/Button';
+import { InputField } from '@/components/ui/InputField/InputField';
+import { PhoneInputField } from '@/components/ui/PhoneInputField/PhoneInputField';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
 import { useTheme } from '@/hooks/useTheme';
-import authService from '@/services/auth/auth.service';
+import { authService } from '@/services/auth/auth.service';
 import { addFirstPageData } from '@/store/signupForm/signupForm.slice';
+
+import { emailRegex, passwordRegex } from '../utils';
 
 interface IProps {
   nextPage: () => void;
@@ -24,7 +26,7 @@ interface IFormField {
   repeatPassword: string;
 }
 
-const Register1: FC<IProps> = props => {
+export const Register1: FC<IProps> = props => {
   const { colors } = useTheme();
 
   const { nextPage, previousPage } = props;
@@ -67,6 +69,7 @@ const Register1: FC<IProps> = props => {
         phoneNumber: data.phoneNumber,
       });
     } catch (error) {
+      console.log(JSON.stringify(error));
       setIsLoading(false);
       setExistingError(error.message);
       return;
@@ -106,8 +109,7 @@ const Register1: FC<IProps> = props => {
             rules={{
               required: 'Электронная почта обязательна',
               pattern: {
-                value:
-                  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                value: emailRegex,
                 message: 'Некорректный формат электронной почты',
               },
             }}
@@ -137,7 +139,7 @@ const Register1: FC<IProps> = props => {
                 message: 'Введите пароль',
               },
               pattern: {
-                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,40}$/,
+                value: passwordRegex,
                 message:
                   'Пароль должен содержать хотя бы одну заглавную букву, одну строчную букву, одну цифру и один спецсимвол (@$!%*?&)',
               },
@@ -197,7 +199,7 @@ const Register1: FC<IProps> = props => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <MyButton buttonText='Далее' disabled={isLoading} onPress={handleSubmit(onSubmit)} />
+        <Button buttonText='Далее' disabled={isLoading} onPress={handleSubmit(onSubmit)} />
       </View>
     </View>
   );

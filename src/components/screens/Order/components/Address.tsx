@@ -1,17 +1,16 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { Image, Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Hyperlink from 'react-native-hyperlink';
 
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
-import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
 import { IAddress } from '@/domain/orders/types';
 import { useTheme } from '@/hooks/useTheme';
 import copyToClipboard from '@/utils/copyToClipBoard';
 import { getMetroColor } from '@/utils/getColorMetro';
-import yandexMaps from '@/utils/yandexMaps';
+import { yandexMaps } from '@/utils/yandexMaps';
 
-interface IAddressProps {
+interface AddressProps {
   address: IAddress;
   index: number;
   price?: number;
@@ -19,85 +18,133 @@ interface IAddressProps {
   isTypeShown?: boolean;
 }
 
-const Address: FC<IAddressProps> = props => {
-  const { address, index, price, isActive, isTypeShown = false } = props;
+const ADDRESS_TYPE_LABELS = {
+  DELIVER: 'Отдать заказ',
+  PICKUP: 'Забрать заказ',
+} as const;
 
+const Address: FC<AddressProps> = ({
+  address,
+  index,
+  price,
+  isActive = false,
+  isTypeShown = false,
+}) => {
   const { colors } = useTheme();
 
-  const handleOpenURL = async () => {
+  const handleOpenMap = useCallback(async () => {
     try {
       yandexMaps.getRouteToPoint(address.geoData.geoLat, address.geoData.geoLon);
     } catch (err) {
-      console.error('Ошибка при открытии URL:', err);
+      console.error('Ошибка при открытии карты:', err);
     }
-  };
+  }, [address.geoData]);
 
-  const handleCall = () => {
-    Linking.openURL(`tel:${'phoneNumber' in address ? address.phoneNumber : ''}`);
-  };
+  const handleCopyAddress = useCallback(() => {
+    copyToClipboard(address.address);
+  }, [address.address]);
 
-  const metroString = address.geoData?.metro?.[0]?.name
-    ? address.geoData?.metro?.[0]?.name + ' |'
-    : '';
-  const distance = address.distance?.toFixed(1) || '';
+  const handleCall = useCallback(() => {
+    if (address.phoneNumber) {
+      Linking.openURL(`tel:${address.phoneNumber}`);
+    }
+  }, [address.phoneNumber]);
+
+  const handleCopyPhone = useCallback(() => {
+    if (address.phoneNumber) {
+      copyToClipboard(address.phoneNumber);
+    }
+  }, [address.phoneNumber]);
+
+  const handleOpenLink = useCallback((url: string) => {
+    Linking.openURL(url);
+  }, []);
+
+  // Computed values
+  const metroInfo = useMemo(() => {
+    const metroName = address.geoData?.metro?.[0]?.name;
+    return metroName ? `${metroName} |` : '';
+  }, [address.geoData?.metro]);
+
+  const distanceText = useMemo(() => {
+    return address.distance ? `${address.distance.toFixed(1)} км от вас` : '';
+  }, [address.distance]);
+
+  const metroBackgroundColor = useMemo(() => {
+    return address.geoData?.metro?.[0]
+      ? getMetroColor(address.geoData.metro[0].line)
+      : colors.purple;
+  }, [address.geoData?.metro, colors.purple]);
+
+  const phoneDisplayText = useMemo(() => {
+    return `${address.phoneNumber || ''} ${address.phoneName || ''}`.trim();
+  }, [address.phoneNumber, address.phoneName]);
+
+  const addressTypeLabel = useMemo(() => {
+    return address.type ? ADDRESS_TYPE_LABELS[address.type] : '';
+  }, [address.type]);
+
+  const isFirstAddress = index === 0;
 
   return (
     <View
-      style={[styles.address, { backgroundColor: colors.background }, isActive && styles.active]}
+      style={[styles.container, { backgroundColor: colors.background }, isActive && styles.active]}
     >
+      {/* Active Address Badge */}
       {isActive && (
-        <View style={[styles.activeAddressTooltip, { backgroundColor: colors.green }]}>
+        <View style={[styles.activeAddressBadge, { backgroundColor: colors.green }]}>
           <ThemedText>Активный адрес</ThemedText>
         </View>
       )}
-      <TouchableOpacity
-        onPress={handleOpenURL}
-        onLongPress={() => {
-          copyToClipboard(address.address);
-        }}
-      >
-        <View style={styles.addressTextContainer}>
+
+      {/* Address Type Badge */}
+      {address.type && isTypeShown && (
+        <View style={[styles.typeBadge, { backgroundColor: colors.green }]}>
+          <Image tintColor={colors.tint} source={icons.settings} style={styles.badgeIcon} />
+          <ThemedText type='mediumText' weight='medium'>
+            {addressTypeLabel}
+          </ThemedText>
+        </View>
+      )}
+
+      {/* Main Address */}
+      <TouchableOpacity onPress={handleOpenMap} onLongPress={handleCopyAddress}>
+        <View style={styles.addressRow}>
           <ThemedText type='title'>{index + 1}</ThemedText>
-          <ThemedText type='mediumText' weight='bold' style={{ textAlign: 'left', flex: 1 }}>
+          <ThemedText type='mediumText' weight='bold' style={styles.addressText}>
             {address.address}
           </ThemedText>
         </View>
       </TouchableOpacity>
+
+      {/* Phone Number */}
       {address.phoneNumber && (
         <TouchableOpacity
           onPress={handleCall}
-          style={[styles.phoneNumber, { backgroundColor: colors.lightPurple }]}
-          onLongPress={() => {
-            copyToClipboard(address.phoneNumber);
-          }}
+          onLongPress={handleCopyPhone}
+          style={[styles.phoneContainer, { backgroundColor: colors.lightPurple }]}
         >
           <ThemedText type='hint' color='primary' align='left'>
             Номер телефона
           </ThemedText>
           <ThemedText type='mediumText' weight='bold' align='left'>
-            {`${address.phoneNumber} ${address?.phoneName}`}
+            {phoneDisplayText}
           </ThemedText>
         </TouchableOpacity>
       )}
-      <View
-        style={[
-          styles.locationInfo,
-          address.geoData?.metro && {
-            backgroundColor: getMetroColor(address.geoData.metro[0].line),
-          },
-        ]}
-      >
-        <ThemedText
-          style={{ color: colors.white }}
-        >{`${metroString} ${distance} км от вас`}</ThemedText>
+
+      {/* Metro & Distance Info */}
+      <View style={[styles.locationBadge, { backgroundColor: metroBackgroundColor }]}>
+        <ThemedText color='onPrimary'>{`${metroInfo} ${distanceText}`}</ThemedText>
       </View>
+
+      {/* Additional Info */}
       {address.info && (
         <View>
           <ThemedText type='hint' align='left'>
             Дополнительно
           </ThemedText>
-          {/* Я не знаю зачем сюда передавать ключ, но иначе ошибка, */}
-          <Hyperlink onPress={url => Linking.openURL(url)}>
+          <Hyperlink onPress={handleOpenLink}>
             <ThemedText weight='medium' align='left'>
               {address.info}
             </ThemedText>
@@ -105,27 +152,22 @@ const Address: FC<IAddressProps> = props => {
         </View>
       )}
 
-      {index == 0 && (
-        <View style={styles.priceContainer}>
-          <Image tintColor={colors.tint} source={icons.money} style={styles.priceIcon} />
+      {/* Price (only for first address) */}
+      {isFirstAddress && price && (
+        <View style={styles.infoRow}>
+          <Image tintColor={colors.tint} source={icons.money} style={styles.icon} />
           <ThemedText type='mediumText' weight='medium'>
             {`Получить ${price} ₽`}
           </ThemedText>
         </View>
       )}
+
+      {/* Floor & Apartment */}
       {address.floor && (
-        <View style={styles.floorContainer}>
-          <Image tintColor={colors.black} source={icons.building} style={styles.floorIcon} />
+        <View style={styles.infoRow}>
+          <Image tintColor={colors.black} source={icons.building} style={styles.icon} />
           <ThemedText type='mediumText' weight='medium'>
-            {`${address.floor} этаж ·  ${address.apartment} кв.`}
-          </ThemedText>
-        </View>
-      )}
-      {address.type && isTypeShown && (
-        <View style={styles.typeContainer}>
-          <Image tintColor={colors.tint} source={icons.settings} style={styles.floorIcon} />
-          <ThemedText type='mediumText' weight='medium'>
-            {address.type == 'DELIVER' ? 'Отдать заказ' : 'Забрать заказ'}
+            {`${address.floor} этаж · ${address.apartment} кв.`}
           </ThemedText>
         </View>
       )}
@@ -136,7 +178,7 @@ const Address: FC<IAddressProps> = props => {
 export default Address;
 
 const styles = StyleSheet.create({
-  address: {
+  container: {
     width: '100%',
     paddingHorizontal: 20,
     paddingVertical: 30,
@@ -146,7 +188,7 @@ const styles = StyleSheet.create({
   active: {
     paddingTop: 30,
   },
-  activeAddressTooltip: {
+  activeAddressBadge: {
     position: 'absolute',
     top: 0,
     left: 0,
@@ -155,68 +197,51 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
-  addressTextContainer: {
+  typeBadge: {
+    flexDirection: 'row',
+    gap: 5,
+    alignItems: 'center',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderTopLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  badgeIcon: {
+    width: 20,
+    height: 20,
+  },
+  addressRow: {
     width: '100%',
     flexDirection: 'row',
     gap: 10,
     alignItems: 'center',
-    flex: 1,
     paddingRight: 10,
   },
-  addressIconContainer: {
-    width: 22,
-    height: 24,
+  addressText: {
+    textAlign: 'left',
+    flex: 1,
   },
-  addressIcon: {
-    width: '100%',
-    height: '100%',
-  },
-  phoneNumber: {
-    backgroundColor: colors.lightPurple,
+  phoneContainer: {
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 20,
   },
-  priceContainer: {
-    flexDirection: 'row',
-    gap: 5,
-  },
-  priceIcon: {
-    width: 20,
-    height: 20,
-  },
-
-  floorContainer: {
-    flexDirection: 'row',
-    gap: 5,
-    alignItems: 'center',
-  },
-
-  floorIcon: {
-    width: 20,
-    height: 20,
-  },
-  cancelOrderButton: {
-    padding: 10,
-  },
-  locationInfo: {
+  locationBadge: {
     alignSelf: 'flex-start',
-    gap: 5,
-    backgroundColor: colors.purple,
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 20,
   },
-  typeContainer: {
+  infoRow: {
     flexDirection: 'row',
     gap: 5,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    backgroundColor: colors.green,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderTopLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    alignItems: 'center',
+  },
+  icon: {
+    width: 20,
+    height: 20,
   },
 });

@@ -1,160 +1,41 @@
 import React from 'react';
-import { ActivityIndicator, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import Animated, { LinearTransition } from 'react-native-reanimated';
+import { View } from 'react-native';
 
 import OrderPreview from '@/components/features/OrderPreview/OrderPreview';
-import OrderPreviewSkeleton from '@/components/skeletons/OrderPreviewSkeleton/OrderPreviewSkeleton';
+import { OrdersListLayout } from '@/components/shared/OrdersListLayout/OrdersListLayout';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
-import { colors } from '@/constants/colors';
-import { icons } from '@/constants/icons';
 import { useActiveOrders } from '@/domain/orders/api';
-import { useTypedSelector } from '@/hooks/redux.hooks';
-import { useTheme } from '@/hooks/useTheme';
 
 import AvailableOrders from './AvailableOrders';
 
 const ActiveOrders = () => {
-  const { colors } = useTheme();
+  const { data, isLoading, refetch, isFetching } = useActiveOrders();
 
-  const location = useTypedSelector(state => state.location);
-  const { data, isLoading, refetch } = useActiveOrders();
-
-  if (location.error) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <OrderPreviewSkeleton />
-          <OrderPreviewSkeleton />
-          <OrderPreviewSkeleton />
-        </View>
-        <View style={styles.loadingTextContainer}>
-          <View style={[styles.loadingModal, { backgroundColor: colors.background }]}>
-            <ThemedText type='big' weight='medium'>
-              {location.error}
-            </ThemedText>
-          </View>
-        </View>
+  // Кастомный компонент для пустого состояния
+  const emptyComponent = (
+    <View style={{ flex: 1 }}>
+      <View style={{ margin: 20 }}>
+        <ThemedText weight='medium'>
+          Похоже, что у вас нет активных заказов на данный момент. Вы можете выбрать подходящий из
+          списка ниже!
+        </ThemedText>
       </View>
-    );
-  }
-  if (location.isLocationLoading || isLoading) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <OrderPreviewSkeleton />
-          <OrderPreviewSkeleton />
-          <OrderPreviewSkeleton />
-        </View>
-        <View style={styles.loadingTextContainer}>
-          <View style={[styles.loadingModal, { backgroundColor: colors.background }]}>
-            <ActivityIndicator size={'large'} color={colors.primary} />
-            <ThemedText type='big' weight='medium'>
-              {location.isLocationLoading
-                ? 'Пытаемся определить ваше местоположение'
-                : 'Запрашиваем заказы с сервера'}
-            </ThemedText>
-          </View>
-        </View>
-      </View>
-    );
-  }
-
-  if (data.length === 0) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.noOrdersTextContainer}>
-          <ThemedText weight='medium'>
-            Похоже, что у вас нет активных заказов на данный момент. Вы можете выбрать подходящий из
-            списка ниже!
-          </ThemedText>
-        </View>
-        <AvailableOrders />
-      </View>
-    );
-  }
+      <AvailableOrders />
+    </View>
+  );
 
   return (
-    <View style={styles.container}>
-      <View>
-        <Animated.FlatList
-          itemLayoutAnimation={LinearTransition}
-          data={data}
-          renderItem={({ item }) => <OrderPreview order={item} />}
-          keyExtractor={item => item.id.toString()}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          contentContainerStyle={styles.flatListStyles}
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
-      <TouchableOpacity
-        style={[styles.update, { backgroundColor: colors.background }]}
-        onPress={() => refetch()}
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <ActivityIndicator size='small' color={colors.primary} />
-        ) : (
-          <Image
-            tintColor={colors.tint}
-            source={icons.refetch}
-            style={{ width: '100%', height: '100%' }}
-          />
-        )}
-      </TouchableOpacity>
-    </View>
+    <OrdersListLayout
+      data={data}
+      isLoading={isLoading}
+      isFetching={isFetching}
+      refetch={refetch}
+      renderItem={item => <OrderPreview order={item} />}
+      keyExtractor={item => item.id.toString()}
+      emptyComponent={emptyComponent}
+      refetchButtonBottom={130}
+    />
   );
 };
 
 export default ActiveOrders;
-
-const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-    paddingHorizontal: 5,
-    position: 'relative',
-  },
-  flatListStyles: {
-    paddingTop: 16,
-    paddingBottom: 126,
-  },
-  loadingContainer: {
-    marginTop: 16,
-    gap: 20,
-  },
-  loadingTextContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noOrdersTextContainer: {
-    margin: 20,
-  },
-  loadingModal: {
-    transform: [{ translateY: -60 }],
-    backgroundColor: colors.white,
-    padding: 20,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  separator: {
-    height: 5,
-    backgroundColor: 'transparent',
-  },
-  update: {
-    position: 'absolute',
-    bottom: 130,
-    right: 20,
-    width: 40,
-    height: 40,
-    padding: 10,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

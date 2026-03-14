@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
-import { colors } from '@/constants/colors';
 import { useTheme } from '@/hooks/useTheme';
 
 interface ITogglerProps {
@@ -20,7 +19,12 @@ interface ITogglerProps {
   styles?: StyleProp<ViewStyle>;
 }
 
-const Toggler: FC<ITogglerProps> = ({ options, activeTab, onChange, styles: providedStyles }) => {
+export const Toggler: FC<ITogglerProps> = ({
+  options,
+  activeTab,
+  onChange,
+  styles: providedStyles,
+}) => {
   const { colors } = useTheme();
   const [togglerWidth, setTogglerWidth] = useState(0);
 
@@ -54,7 +58,7 @@ const Toggler: FC<ITogglerProps> = ({ options, activeTab, onChange, styles: prov
 
   return (
     <View
-      style={[styles.togglerType, { backgroundColor: colors.backgroundSecondary }, providedStyles]}
+      style={[styles.togglerType, { backgroundColor: colors.background }, providedStyles]}
       onLayout={onTogglerLayout}
     >
       <Animated.View
@@ -62,6 +66,7 @@ const Toggler: FC<ITogglerProps> = ({ options, activeTab, onChange, styles: prov
           styles.indicator,
           { transform: [{ translateX: indicatorTranslateX }] },
           { width: togglerWidth / options.length },
+          { backgroundColor: colors.primary },
         ]}
       />
       {options.map(option => {
@@ -73,7 +78,12 @@ const Toggler: FC<ITogglerProps> = ({ options, activeTab, onChange, styles: prov
           >
             <ThemedText
               type='default'
-              style={[styles.togglerText, option === activeTab && styles.activeTogglerText]}
+              style={[
+                styles.togglerText,
+                option === activeTab
+                  ? { color: colors.textOnPrimary }
+                  : { color: colors.textSecondary },
+              ]}
             >
               {option}
             </ThemedText>
@@ -83,8 +93,6 @@ const Toggler: FC<ITogglerProps> = ({ options, activeTab, onChange, styles: prov
     </View>
   );
 };
-
-export default Toggler;
 
 const styles = StyleSheet.create({
   togglerType: {
@@ -106,15 +114,11 @@ const styles = StyleSheet.create({
   togglerText: {
     flex: 1,
   },
-  activeTogglerText: {
-    color: colors.white,
-  },
   indicator: {
     position: 'absolute',
     top: 0,
     left: 0,
     height: '100%',
-    backgroundColor: colors.purple,
     zIndex: -1,
   },
 });

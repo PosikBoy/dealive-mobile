@@ -9,22 +9,23 @@ export const palette = {
   redLight: '#D95A5A',
 
   green: '#D0FF84',
-  greenDark: 'rgb(0, 112, 24)',
+
+  greenDark: 'rgb(16, 197, 55)',
 
   gray: '#808080',
-  grayLight: '#D9D9D9',
+  grayLight: '#e9e9e9',
   grayInput: '#999999',
 
   black: '#000000',
   white: '#ffffff',
-  whiteDark: 'rgb(48, 46, 46)',
+  whiteDark: '#302E2E',
 
-  overlay: 'rgba(0, 0, 0, 0.05)',
+  overlay: 'rgb(40, 40, 40)',
 };
 
 const lightTheme = {
   primary: palette.purple,
-  primaryHover: palette.purpleHover,
+  primaryActive: palette.purpleHover,
   primaryLight: palette.purpleLight,
   primaryLightHover: palette.purpleLightHover,
 
@@ -34,7 +35,7 @@ const lightTheme = {
   errorLight: palette.redLight,
 
   background: palette.white,
-  backgroundSecondary: palette.overlay,
+  backgroundSecondary: palette.grayLight,
   surface: palette.white,
 
   text: palette.black,
@@ -45,7 +46,7 @@ const lightTheme = {
   borderLight: palette.grayLight,
 
   input: palette.white,
-  inputBorder: palette.grayLight,
+  inputBorder: palette.grayInput,
   inputPlaceholder: palette.grayInput,
 
   statusBar: palette.white,
@@ -61,7 +62,7 @@ const lightTheme = {
 
 const darkTheme = {
   primary: palette.purple,
-  primaryHover: palette.purpleHover,
+  primaryActive: palette.purpleHover,
   primaryLight: palette.purpleHover,
   primaryLightHover: palette.purpleHover,
 
@@ -72,7 +73,7 @@ const darkTheme = {
 
   background: palette.whiteDark,
   backgroundSecondary: palette.overlay,
-  surface: palette.whiteDark,
+  surface: palette.gray,
 
   text: palette.white,
   textSecondary: palette.gray,

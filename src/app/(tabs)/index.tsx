@@ -1,7 +1,7 @@
 import { Redirect } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 
-import Orders from '@/components/screens/Orders/Orders';
+import { Orders } from '@/components/screens/Orders/Orders';
 import { authStorage } from '@/helpers/authStorage';
 import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
 import { fetchAuthStatus, fetchIsApprovedStatus, logOut } from '@/store/auth/auth.actions';

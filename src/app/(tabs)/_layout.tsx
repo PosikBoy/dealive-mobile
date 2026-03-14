@@ -30,7 +30,7 @@ const CustomTabButton = props => (
 );
 
 const TabsLayout = () => {
-  const { theme, colors } = useTheme();
+  const { colors } = useTheme();
 
   return (
     <Tabs
@@ -42,8 +42,7 @@ const TabsLayout = () => {
         tabBarButton: props => <CustomTabButton {...props} />,
         tabBarStyle: {
           backgroundColor: colors.background,
-          borderTopWidth: 1,
-          shadowOpacity: 2,
+          borderTopWidth: 0,
           height: 60,
           alignItems: 'center',
         },

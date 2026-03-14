@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
 import React, { useRef, useState } from 'react';
-import { Animated, FlatList, StyleSheet, TouchableHighlight, View } from 'react-native';
+import { Animated, FlatList, StyleSheet, View } from 'react-native';
 
-import Button from '@/components/ui/Button/Button';
+import { Button } from '@/components/ui/Button/Button';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { useTheme } from '@/hooks/useTheme';
@@ -41,13 +41,9 @@ export const OnBoarding = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <TouchableHighlight
-        style={styles.skipTextContainer}
-        onPress={navigateToLogin}
-        underlayColor={colors.background}
-      >
+      <Button style={styles.skipTextContainer} onPress={navigateToLogin} variant='text'>
         <ThemedText>{t('button-skip-text')}</ThemedText>
-      </TouchableHighlight>
+      </Button>
       <View style={styles.slider}>
         <FlatList
           data={data}
@@ -109,7 +105,7 @@ const styles = StyleSheet.create({
   skipTextContainer: {
     alignSelf: 'flex-end',
     height: 40,
-    width: 100,
+    width: 120,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 20,

@@ -1,32 +1,37 @@
-import React, { FC, useEffect, useImperativeHandle, useRef } from 'react';
-import { Control, useController } from 'react-hook-form';
+import React, { useEffect, useImperativeHandle, useRef } from 'react';
 import {
-  KeyboardTypeOptions,
-  StyleSheet,
-  TextInput,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+  Control,
+  FieldError,
+  FieldValues,
+  Path,
+  RegisterOptions,
+  useController,
+} from 'react-hook-form';
+import { KeyboardTypeOptions, StyleSheet, TextInput, View } from 'react-native';
 import Animated, {
+  Easing,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
   withTiming,
 } from 'react-native-reanimated';
 
 import { fonts } from '@/constants/styles';
 import { useTheme } from '@/hooks/useTheme';
 
-interface IField {
+export interface IInputField<TFieldValues extends FieldValues = FieldValues> {
   type?: 'default' | 'password';
   placeholder: string;
-  error?: any;
-  name: string;
-  control: Control<any>;
-  rules?: any;
+  error?: FieldError;
+  name: Path<TFieldValues>;
+  control: Control<TFieldValues>;
+  rules?: RegisterOptions<TFieldValues, Path<TFieldValues>>;
   keyboardType?: KeyboardTypeOptions;
+  handler?: (value: string) => string;
 }
-const InputField: FC<IField> = props => {
+
+export const InputField = <TFieldValues extends FieldValues = FieldValues>(
+  props: IInputField<TFieldValues>,
+) => {
   const { colors } = useTheme();
   const {
     type = 'default',
@@ -35,9 +40,10 @@ const InputField: FC<IField> = props => {
     control,
     rules = {},
     keyboardType = 'default',
+    handler = value => value,
   } = props;
 
-  const { field } = useController({
+  const { field } = useController<TFieldValues>({
     control,
     name,
     rules,
@@ -49,30 +55,54 @@ const InputField: FC<IField> = props => {
     }
   });
   const placeholderTop = useSharedValue(11);
-  const inputColor = useSharedValue(colors.inputPlaceholder);
+  const inputColor = useSharedValue(colors.inputBorder);
 
   const raisePlaceholder = () => {
-    placeholderTop.value = withTiming(-9);
+    placeholderTop.value = withTiming(-9, {
+      duration: 200,
+      easing: Easing.out(Easing.ease),
+    });
   };
+
   const downPlaceholder = () => {
-    placeholderTop.value = withTiming(11);
+    placeholderTop.value = withTiming(11, {
+      duration: 200,
+      easing: Easing.out(Easing.ease),
+    });
   };
+
   const makeInputColorFocused = () => {
-    inputColor.value = withSpring(colors.primary);
+    inputColor.value = withTiming(colors.primary, {
+      duration: 200,
+      easing: Easing.out(Easing.ease),
+    });
   };
+
   const makeInputColorUnFocused = () => {
-    inputColor.value = withSpring(colors.inputBorder);
+    inputColor.value = withTiming(colors.inputBorder, {
+      duration: 200,
+      easing: Easing.out(Easing.ease),
+    });
   };
+
   const animatedBorderColor = useAnimatedStyle(() => {
     return {
       borderColor: inputColor.value,
     };
   });
+
   const animatedPlaceholderColor = useAnimatedStyle(() => {
     return {
       color: inputColor.value,
     };
   });
+
+  const animatedPlaceholderPosition = useAnimatedStyle(() => {
+    return {
+      top: placeholderTop.value,
+    };
+  });
+
   const handleBlur = () => {
     if (!field.value) {
       downPlaceholder();
@@ -85,19 +115,19 @@ const InputField: FC<IField> = props => {
     makeInputColorFocused();
   };
 
-  useImperativeHandle(field.ref, () => {
-    return {
-      focus: () => {
-        inputRef.current.focus();
-      },
-    };
-  });
+  useImperativeHandle(field.ref, () => ({
+    focus: () => {
+      inputRef.current?.focus();
+    },
+  }));
 
   const inputRef = useRef<TextInput>(null);
 
-  const handleChange = e => {
-    field.onChange(e);
+  const handleChange = (value: string) => {
+    const newValue = handler(value);
+    field.onChange(newValue);
   };
+
   return (
     <View style={styles.container}>
       <Animated.View
@@ -108,7 +138,7 @@ const InputField: FC<IField> = props => {
           ref={inputRef}
           secureTextEntry={type === 'password'}
           style={[styles.input, { color: colors.text }]}
-          value={field.value}
+          value={field.value ?? ''}
           keyboardType={keyboardType}
           onFocus={handleFocus}
           onChangeText={handleChange}
@@ -116,26 +146,21 @@ const InputField: FC<IField> = props => {
         />
       </Animated.View>
 
-      <Animated.View
-        style={{
-          position: 'absolute',
-          top: placeholderTop,
-          left: 12,
-          backgroundColor: colors.background,
-          paddingHorizontal: 5,
-        }}
-      >
-        <TouchableWithoutFeedback onPress={() => inputRef.current.focus()}>
-          <Animated.Text style={[styles.placeholder, animatedPlaceholderColor]}>
-            {placeholder}
-          </Animated.Text>
-        </TouchableWithoutFeedback>
+      <Animated.View style={[styles.placeholderContainer, animatedPlaceholderPosition]}>
+        <Animated.Text
+          style={[
+            styles.placeholder,
+            { backgroundColor: colors.background },
+            animatedPlaceholderColor,
+          ]}
+          onPress={() => inputRef.current.focus()}
+        >
+          {placeholder}
+        </Animated.Text>
       </Animated.View>
     </View>
   );
 };
-
-export default InputField;
 
 const styles = StyleSheet.create({
   container: {
@@ -154,8 +179,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     fontFamily: fonts.regular,
-    paddingLeft: 12,
+    paddingLeft: 15,
     paddingVertical: 11,
+  },
+  placeholderContainer: {
+    position: 'absolute',
+    left: 12,
   },
   placeholder: {
     fontSize: 14,

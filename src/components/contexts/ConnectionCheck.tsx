@@ -1,6 +1,6 @@
 import NetInfo from '@react-native-community/netinfo';
 import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ConnectionCheck({ children }) {
   const [connectionStatus, setConnectionStatus] = useState(true);
@@ -16,5 +16,5 @@ export default function ConnectionCheck({ children }) {
     router.replace('/offline');
   }
 
-  return <>{children}</>;
+  return children;
 }

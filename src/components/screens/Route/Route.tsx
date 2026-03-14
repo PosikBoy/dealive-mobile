@@ -1,37 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import React, { useMemo } from 'react';
+import { Image, StyleSheet, View } from 'react-native';
 
-import Header from '@/components/shared/Header/Header';
-import RouteItem from '@/components/shared/RouteItem';
-import MyButton from '@/components/ui/Button/Button';
+import { Header } from '@/components/shared/Header/Header';
+import { RouteList } from '@/components/shared/RouteList/RouteList';
+import { Button } from '@/components/ui/Button/Button';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
-import { colors } from '@/constants/colors';
+import { icons } from '@/constants/icons';
 import { borderRadiuses } from '@/constants/styles';
 import { useActiveOrders } from '@/domain/orders/api';
 import { useTypedSelector } from '@/hooks/redux.hooks';
 import { useTheme } from '@/hooks/useTheme';
-import yandexMaps from '@/utils/yandexMaps';
+import { yandexMaps } from '@/utils/yandexMaps';
 
 const Route = () => {
   const { colors } = useTheme();
-  const [sum, setSum] = useState<number>(0);
   const routeData = useTypedSelector(state => state.route);
   const { data } = useActiveOrders();
 
-  const footerText = `Расстояние ${routeData.distance.toFixed(2)} км | Доход ${sum.toFixed(0)}₽`;
-
-  useEffect(() => {
-    const sum = data.reduce((sum, order) => {
-      return sum + order.price;
-    }, 0);
-    setSum(sum);
+  const sum = useMemo(() => {
+    return data.reduce((sum, order) => sum + order.price, 0);
   }, [data]);
+
+  const footerText = useMemo(
+    () => `Расстояние ${routeData.distance.toFixed(2)} км | Доход ${sum.toFixed(0)}₽`,
+    [routeData.distance, sum],
+  );
 
   const openRoute = async () => {
     try {
       const points = routeData.route.map(address => yandexMaps.getPoint(address));
-
       yandexMaps.getRoute(points);
     } catch (error) {
       console.log(error);
@@ -40,31 +37,32 @@ const Route = () => {
 
   if (routeData.route?.length === 0) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         <Header title='Маршрут' isButtonBackShown={false} />
-        <ThemedText type='mediumText' weight='medium' style={{ margin: 20 }}>
-          Похоже, что у вас нет активных заказов на данный момент. Вы можете выбрать подходящий на
-          вкладке "Заказы"
-        </ThemedText>
+        <View style={styles.emptyContainer}>
+          <ThemedText type='mediumText' weight='medium' style={styles.emptyText}>
+            На данный момент у вас нет активных заказов, поэтому маршрут пуст
+          </ThemedText>
+          <Image source={icons.noOrders} style={styles.emptyImage} resizeMode='contain' />
+        </View>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.backgroundSecondary }]}>
       <Header title='Маршрут' isButtonBackShown={false} />
-      <FlatList
-        data={routeData.route}
-        renderItem={({ item, index }) => (
-          <RouteItem address={item} index={index} isTypeShown={true} />
-        )}
+      <RouteList
+        route={routeData.route}
+        showTypeLabel={true}
+        showFooter={false}
         contentContainerStyle={{
           gap: 5,
           paddingBottom: 120,
           width: '100%',
         }}
-        keyExtractor={item => item.id.toString()}
         style={{
+          flex: 1,
           paddingTop: 10,
           paddingHorizontal: 5,
           width: '100%',
@@ -74,7 +72,7 @@ const Route = () => {
         <ThemedText weight='medium' type='mediumText'>
           {footerText}
         </ThemedText>
-        <MyButton buttonText='Открыть маршрут на карте' onPress={openRoute} color='purple' />
+        <Button buttonText='Открыть маршрут на карте' onPress={openRoute} color='primary' />
       </View>
     </View>
   );
@@ -87,43 +85,29 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
   },
-
-  header: {
-    paddingVertical: 20,
-    width: '100%',
-    backgroundColor: '#fff',
+  emptyContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    paddingHorizontal: 20,
   },
-
+  emptyText: {
+    textAlign: 'center',
+    marginBottom: 30,
+  },
+  emptyImage: {
+    width: 330,
+    height: 250,
+  },
   footer: {
-    alignItems: 'center',
     position: 'absolute',
     bottom: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
     padding: 10,
     gap: 10,
     borderTopLeftRadius: borderRadiuses.medium,
     borderTopRightRadius: borderRadiuses.medium,
-  },
-
-  loadingTextContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: colors.backgroundColor,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingModal: {
-    transform: [{ translateY: -60 }],
-    backgroundColor: colors.white,
-    padding: 20,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });

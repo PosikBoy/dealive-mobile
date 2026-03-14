@@ -8,14 +8,15 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { colors } from '@/constants/colors';
+import { useTheme } from '@/hooks/useTheme';
 
 const Shimmer: FC = () => {
+  const { colors } = useTheme();
   const shimmerOpacity = useSharedValue(0.3);
 
   useEffect(() => {
     shimmerOpacity.value = withRepeat(
-      withTiming(0.7, {
+      withTiming(0.1, {
         duration: 2000,
         easing: Easing.linear,
       }),
@@ -32,7 +33,9 @@ const Shimmer: FC = () => {
 
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.shimmer, shimmerStyle]} />
+      <Animated.View
+        style={[styles.shimmer, shimmerStyle, { backgroundColor: colors.textSecondary }]}
+      />
     </View>
   );
 };
@@ -51,6 +54,5 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgb(255, 255, 255)', // Полупрозрачный белый
   },
 });

@@ -129,6 +129,4 @@ class RouteService {
   };
 }
 
-const routeService = new RouteService();
-
-export default routeService;
+export const routeService = new RouteService();

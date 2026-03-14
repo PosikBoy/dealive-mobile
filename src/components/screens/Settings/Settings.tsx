@@ -3,7 +3,7 @@ import React from 'react';
 import { Image, Linking, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
-import Header from '@/components/shared/Header/Header';
+import { Header } from '@/components/shared/Header/Header';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { icons } from '@/constants/icons';
 import { useTheme } from '@/hooks/useTheme';
@@ -169,14 +169,12 @@ export default Settings;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
     flex: 1,
     alignItems: 'center',
   },
   header: {
     paddingVertical: 20,
     width: '100%',
-    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
   },

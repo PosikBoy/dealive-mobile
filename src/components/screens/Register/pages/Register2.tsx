@@ -2,10 +2,10 @@ import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
-import Header from '@/components/shared/Header/Header';
-import MyButton from '@/components/ui/Button/Button';
+import { Header } from '@/components/shared/Header/Header';
+import { Button } from '@/components/ui/Button/Button';
 import DataInputField from '@/components/ui/DataInputField/DataInputField';
-import InputField from '@/components/ui/InputField/InputField';
+import { InputField } from '@/components/ui/InputField/InputField';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
@@ -148,7 +148,7 @@ const Register2: FC<IProps> = props => {
         )}
       </View>
       <View style={styles.buttonContainer}>
-        <MyButton buttonText='Далее' onPress={handleSubmit(onSubmit)} />
+        <Button buttonText='Далее' onPress={handleSubmit(onSubmit)} />
       </View>
     </View>
   );

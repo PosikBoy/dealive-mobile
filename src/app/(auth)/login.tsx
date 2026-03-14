@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Login from '@/components/screens/Login/Login';
+import { Login } from '@/components/screens/Login/Login';
 
 const login = () => {
   return <Login />;

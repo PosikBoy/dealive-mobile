@@ -1,6 +1,7 @@
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import Header from '@/components/shared/Header/Header';
+import { Header } from '@/components/shared/Header/Header';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { useTheme } from '@/hooks/useTheme';

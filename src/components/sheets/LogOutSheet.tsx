@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 
-import MyButton from '@/components/ui/Button/Button';
+import { Button } from '@/components/ui/Button/Button';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { useTypedDispatch } from '@/hooks/redux.hooks';
 import { useTheme } from '@/hooks/useTheme';
@@ -59,10 +59,10 @@ const LogOutSheet = () => {
         </ThemedText>
         <ThemedText type='mediumText'>{STRINGS.SUBTITLE}</ThemedText>
 
-        <MyButton
+        <Button
           onPress={handleLogOut}
           buttonText={STRINGS.LOGOUT_BUTTON}
-          color={'red'}
+          color='error'
           isLoading={isLoading}
           disabled={isLoading}
         />

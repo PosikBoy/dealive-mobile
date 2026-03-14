@@ -3,10 +3,10 @@ import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
-import Header from '@/components/shared/Header/Header';
-import MyButton from '@/components/ui/Button/Button';
+import { Header } from '@/components/shared/Header/Header';
+import { Button } from '@/components/ui/Button/Button';
 import ImagePicker from '@/components/ui/ImagePicker/ImagePicker';
-import InputFieldWithHandler from '@/components/ui/InputFieldWithHandler/InputFieldWIthHandler';
+import { InputField } from '@/components/ui/InputField/InputField';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
 import { colors } from '@/constants/colors';
 import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
@@ -72,7 +72,9 @@ const Register3: FC<IProps> = props => {
       const updatedFormState = store.getState().signupForm;
       await dispatch(register(updatedFormState));
       router.replace('/waitForApproval');
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -83,7 +85,7 @@ const Register3: FC<IProps> = props => {
           Введите серию и номер паспорта
         </ThemedText>
         <View style={styles.inputField}>
-          <InputFieldWithHandler
+          <InputField
             control={control}
             name='documentNumber'
             placeholder='1234 567890'
@@ -152,7 +154,7 @@ const Register3: FC<IProps> = props => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <MyButton
+        <Button
           buttonText='Создать аккаунт'
           onPress={handleSubmit(onSubmit)}
           disabled={isLoading}
