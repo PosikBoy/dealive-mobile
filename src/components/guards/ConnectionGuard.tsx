@@ -1,9 +1,10 @@
 import NetInfo from '@react-native-community/netinfo';
-import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { Redirect } from 'expo-router';
+import { FC, PropsWithChildren, useEffect, useState } from 'react';
 
-export default function ConnectionCheck({ children }) {
+export const ConnectionGuard: FC<PropsWithChildren> = ({ children }) => {
   const [connectionStatus, setConnectionStatus] = useState(true);
+
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       setConnectionStatus(state.isConnected);
@@ -13,8 +14,8 @@ export default function ConnectionCheck({ children }) {
   }, []);
 
   if (!connectionStatus) {
-    router.replace('/offline');
+    return <Redirect href={{ pathname: '/(special)/offline' }} />;
   }
 
-  return children;
-}
+  return <>{children}</>;
+};

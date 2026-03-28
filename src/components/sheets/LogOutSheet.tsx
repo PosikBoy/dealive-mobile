@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
@@ -23,9 +22,9 @@ const LogOutSheet = () => {
 
   const handleLogOut = useCallback(async () => {
     setIsLoading(true);
+
     try {
       await dispatch(logOut()).unwrap();
-      router.replace('/');
       SheetManager.hide('log-out-sheet');
     } catch (error) {
       console.error('Logout failed:', error);
