@@ -101,7 +101,14 @@ export const ordersApi = createApi({
 });
 
 export const useAvailableOrders = () => {
-  const queryResult = ordersApi.useGetAvailableOrdersQuery(undefined, {
+  const {
+    data: _data,
+    isLoading,
+    isFetching,
+    isError,
+    error,
+    refetch,
+  } = ordersApi.useGetAvailableOrdersQuery(undefined, {
     pollingInterval: 60_000,
     refetchOnFocus: true,
     refetchOnReconnect: true,
@@ -111,10 +118,14 @@ export const useAvailableOrders = () => {
 
   return useMemo(
     () => ({
-      ...queryResult,
+      isLoading,
+      isFetching,
+      isError,
+      error,
+      refetch,
       data: enrichedOrders,
     }),
-    [queryResult, enrichedOrders],
+    [isLoading, isFetching, isError, error, refetch, enrichedOrders],
   );
 };
 
@@ -122,7 +133,14 @@ export const useActiveOrders = () => {
   const dispatch = useTypedDispatch();
   const prevOrdersRef = useRef<string>('');
 
-  const queryResult = ordersApi.useGetActiveOrdersQuery(undefined, {
+  const {
+    data: _data,
+    isLoading,
+    isFetching,
+    isError,
+    error,
+    refetch,
+  } = ordersApi.useGetActiveOrdersQuery(undefined, {
     refetchOnFocus: true,
     refetchOnReconnect: true,
   });
@@ -136,7 +154,7 @@ export const useActiveOrders = () => {
       .sort()
       .join(',');
 
-    if (enrichedOrders && enrichedOrders.length > 0 && !queryResult.isLoading) {
+    if (enrichedOrders && enrichedOrders.length > 0 && !isLoading) {
       if (prevOrdersRef.current !== currentOrdersKey) {
         prevOrdersRef.current = currentOrdersKey;
         dispatch(updateRoute(enrichedOrders));
@@ -145,40 +163,62 @@ export const useActiveOrders = () => {
       prevOrdersRef.current = '';
       dispatch(updateRoute([]));
     }
-  }, [enrichedOrders, queryResult.isLoading, dispatch]);
+  }, [enrichedOrders, isLoading, dispatch]);
 
   return useMemo(
     () => ({
-      ...queryResult,
+      isLoading,
+      isFetching,
+      isError,
+      error,
+      refetch,
       data: enrichedOrders,
     }),
-    [queryResult, enrichedOrders],
+    [isLoading, isFetching, isError, error, refetch, enrichedOrders],
   );
 };
 
 export const useOrderById = (id: number) => {
-  const queryResult = ordersApi.useGetOrderByIdQuery(
+  const {
+    data: _data,
+    isLoading,
+    isFetching,
+    isError,
+    error,
+    refetch,
+  } = ordersApi.useGetOrderByIdQuery(
     { id },
     {
       pollingInterval: 120 * 1000,
     },
   );
 
-  const getOrderByIdSelector = makeSelectOrderById(id);
+  const getOrderByIdSelector = useMemo(() => makeSelectOrderById(id), [id]);
 
   const cachedOrder = useTypedSelector(getOrderByIdSelector);
 
   return useMemo(
     () => ({
-      ...queryResult,
+      isLoading,
+      isFetching,
+      isError,
+      error,
+      refetch,
       data: cachedOrder,
     }),
-    [queryResult, cachedOrder],
+    [isLoading, isFetching, isError, error, refetch, cachedOrder],
   );
 };
 
 export const useAllOrders = () => {
-  const queryResult = ordersApi.useGetAllOrdersQuery(undefined, {
+  const {
+    data: _data,
+    isLoading,
+    isFetching,
+    isError,
+    error,
+    refetch,
+  } = ordersApi.useGetAllOrdersQuery(undefined, {
     pollingInterval: 60_000,
     refetchOnFocus: true,
     refetchOnReconnect: true,
@@ -188,10 +228,14 @@ export const useAllOrders = () => {
 
   return useMemo(
     () => ({
-      ...queryResult,
+      isLoading,
+      isFetching,
+      isError,
+      error,
+      refetch,
       data: enrichedOrders ?? [],
     }),
-    [queryResult, enrichedOrders],
+    [isLoading, isFetching, isError, error, refetch, enrichedOrders],
   );
 };
 

@@ -5,15 +5,20 @@ import { useTypedDispatch } from '@/hooks/redux.hooks';
 import { pushError, pushLocation } from '@/store/location/location.slice';
 
 const LocationProvider = () => {
-  const { location, error, isLoading } = useLocation();
+  const { location, error } = useLocation();
   const dispatch = useTypedDispatch();
+
+  useEffect(() => {
+    if (location?.lon) {
+      dispatch(pushLocation(location));
+    }
+  }, [location]);
+
   useEffect(() => {
     if (error) {
       dispatch(pushError(error));
-    } else if (location?.lon) {
-      dispatch(pushLocation(location));
     }
-  }, [location, error, isLoading]);
+  }, [error]);
 
   return null;
 };

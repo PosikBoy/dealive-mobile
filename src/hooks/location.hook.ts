@@ -55,42 +55,35 @@ export const useLocation = () => {
           lat: data.coords.latitude,
         };
 
-        if (location) {
-          // Вычисляем расстояние между текущей и новой локацией
-          const distance = calculateDistance(
-            location.lat,
-            location.lon,
-            newLocation.lat,
-            newLocation.lon,
-          );
-
-          if (distance > 0.05) {
-            setLocation(newLocation);
-            setError(null);
+        setLocation(prevLocation => {
+          if (prevLocation) {
+            const distance = calculateDistance(
+              prevLocation.lat,
+              prevLocation.lon,
+              newLocation.lat,
+              newLocation.lon,
+            );
+            return distance > 0.05 ? newLocation : prevLocation;
           }
-        } else {
-          // Если локации ещё нет, просто сохраняем её
-          setLocation(newLocation);
-          setError(null);
-        }
+          return newLocation;
+        });
 
-        setLocation(newLocation);
         setError(null);
       } catch (err: any) {
         setError(
           'Не удалось получить местоположение. Убедитесь, что на вашем устройстве включена геолокация.',
         );
       } finally {
-        setIsLoading(false); // Завершаем загрузку
+        setIsLoading(false);
       }
     };
 
     getLocation();
 
-    interval = setInterval(getLocation, 1000);
+    interval = setInterval(getLocation, 5000);
 
     return () => clearInterval(interval);
-  }, [location]);
+  }, []);
 
   return { location, isLoading, error };
 };

@@ -19,15 +19,19 @@ export const useRecommendedOrders = () => {
   const { data: orders = [], isLoading, refetch, isFetching } = useAvailableOrders();
 
   const routeState = useTypedSelector(state => state.route);
-  const location = useTypedSelector(state => state.location);
+  const locationLat = useTypedSelector(state => state.location.lat);
+  const locationLon = useTypedSelector(state => state.location.lon);
+  const isLocationLoading = useTypedSelector(state => state.location.isLocationLoading);
 
   const [recommendedOrders, setRecommendedOrders] = useState<IRecommendedOrders[]>([]);
 
   useEffect(() => {
-    if (!orders.length || location.isLocationLoading || isLoading) {
+    if (!orders.length || isLocationLoading || isLoading) {
       setRecommendedOrders([]);
       return;
     }
+
+    const location = { lat: locationLat, lon: locationLon };
 
     const calculatedOrders = orders.map(order => {
       const newRoute = routeService.getRouteWithNewOrder([...routeState.route], order, location);
@@ -50,11 +54,11 @@ export const useRecommendedOrders = () => {
 
     const sorted = [...calculatedOrders].sort((a, b) => b.incomePerHour - a.incomePerHour);
     setRecommendedOrders(sorted);
-  }, [orders, routeState, location]);
+  }, [orders, routeState, locationLat, locationLon, isLocationLoading, isLoading]);
 
   return {
     recommendedOrders,
-    isLoading: isLoading || location.isLocationLoading,
+    isLoading: isLoading || isLocationLoading,
     refetch,
     isFetching,
   };
