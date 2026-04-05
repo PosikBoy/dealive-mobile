@@ -62,6 +62,58 @@ export interface IAddress {
   isCompleted?: boolean;
 }
 
+// ─── WebSocket / Courier Offer Types ────────────────────────────────────────
+
+export const COURIER_EVENTS = {
+  ORDER_OFFER: 'order:offer',
+  ORDER_OFFER_CANCELLED: 'order:offer:cancelled',
+} as const;
+
+export const COURIER_MESSAGES = {
+  IDENTIFY: 'identify',
+} as const;
+
+export interface IOrderOfferAddress {
+  address: string;
+  geoData: {
+    lat: string;
+    lon: string;
+  };
+}
+
+export interface IOrderOfferData {
+  id: number;
+  parcelType: string;
+  weight: string;
+  price: number;
+  addresses: IOrderOfferAddress[];
+}
+
+export interface IOrderOfferPayload {
+  timeoutSeconds: number;
+  order: IOrderOfferData;
+}
+
+// ─── Courier Routes ──────────────────────────────────────────────────────────
+
+export interface IRoutePoint {
+  id: number;
+  orderId: number;
+  address: string;
+  isCompleted: boolean;
+  geoData: {
+    lat: string;
+    lon: string;
+  };
+}
+
+export interface IUpdateRouteBody {
+  currentLocation: { lat: number; lon: number };
+  route: IRoutePoint[];
+  totalDistance: number;
+  isOnline: boolean;
+}
+
 export interface IOrder {
   id: number;
   clientId?: number;

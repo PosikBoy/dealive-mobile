@@ -7,9 +7,11 @@ import { profileApi } from '@/services/profile/profile.service';
 
 import { authSlice } from './auth/auth.slice';
 import { locationSlice } from './location/location.slice';
+import orderOfferSlice from './orderOffer/orderOffer.slice';
 import routeSlice from './route/route.slice';
 import { signupFormSlice } from './signupForm/signupForm.slice';
 import { supportChatSlice } from './supportChat/supportChat.slice';
+import { toastSlice } from './toast/toast.slice';
 
 const persistRouteConfig = {
   key: 'root',
@@ -25,6 +27,8 @@ const rootReducer = combineReducers({
   supportChat: supportChatSlice.reducer,
   location: locationSlice.reducer,
   route: persistReducer(persistRouteConfig, routeSlice.reducer),
+  orderOffer: orderOfferSlice.reducer,
+  toast: toastSlice.reducer,
 });
 
 const store = configureStore({

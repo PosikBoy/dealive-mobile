@@ -1,90 +1,53 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { Animated, StyleSheet, Switch, View } from 'react-native';
 
 import { Header } from '@/components/shared/Header/Header';
 import { Toggler } from '@/components/ui/HorizontalToggler/HorizontalToggler';
+import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
+import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
+import { useTabAnimation } from '@/hooks/useTabAnimation';
 import { useTheme } from '@/hooks/useTheme';
+import { setAcceptingOrders } from '@/store/orderOffer/orderOffer.slice';
 
 import ActiveOrders from './components/ActiveOrders';
 import AvailableOrders from './components/AvailableOrders';
 import RecommendedOrders from './components/RecommendedOrders';
 
-const options = ['Доступные', 'Лучшие', 'Активные'];
+const TABS = ['Доступные', 'Лучшие', 'Активные'];
 
 export const Orders = () => {
   const { colors } = useTheme();
-  const [activeTab, setActiveTab] = useState<string>('Доступные');
+  const dispatch = useTypedDispatch();
+  const isAcceptingOrders = useTypedSelector(state => state.orderOffer.isAcceptingOrders);
+  const [activeTab, setActiveTab] = useState<string>(TABS[0]);
 
-  const tabAnimation = useRef(new Animated.Value(options.indexOf(activeTab))).current;
-
-  useEffect(() => {
-    Animated.spring(tabAnimation, {
-      toValue: options.indexOf(activeTab),
-      useNativeDriver: true,
-      bounciness: 5,
-      speed: 12,
-    }).start();
-  }, [activeTab, tabAnimation]);
-
-  const availableTranslate = useMemo(
-    () =>
-      tabAnimation.interpolate({
-        inputRange: [0, 1, 2],
-        outputRange: [0, -20, -20],
-      }),
-    [tabAnimation],
-  );
-
-  const recommendedTranslate = useMemo(
-    () =>
-      tabAnimation.interpolate({
-        inputRange: [0, 1, 2],
-        outputRange: [20, 0, -20],
-      }),
-    [tabAnimation],
-  );
-
-  const activeTranslate = useMemo(
-    () =>
-      tabAnimation.interpolate({
-        inputRange: [0, 1, 2],
-        outputRange: [20, -20, 0],
-      }),
-    [tabAnimation],
-  );
-
-  const availableOpacity = useMemo(
-    () =>
-      tabAnimation.interpolate({
-        inputRange: [0, 1, 2],
-        outputRange: [1, 0, 0],
-      }),
-    [tabAnimation],
-  );
-
-  const recommendedOpacity = useMemo(
-    () =>
-      tabAnimation.interpolate({
-        inputRange: [0, 1, 2],
-        outputRange: [0, 1, 0],
-      }),
-    [tabAnimation],
-  );
-
-  const activeOpacity = useMemo(
-    () =>
-      tabAnimation.interpolate({
-        inputRange: [0, 1, 2],
-        outputRange: [0, 0, 1],
-      }),
-    [tabAnimation],
-  );
+  const {
+    availableTranslate,
+    activeTranslate,
+    routeTranslate: recommendedTranslate,
+    availableOpacity,
+    activeOpacity,
+    routeOpacity: recommendedOpacity,
+  } = useTabAnimation(activeTab, TABS);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.backgroundSecondary }]}>
       <Header title='Заказы' isButtonBackShown={false} />
-      <View style={[styles.togglerContainer]}>
-        <Toggler options={options} activeTab={activeTab} onChange={setActiveTab} />
+      <View style={[styles.acceptingRow, { backgroundColor: colors.background }]}>
+        <ThemedText type='mediumText' weight='medium' align='left'>
+          Предлагать заказы
+        </ThemedText>
+        <Switch
+          value={isAcceptingOrders}
+          onValueChange={(value: boolean) => {
+            dispatch(setAcceptingOrders(value));
+          }}
+          trackColor={{ false: '#ccc', true: colors.primary }}
+          thumbColor='#fff'
+        />
+      </View>
+      <View style={styles.togglerContainer}>
+        <Toggler options={TABS} activeTab={activeTab} onChange={setActiveTab} />
       </View>
 
       <View style={styles.ordersContainer}>
@@ -94,7 +57,7 @@ export const Orders = () => {
             {
               opacity: availableOpacity,
               transform: [{ translateX: availableTranslate }],
-              pointerEvents: activeTab === 'Доступные' ? 'auto' : 'none',
+              pointerEvents: activeTab === TABS[0] ? 'auto' : 'none',
             },
           ]}
         >
@@ -106,7 +69,7 @@ export const Orders = () => {
             {
               opacity: recommendedOpacity,
               transform: [{ translateX: recommendedTranslate }],
-              pointerEvents: activeTab === 'Лучшие' ? 'auto' : 'none',
+              pointerEvents: activeTab === TABS[1] ? 'auto' : 'none',
             },
           ]}
         >
@@ -118,7 +81,7 @@ export const Orders = () => {
             {
               opacity: activeOpacity,
               transform: [{ translateX: activeTranslate }],
-              pointerEvents: activeTab === 'Активные' ? 'auto' : 'none',
+              pointerEvents: activeTab === TABS[2] ? 'auto' : 'none',
             },
           ]}
         >
@@ -133,6 +96,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
+  },
+  acceptingRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 20,
+    marginHorizontal: 5,
+    marginTop: 10,
   },
   togglerContainer: {
     paddingTop: 10,

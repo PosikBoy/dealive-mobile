@@ -10,9 +10,11 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { PersistGate } from 'redux-persist/integration/react';
 
+import { CourierWSProvider } from '@/components/contexts/CourierWSProvider';
 import LocationProvider from '@/components/contexts/LocationProvider';
 import { StoreProvider } from '@/components/contexts/ReduxProvider';
 import { ConnectionGuard } from '@/components/guards/ConnectionGuard';
+import { ToastBanner } from '@/components/ui/ToastBanner/ToastBanner';
 import { fonts } from '@/constants/fonts';
 import { useTheme } from '@/hooks/useTheme';
 import { persistor } from '@/store/store';
@@ -53,6 +55,7 @@ const Layout = () => {
             <PersistGate loading={null} persistor={persistor}>
               <SheetProvider>
                 <ConnectionGuard>
+                  <ToastBanner />
                   <StatusBar style='auto' />
                   <Stack
                     screenOptions={{
@@ -61,6 +64,7 @@ const Layout = () => {
                     }}
                   />
                   <LocationProvider />
+                  <CourierWSProvider />
                 </ConnectionGuard>
               </SheetProvider>
             </PersistGate>

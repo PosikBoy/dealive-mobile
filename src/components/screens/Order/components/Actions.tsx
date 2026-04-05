@@ -1,6 +1,7 @@
 import React from 'react';
 import { FlatList } from 'react-native';
 
+import { orderStatuses } from '@/constants/orderStatuses';
 import { IOrder } from '@/domain/orders/types';
 
 import { Action } from './Action';
@@ -9,7 +10,7 @@ type Props = {
   order: IOrder;
 };
 
-const Actions = (props: Props) => {
+export const Actions = (props: Props) => {
   const { order } = props;
 
   return (
@@ -19,7 +20,7 @@ const Actions = (props: Props) => {
         <Action
           address={order.addresses.find(address => address.id == item.addressId)}
           action={item}
-          disabled={order.statusId != 4}
+          disabled={order.statusId !== orderStatuses.courierInTransit}
         />
       )}
       keyExtractor={item => item.id.toString()}
@@ -31,5 +32,3 @@ const Actions = (props: Props) => {
     />
   );
 };
-
-export default Actions;

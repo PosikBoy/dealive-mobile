@@ -8,7 +8,7 @@ interface IProps {
   orderId: number;
 }
 
-const Route = (props: IProps) => {
+export const Route = (props: IProps) => {
   const { route, orderId } = props;
 
   return (
@@ -28,5 +28,3 @@ const Route = (props: IProps) => {
     />
   );
 };
-
-export default Route;

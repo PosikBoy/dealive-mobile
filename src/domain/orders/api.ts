@@ -97,6 +97,13 @@ export const ordersApi = createApi({
       }),
       invalidatesTags: ['completeAction'],
     }),
+
+    declineOrder: builder.mutation<{ success: true }, number>({
+      query: (orderId: number) => ({
+        url: `/order/${orderId}/decline`,
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
@@ -239,4 +246,9 @@ export const useAllOrders = () => {
   );
 };
 
-export const { useGetAllOrdersQuery, useTakeOrderMutation, useCompleteActionMutation } = ordersApi;
+export const {
+  useGetAllOrdersQuery,
+  useTakeOrderMutation,
+  useCompleteActionMutation,
+  useDeclineOrderMutation,
+} = ordersApi;

@@ -14,7 +14,7 @@ type Props = {
   activeAddressId: number;
 };
 
-const Addresses = (props: Props) => {
+export const Addresses = (props: Props) => {
   const { order, activeAddressId } = props;
 
   const openRoute = async () => {
@@ -61,8 +61,6 @@ const Addresses = (props: Props) => {
     </View>
   );
 };
-
-export default Addresses;
 
 const styles = StyleSheet.create({
   container: {

@@ -5,4 +5,5 @@ export const orderStatuses = {
   courierInTransit: 4,
   delivered: 5,
   cancelled: 6,
+  offeringCourier: 7,
 };

@@ -43,7 +43,11 @@ class AuthStorage {
     await this.setIsAuth(false);
     await this.setSupportChat(null);
     await this.removeTokens();
-    await AsyncStorage.clear();
+    try {
+      await AsyncStorage.clear();
+    } catch {
+      // iOS may throw NSFileNoSuchFileError (Code=4) if storage dir doesn't exist yet
+    }
   };
 
   removeIsAuth = async () => {
