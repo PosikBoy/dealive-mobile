@@ -30,9 +30,7 @@ const Route = () => {
     try {
       const points = routeData.route.map(address => yandexMaps.getPoint(address));
       yandexMaps.getRoute(points);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   if (routeData.route?.length === 0) {

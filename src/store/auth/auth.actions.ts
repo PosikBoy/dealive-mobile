@@ -29,8 +29,6 @@ export const login = createAsyncThunk<
 
     return response;
   } catch (error: any) {
-    console.log('Error in login action', JSON.stringify(error));
-
     const errorMessage = errorCatch(error);
     return thunkApi.rejectWithValue(errorMessage);
   }

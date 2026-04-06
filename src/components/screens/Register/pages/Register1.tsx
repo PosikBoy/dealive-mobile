@@ -69,7 +69,6 @@ export const Register1: FC<IProps> = props => {
         phoneNumber: data.phoneNumber,
       });
     } catch (error) {
-      console.log(JSON.stringify(error));
       setIsLoading(false);
       setExistingError(error.message);
       return;

@@ -34,9 +34,7 @@ export const Login = () => {
     try {
       await dispatch(login(data)).unwrap();
       router.replace('/');
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const handleRegister = () => {

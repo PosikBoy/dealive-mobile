@@ -27,7 +27,6 @@ const LogOutSheet = () => {
       await dispatch(logOut()).unwrap();
       SheetManager.hide('log-out-sheet');
     } catch (error) {
-      console.error('Logout failed:', error);
     } finally {
       setIsLoading(false);
     }

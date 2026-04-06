@@ -32,9 +32,7 @@ export const RouteList: React.FC<RouteListProps> = ({
     try {
       const points = route.map(address => yandexMaps.getPoint(address));
       yandexMaps.getRoute(points);
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   };
 
   if (route.length === 0) {

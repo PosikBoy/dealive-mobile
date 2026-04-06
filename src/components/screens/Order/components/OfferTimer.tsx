@@ -16,17 +16,16 @@ export const OfferTimer: FC<IProps> = ({ initialSeconds, onExpire }) => {
   const [secondsLeft, setSecondsLeft] = useState<number>(initialSeconds);
 
   useEffect(() => {
-    setSecondsLeft(initialSeconds);
+    let current = initialSeconds;
+    setSecondsLeft(current);
 
     const interval = setInterval(() => {
-      setSecondsLeft(prev => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          onExpire();
-          return 0;
-        }
-        return prev - 1;
-      });
+      current -= 1;
+      setSecondsLeft(current);
+      if (current <= 0) {
+        clearInterval(interval);
+        onExpire();
+      }
     }, 1000);
 
     return () => clearInterval(interval);

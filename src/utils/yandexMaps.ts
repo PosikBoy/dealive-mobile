@@ -12,9 +12,7 @@ class YandexMaps {
     try {
       const supported = await Linking.canOpenURL(primaryUrl);
       await Linking.openURL(supported ? primaryUrl : fallbackUrl);
-    } catch (err) {
-      console.error('Ошибка открытия URL:', err);
-    }
+    } catch (err) {}
   }
 
   getRouteToPoint(lat: string, lon: string) {

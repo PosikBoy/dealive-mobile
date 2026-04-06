@@ -7,7 +7,6 @@ class FilesService {
   async uploadFiles(files: any[]) {
     const formData = new FormData();
     files.forEach(file => {
-      console.log(file);
       formData.append('files', {
         uri: file.uri,
         name: file.fileName,

@@ -24,16 +24,7 @@ class CourierWsService {
     });
 
     this.socket.on('connect', () => {
-      console.log('[WS] Connected, socketId:', this.socket?.id);
       this.socket?.emit(COURIER_MESSAGES.IDENTIFY);
-    });
-
-    this.socket.on('disconnect', reason => {
-      console.log('[WS] Disconnected:', reason);
-    });
-
-    this.socket.on('connect_error', err => {
-      console.error('[WS] Connection error:', err.message);
     });
   }
 

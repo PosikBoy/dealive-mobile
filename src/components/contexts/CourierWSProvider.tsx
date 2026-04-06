@@ -47,14 +47,7 @@ export const CourierWSProvider = () => {
     const requestNotificationPermissions = async () => {
       const { status: existingStatus } = await Notifications.getPermissionsAsync();
       if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        if (status !== 'granted') {
-          console.warn('[Notifications] Permission not granted:', status);
-        } else {
-          console.log('[Notifications] Permission granted');
-        }
-      } else {
-        console.log('[Notifications] Permission already granted');
+        await Notifications.requestPermissionsAsync();
       }
     };
 
@@ -68,7 +61,6 @@ export const CourierWSProvider = () => {
     }
 
     const handleOffer = async (payload: IOrderOfferPayload) => {
-      console.log('[WS] order:offer received:', JSON.stringify(payload));
       dispatch(setOrderOffer(payload));
       dispatch(showToast({ message: 'Мы подобрали для вас выгодный заказ ✨', type: 'info' }));
 
@@ -93,14 +85,11 @@ export const CourierWSProvider = () => {
     const connectWs = async () => {
       const token = await authStorage.getAccessToken();
       if (!token) {
-        console.warn('[WS] No token, skipping connect');
         return;
       }
-      console.log('[WS] Connecting with token...');
       courierWsService.connect(token);
       courierWsService.onOrderOffer(handleOffer);
       courierWsService.onOrderOfferCancelled(handleOfferCancelled);
-      console.log('[WS] Handlers registered');
     };
 
     connectWs();
@@ -136,9 +125,7 @@ export const CourierWSProvider = () => {
           totalDistance: distanceRef.current,
           isOnline: true,
         });
-      } catch (err) {
-        console.warn('[CourierWSProvider] route push failed:', err);
-      }
+      } catch (err) {}
     };
 
     pushRoute();

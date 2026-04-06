@@ -29,8 +29,6 @@ const axiosBaseQuery =
       return { data: result.data };
     } catch (err) {
       const error = err as any;
-      console.log('axiosBaseQuery error:', error);
-      console.log('Error response:', error.response?.data);
       // создаем чистый объект для Redux
       const serializedError: ApiError = {
         status: error.response?.status ?? 500,

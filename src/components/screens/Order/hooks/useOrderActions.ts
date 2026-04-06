@@ -4,6 +4,7 @@ import { Linking } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
 import { ApiError } from '@/axios/api-error';
+import { ICompleteActionSheet } from '@/components/sheets/CompleteActionSheet';
 import { useDeclineOrderMutation, useTakeOrderMutation } from '@/domain/orders/api';
 import { IOrder } from '@/domain/orders/types';
 import { useTypedDispatch } from '@/hooks/redux.hooks';
@@ -21,10 +22,15 @@ interface UseOrderActionsReturn {
   handleBackPress: () => Promise<void>;
 }
 
-export const useOrderActions = (order: IOrder, isOfferOrder: boolean): UseOrderActionsReturn => {
+export const useOrderActions = (
+  order: IOrder | undefined,
+  isOfferOrder: boolean,
+): UseOrderActionsReturn => {
   const dispatch = useTypedDispatch();
   const [takeOrder, { error }] = useTakeOrderMutation();
   const [declineOrder, { isLoading: isDeclining }] = useDeclineOrderMutation();
+
+  console.log('order', order);
 
   const lastAction = order?.actions?.find(action => !action.isCompleted);
   const lastAddress = order?.addresses?.find(address => address.id === lastAction?.addressId);
@@ -35,6 +41,7 @@ export const useOrderActions = (order: IOrder, isOfferOrder: boolean): UseOrderA
   );
 
   const takeOrderHandler = useCallback(async () => {
+    if (!order?.id) return;
     try {
       await takeOrder({ orderId: order.id }).unwrap();
       SheetManager.hide('take-order-sheet');
@@ -42,9 +49,10 @@ export const useOrderActions = (order: IOrder, isOfferOrder: boolean): UseOrderA
       const apiError = err as ApiError;
       dispatch(showToast({ message: apiError.message, type: 'error' }));
     }
-  }, [order.id, takeOrder, dispatch]);
+  }, [order?.id, takeOrder, dispatch]);
 
   const takeOrderModalShow = useCallback(() => {
+    if (!order) return;
     SheetManager.show('take-order-sheet', {
       payload: {
         order,
@@ -55,8 +63,9 @@ export const useOrderActions = (order: IOrder, isOfferOrder: boolean): UseOrderA
   }, [order, error?.message, takeOrderHandler]);
 
   const completeActionModalShow = useCallback(() => {
+    if (!completeActionPayload.action || !completeActionPayload.address) return;
     SheetManager.show('complete-action-sheet', {
-      payload: completeActionPayload,
+      payload: completeActionPayload as ICompleteActionSheet,
     });
   }, [completeActionPayload]);
 
@@ -86,6 +95,7 @@ export const useOrderActions = (order: IOrder, isOfferOrder: boolean): UseOrderA
   }, [lastAddress]);
 
   const declineOrderHandler = useCallback(async () => {
+    if (!order?.id) return;
     try {
       await declineOrder(order.id).unwrap();
       dispatch(clearOrderOffer());
@@ -94,10 +104,10 @@ export const useOrderActions = (order: IOrder, isOfferOrder: boolean): UseOrderA
       const apiError = err as ApiError;
       dispatch(showToast({ message: apiError.message, type: 'error' }));
     }
-  }, [order.id, declineOrder, dispatch]);
+  }, [order?.id, declineOrder, dispatch]);
 
   const handleBackPress = useCallback(async () => {
-    if (isOfferOrder) {
+    if (isOfferOrder && order?.id) {
       try {
         await declineOrder(order.id).unwrap();
         dispatch(clearOrderOffer());
@@ -107,7 +117,7 @@ export const useOrderActions = (order: IOrder, isOfferOrder: boolean): UseOrderA
       }
     }
     router.back();
-  }, [isOfferOrder, order.id, declineOrder, dispatch]);
+  }, [isOfferOrder, order?.id, declineOrder, dispatch]);
 
   return {
     isDeclining,

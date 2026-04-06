@@ -57,7 +57,6 @@ export const authSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchAuthStatus.pending, state => {
-        console.log('fetchAuthStatus.pending');
         state.isLoading = true;
         state.error = null;
       })

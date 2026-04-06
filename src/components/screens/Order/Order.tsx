@@ -21,7 +21,7 @@ import { useOrderActions } from './hooks/useOrderActions';
 import { useTabAnimation } from './hooks/useTabAnimation';
 
 interface IProps {
-  order: IOrder;
+  order: IOrder | undefined;
 }
 
 const Order: FC<IProps> = ({ order }) => {

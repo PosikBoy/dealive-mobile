@@ -24,9 +24,7 @@ const Messages = (props: Props) => {
       try {
         const response = await chatService.getMessages(props.chatId, page);
         setMessages(prevMessages => [...response, ...prevMessages]);
-      } catch (error) {
-        console.log('error', JSON.stringify(error));
-      }
+      } catch (error) {}
     };
     subscribe();
     getMessages();

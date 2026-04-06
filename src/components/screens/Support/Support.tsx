@@ -32,9 +32,7 @@ const Support = () => {
         await authStorage.setSupportChat(chat); // Сохраняем в SecureStore
         setChatId(newChatId); // Устанавливаем новый chatId
       }
-    } catch (error) {
-      console.error('Ошибка при получении или создании чата:', error);
-    }
+    } catch (error) {}
   }, []);
 
   const sendMessageHandler = useCallback(async () => {

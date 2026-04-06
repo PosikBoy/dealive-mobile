@@ -24,7 +24,7 @@ const waitForApproval = () => {
         router.replace('/');
       }
     } catch (error) {
-      console.error(error);
+      console.error(JSON.stringify(error));
     }
   };
 

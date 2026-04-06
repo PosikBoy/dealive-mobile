@@ -84,10 +84,6 @@ export const getAvailableOrdersSelector = createSelector(
 
       return ordersWithGeo;
     } catch (error) {
-      console.error(
-        'Error in getAvailableOrdersSelector:',
-        error instanceof Error ? error.message : String(error),
-      );
       return availableOrders || [];
     }
   },
@@ -123,10 +119,6 @@ export const getActiveOrdersSelector = createSelector(
 
       return ordersWithGeo;
     } catch (error) {
-      console.error(
-        'Error in getActiveOrdersSelector:',
-        error instanceof Error ? error.message : String(error),
-      );
       return activeOrders || [];
     }
   },
@@ -163,10 +155,6 @@ export const getAllOrdersSelector = createSelector(
 
       return ordersWithGeo;
     } catch (error) {
-      console.error(
-        'Error in getAllOrdersSelector:',
-        error instanceof Error ? error.message : String(error),
-      );
       return allOrders || [];
     }
   },
