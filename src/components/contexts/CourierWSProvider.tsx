@@ -2,7 +2,9 @@ import * as Haptics from 'expo-haptics';
 import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
 import { useEffect, useRef } from 'react';
+import { AppState, AppStateStatus } from 'react-native';
 
+import { useCurrentOffer } from '@/domain/orders/api';
 import { IOrderOfferPayload, IRoutePoint } from '@/domain/orders/types';
 import { authStorage } from '@/helpers/authStorage';
 import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
@@ -34,6 +36,8 @@ export const CourierWSProvider = () => {
   const routeRef = useRef(route);
   const distanceRef = useRef(distance);
 
+  useCurrentOffer();
+
   useEffect(() => {
     locationRef.current = location;
   }, [location]);
@@ -42,17 +46,6 @@ export const CourierWSProvider = () => {
     routeRef.current = route;
     distanceRef.current = distance;
   }, [route, distance]);
-
-  useEffect(() => {
-    const requestNotificationPermissions = async () => {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      if (existingStatus !== 'granted') {
-        await Notifications.requestPermissionsAsync();
-      }
-    };
-
-    requestNotificationPermissions();
-  }, []);
 
   useEffect(() => {
     if (!isAuth || !isAcceptingOrders) {
@@ -69,13 +62,13 @@ export const CourierWSProvider = () => {
       await Notifications.scheduleNotificationAsync({
         content: {
           title: 'Новый заказ!',
-          body: `${payload.order.parcelType} · ${payload.order.price} ₽ · ${payload.order.addresses.length} адреса`,
+          body: 'Нажмите, чтобы посмотреть детали',
           sound: true,
         },
         trigger: null,
       });
 
-      router.push({ pathname: '/orders/[id]', params: { id: payload.order.id } });
+      router.push({ pathname: '/orders/[id]', params: { id: payload.orderId } });
     };
 
     const handleOfferCancelled = () => {
@@ -84,9 +77,7 @@ export const CourierWSProvider = () => {
 
     const connectWs = async () => {
       const token = await authStorage.getAccessToken();
-      if (!token) {
-        return;
-      }
+      if (!token) return;
       courierWsService.connect(token);
       courierWsService.onOrderOffer(handleOffer);
       courierWsService.onOrderOfferCancelled(handleOfferCancelled);
@@ -94,9 +85,18 @@ export const CourierWSProvider = () => {
 
     connectWs();
 
+    const handleAppStateChange = (nextState: AppStateStatus) => {
+      if (nextState === 'active' && !courierWsService.isConnected()) {
+        connectWs();
+      }
+    };
+
+    const appStateSubscription = AppState.addEventListener('change', handleAppStateChange);
+
     return () => {
       courierWsService.offOrderOffer(handleOffer);
       courierWsService.offOrderOfferCancelled(handleOfferCancelled);
+      appStateSubscription.remove();
     };
   }, [isAuth, isAcceptingOrders, dispatch]);
 
@@ -133,6 +133,35 @@ export const CourierWSProvider = () => {
 
     return () => clearInterval(interval);
   }, [isAuth, isAcceptingOrders]);
+
+  const routeKey = route.map(a => a.id).join(',');
+
+  useEffect(() => {
+    if (!isAuth || !isAcceptingOrders) return;
+
+    const loc = locationRef.current;
+    if (!loc?.lat || !loc?.lon) return;
+
+    const routePoints: IRoutePoint[] = route.map(address => ({
+      id: address.id,
+      orderId: address.orderId,
+      address: address.address,
+      isCompleted: address.isCompleted ?? false,
+      geoData: {
+        lat: address.geoData?.geoLat ?? '0',
+        lon: address.geoData?.geoLon ?? '0',
+      },
+    }));
+
+    courierRoutesService
+      .updateState({
+        currentLocation: { lat: loc.lat, lon: loc.lon },
+        route: routePoints,
+        totalDistance: distanceRef.current,
+        isOnline: true,
+      })
+      .catch(() => {});
+  }, [routeKey, isAuth, isAcceptingOrders]);
 
   useEffect(() => {
     if (isAuth === false || (isAuth && !isAcceptingOrders)) {

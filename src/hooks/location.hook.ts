@@ -1,7 +1,13 @@
 import * as Location from 'expo-location';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
-import { calculateDistance } from '@/domain/orders/utils/enrichOrdersWithGeo';
+import { useTypedDispatch } from '@/hooks/redux.hooks';
+import { pushError, pushLocation } from '@/store/location/location.slice';
+import { calculateDistance } from '@/utils/calculateDistance';
+
+const LOCATION_INTERVAL_MS = 5000;
+const MIN_DISTANCE_METERS = 50;
+const MIN_DISTANCE_KILOMETERS = MIN_DISTANCE_METERS / 1000;
 
 interface ILocation {
   lon: number;
@@ -9,81 +15,64 @@ interface ILocation {
 }
 
 export const useLocation = () => {
-  const [location, setLocation] = useState<ILocation | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useTypedDispatch();
+  const prevLocationRef = useRef<ILocation | null>(null);
+  const locationSubscriptionRef = useRef<Location.LocationSubscription | null>(null);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
+  const requestLocationPermission = async () => {
+    const { status } = await Location.getForegroundPermissionsAsync();
 
-    const requestPermissions = async () => {
-      try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          throw new Error(
-            'Для доступа к заказам необходимо выдать разрешение на доступ к местоположению устройства.',
-          );
-        }
-        return true;
-      } catch (error: any) {
-        setError(error.message);
-        return false;
+    if (status !== 'granted') {
+      const res = await Location.requestForegroundPermissionsAsync();
+
+      if (res.status !== 'granted') {
+        dispatch(pushError('Не удалось получить разрешение на местоположение.'));
       }
-    };
+    }
+  };
 
-    const getLocation = async () => {
-      setIsLoading(true);
-
-      const hasPermission = await requestPermissions();
-      if (!hasPermission) {
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        const data = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Lowest,
-        });
-
+  const initLocation = async () => {
+    locationSubscriptionRef.current = await Location.watchPositionAsync(
+      {
+        accuracy: Location.Accuracy.Balanced,
+        distanceInterval: MIN_DISTANCE_METERS,
+        timeInterval: LOCATION_INTERVAL_MS,
+      },
+      data => {
         if (data?.mocked) {
-          setError('Приложение не поддерживает фиктивное местоположение.');
+          dispatch(pushError('Фиктивная геолокация не поддерживается.'));
           return;
         }
 
-        const newLocation = {
+        const newLocation: ILocation = {
           lon: data.coords.longitude,
           lat: data.coords.latitude,
         };
 
-        setLocation(prevLocation => {
-          if (prevLocation) {
-            const distance = calculateDistance(
-              prevLocation.lat,
-              prevLocation.lon,
-              newLocation.lat,
-              newLocation.lon,
-            );
-            return distance > 0.05 ? newLocation : prevLocation;
-          }
-          return newLocation;
-        });
+        const prev = prevLocationRef.current;
 
-        setError(null);
-      } catch (err: any) {
-        setError(
-          'Не удалось получить местоположение. Убедитесь, что на вашем устройстве включена геолокация.',
-        );
-      } finally {
-        setIsLoading(false);
-      }
+        if (!prev) {
+          prevLocationRef.current = newLocation;
+          dispatch(pushLocation(newLocation));
+          return;
+        }
+
+        const distance = calculateDistance(prev.lat, prev.lon, newLocation.lat, newLocation.lon);
+
+        if (distance > MIN_DISTANCE_KILOMETERS) {
+          prevLocationRef.current = newLocation;
+          dispatch(pushLocation(newLocation));
+        }
+      },
+    );
+  };
+
+  useEffect(() => {
+    requestLocationPermission();
+    initLocation();
+
+    return () => {
+      locationSubscriptionRef.current?.remove();
     };
-
-    getLocation();
-
-    interval = setInterval(getLocation, 5000);
-
-    return () => clearInterval(interval);
   }, []);
-
-  return { location, isLoading, error };
 };

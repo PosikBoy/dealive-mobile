@@ -11,7 +11,7 @@ import Address from './Address';
 
 type Props = {
   order: IOrder;
-  activeAddressId: number;
+  activeAddressId?: number;
 };
 
 export const Addresses = (props: Props) => {

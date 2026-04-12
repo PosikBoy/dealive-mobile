@@ -2,14 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { isError } from '@/helpers/isReduxError';
 
-import {
-  // checkAuth,
-  fetchAuthStatus,
-  fetchIsApprovedStatus,
-  login,
-  logOut,
-  register,
-} from './auth.actions';
+import { fetchAuthStatus, fetchIsApprovedStatus, login, logOut, register } from './auth.actions';
 
 interface IInitialState {
   isLoading: boolean;

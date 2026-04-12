@@ -1,11 +1,13 @@
 import { BaseQueryFn, createApi } from '@reduxjs/toolkit/query/react';
 import { AxiosRequestConfig } from 'axios';
+import { router } from 'expo-router';
 import { useEffect, useMemo, useRef } from 'react';
 
 import { ApiError } from '@/axios/api-error';
 import { instance } from '@/axios/interceptor';
 import { SERVER_URL } from '@/constants/urls';
 import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
+import { setOrderOffer } from '@/store/orderOffer/orderOffer.slice';
 import { updateRoute } from '@/store/route/route.slice';
 
 import {
@@ -14,7 +16,7 @@ import {
   getAvailableOrdersSelector,
   makeSelectOrderById,
 } from './selectors';
-import { IOrder } from './types';
+import { ICurrentOfferResponse, IOrder, IOrderOfferPayload } from './types';
 
 type AxiosArgs = AxiosRequestConfig;
 
@@ -101,6 +103,23 @@ export const ordersApi = createApi({
         url: `/order/${orderId}/decline`,
         method: 'POST',
       }),
+    }),
+
+    saveNotificationToken: builder.mutation<void, { token: string }>({
+      query: ({ token }) => ({
+        url: '/courier/notification-token',
+        method: 'POST',
+        data: { token },
+      }),
+    }),
+
+    getCurrentOffer: builder.query<ICurrentOfferResponse | null, void>({
+      query: () => ({
+        url: '/courier/current-offer',
+        method: 'GET',
+      }),
+      // Returns null when no active offer — treat 404 as empty
+      transformErrorResponse: () => null,
     }),
   }),
 });
@@ -249,4 +268,25 @@ export const {
   useTakeOrderMutation,
   useCompleteActionMutation,
   useDeclineOrderMutation,
+  useSaveNotificationTokenMutation,
+  useGetCurrentOfferQuery,
 } = ordersApi;
+
+export const useCurrentOffer = () => {
+  const dispatch = useTypedDispatch();
+
+  const { data } = ordersApi.useGetCurrentOfferQuery(undefined, {
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
+
+  useEffect(() => {
+    if (!data) return;
+    const offer: IOrderOfferPayload = {
+      timeoutSeconds: data.timeoutSeconds,
+      orderId: data.orderId,
+    };
+    dispatch(setOrderOffer(offer));
+    router.push({ pathname: '/orders/[id]', params: { id: data.orderId } });
+  }, [data, dispatch]);
+};

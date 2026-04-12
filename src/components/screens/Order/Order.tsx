@@ -21,7 +21,7 @@ import { useOrderActions } from './hooks/useOrderActions';
 import { useTabAnimation } from './hooks/useTabAnimation';
 
 interface IProps {
-  order: IOrder | undefined;
+  order?: IOrder;
 }
 
 const Order: FC<IProps> = ({ order }) => {
@@ -33,7 +33,7 @@ const Order: FC<IProps> = ({ order }) => {
   const activeOffer = useTypedSelector(state => state.orderOffer.offer);
 
   const isOfferOrder =
-    order?.statusId === orderStatuses.offeringCourier && activeOffer?.order.id === order?.id;
+    order?.statusId === orderStatuses.offeringCourier && activeOffer?.orderId === order?.id;
 
   const showTakeOrderButton = order?.statusId === orderStatuses.searchCourier;
   const showCompleteActionButton = order?.statusId === orderStatuses.courierInTransit;

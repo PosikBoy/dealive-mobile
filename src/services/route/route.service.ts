@@ -1,5 +1,5 @@
 import { IAddress, IOrder } from '@/domain/orders/types';
-import { calculateDistance } from '@/domain/orders/utils/enrichOrdersWithGeo';
+import { calculateDistance } from '@/utils/calculateDistance';
 
 interface IUserLocation {
   lat: number;

@@ -73,25 +73,14 @@ export const COURIER_MESSAGES = {
   IDENTIFY: 'identify',
 } as const;
 
-export interface IOrderOfferAddress {
-  address: string;
-  geoData: {
-    lat: string;
-    lon: string;
-  };
-}
-
-export interface IOrderOfferData {
-  id: number;
-  parcelType: string;
-  weight: string;
-  price: number;
-  addresses: IOrderOfferAddress[];
-}
-
 export interface IOrderOfferPayload {
   timeoutSeconds: number;
-  order: IOrderOfferData;
+  orderId: number;
+}
+
+export interface ICurrentOfferResponse {
+  timeoutSeconds: number;
+  orderId: number;
 }
 
 // ─── Courier Routes ──────────────────────────────────────────────────────────

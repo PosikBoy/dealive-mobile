@@ -1,12 +1,13 @@
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, ToastAndroid, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import ActionSheet, { SheetManager, SheetProps } from 'react-native-actions-sheet';
 
 import { useCompleteActionMutation } from '@/domain/orders/api';
 import { IAddress, IOrderAction, IOrderActionType } from '@/domain/orders/types';
 import { calculateDistanceToAddress } from '@/domain/orders/utils/enrichOrdersWithGeo';
-import { useTypedSelector } from '@/hooks/redux.hooks';
+import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
 import { useTheme } from '@/hooks/useTheme';
+import { showToast } from '@/store/toast/toast.slice';
 
 import { Button } from '../ui/Button/Button';
 import { ThemedText } from '../ui/ThemedText/ThemedText';
@@ -48,21 +49,22 @@ export interface ICompleteActionSheet {
 }
 
 export const CompleteActionSheet = React.memo((props: SheetProps<'complete-action-sheet'>) => {
-  const { action, address } = props.payload;
+  const { action, address } = props.payload!;
 
   const { colors } = useTheme();
+  const dispatch = useTypedDispatch();
   const location = useTypedSelector(state => state.location);
   const [completeAction, { isLoading }] = useCompleteActionMutation();
   const [error, setError] = useState<string>();
 
-  const snippet = ACTION_SNIPPETS[action.actionType];
+  const snippet = ACTION_SNIPPETS[action.actionType as IOrderActionType];
 
   const validateLocation = useCallback(async () => {
     try {
       const distance = calculateDistanceToAddress(location, address);
       return distance <= LOCATION_DISTANCE_THRESHOLD;
-    } catch (error) {
-      console.error('Location validation error:', error);
+    } catch (err) {
+      console.error('Location validation error:', err);
       return false;
     }
   }, [location, address]);
@@ -83,11 +85,13 @@ export const CompleteActionSheet = React.memo((props: SheetProps<'complete-actio
       // }
 
       SheetManager.hide('complete-action-sheet');
-      ToastAndroid.show('Действие подтверждено, спасибо!', ToastAndroid.SHORT);
-    } catch (error) {
-      setError(error.data?.message || ERROR_MESSAGES.default);
+      dispatch(
+        showToast({ message: 'Действие подтверждено, спасибо!', type: 'success', timeout: 2000 }),
+      );
+    } catch (err: any) {
+      setError(err.data?.message || ERROR_MESSAGES.default);
     }
-  }, [action.id, action.actionType, validateLocation, completeAction]);
+  }, [action.id, action.actionType, validateLocation, completeAction, dispatch]);
 
   const renderAdditionalInfo = () => {
     if (action.actionType === IOrderActionType.PAY_COMMISION) {
@@ -99,14 +103,15 @@ export const CompleteActionSheet = React.memo((props: SheetProps<'complete-actio
     }
     return null;
   };
+
   return (
     <ActionSheet
       gestureEnabled={true}
       id={'complete-action-sheet'}
       openAnimationConfig={{
-        stiffness: 1000, // Уменьшаем жесткость
-        damping: 100000, // Увеличиваем затухание
-        mass: 1, // Масса (оставляем по умолчанию)
+        stiffness: 1000,
+        damping: 100000,
+        mass: 1,
       }}
       containerStyle={{
         backgroundColor: colors.white,

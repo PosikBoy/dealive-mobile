@@ -30,8 +30,6 @@ export const useOrderActions = (
   const [takeOrder, { error }] = useTakeOrderMutation();
   const [declineOrder, { isLoading: isDeclining }] = useDeclineOrderMutation();
 
-  console.log('order', order);
-
   const lastAction = order?.actions?.find(action => !action.isCompleted);
   const lastAddress = order?.addresses?.find(address => address.id === lastAction?.addressId);
 
@@ -71,20 +69,16 @@ export const useOrderActions = (
 
   const openMaps = useCallback(async () => {
     if (!lastAddress?.geoData) {
-      console.error('No address or geodata available');
       return;
     }
 
     try {
       yandexMaps.getRouteToPoint(lastAddress.geoData.geoLat, lastAddress.geoData.geoLon);
-    } catch (err) {
-      console.error('Ошибка при открытии URL:', err);
-    }
+    } catch (err) {}
   }, [lastAddress?.geoData]);
 
   const callPhone = useCallback(() => {
     if (!lastAddress) {
-      console.error('No address available');
       return;
     }
 

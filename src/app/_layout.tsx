@@ -11,15 +11,35 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { CourierWSProvider } from '@/components/contexts/CourierWSProvider';
-import LocationProvider from '@/components/contexts/LocationProvider';
 import { StoreProvider } from '@/components/contexts/ReduxProvider';
 import { ConnectionGuard } from '@/components/guards/ConnectionGuard';
 import { ToastBanner } from '@/components/ui/ToastBanner/ToastBanner';
 import { fonts } from '@/constants/fonts';
+import { useLocation } from '@/hooks/location.hook';
+import { usePushNotificationToken } from '@/hooks/usePushNotificationToken';
 import { useTheme } from '@/hooks/useTheme';
 import { persistor } from '@/store/store';
 
 SplashScreen.preventAutoHideAsync();
+
+const AppContent = () => {
+  useLocation();
+  usePushNotificationToken();
+
+  return (
+    <ConnectionGuard>
+      <ToastBanner />
+      <StatusBar style='auto' />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          animation: 'fade_from_bottom',
+        }}
+      />
+      <CourierWSProvider />
+    </ConnectionGuard>
+  );
+};
 
 const Layout = () => {
   const { colors } = useTheme();
@@ -54,18 +74,7 @@ const Layout = () => {
           <StoreProvider>
             <PersistGate loading={null} persistor={persistor}>
               <SheetProvider>
-                <ConnectionGuard>
-                  <ToastBanner />
-                  <StatusBar style='auto' />
-                  <Stack
-                    screenOptions={{
-                      headerShown: false,
-                      animation: 'fade_from_bottom',
-                    }}
-                  />
-                  <LocationProvider />
-                  <CourierWSProvider />
-                </ConnectionGuard>
+                <AppContent />
               </SheetProvider>
             </PersistGate>
           </StoreProvider>
