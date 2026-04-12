@@ -1,8 +1,10 @@
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { FC } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button/Button';
-import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
+import { InfoBadge } from '@/components/ui/InfoBadge/InfoBadge';
+import { palette } from '@/constants/colors';
 import { icons } from '@/constants/icons';
 import { IAddress, IOrderAction, IOrderOfferPayload } from '@/domain/orders/types';
 import { useTheme } from '@/hooks/useTheme';
@@ -14,6 +16,7 @@ interface IProps {
   price: number;
   weight: string;
   parcelType: string;
+  incomePerHour?: number;
 
   isOfferOrder: boolean;
   activeOffer: IOrderOfferPayload | null;
@@ -36,6 +39,7 @@ export const OrderFooter: FC<IProps> = ({
   price,
   weight,
   parcelType,
+  incomePerHour,
   isOfferOrder,
   activeOffer,
   onOfferExpire,
@@ -58,9 +62,37 @@ export const OrderFooter: FC<IProps> = ({
         <OfferTimer initialSeconds={activeOffer.timeoutSeconds} onExpire={onOfferExpire} />
       )}
 
-      <ThemedText style={styles.footerInfo}>
-        {TEXTS.orderInfo(price, weight, parcelType)}
-      </ThemedText>
+      <View style={styles.badgesRow}>
+        <InfoBadge
+          flex
+          backgroundColor={palette.gold}
+          textColor={palette.black}
+          icon={<Ionicons name='cash-outline' size={14} color={palette.black} />}
+          label={`${price} ₽`}
+        />
+        <InfoBadge
+          flex
+          backgroundColor={palette.blue}
+          icon={<MaterialCommunityIcons name='weight-kilogram' size={14} color={palette.white} />}
+          label={weight}
+        />
+        <InfoBadge
+          flex
+          backgroundColor={palette.purple}
+          icon={
+            <MaterialCommunityIcons name='package-variant-closed' size={14} color={palette.white} />
+          }
+          label={parcelType}
+        />
+        {incomePerHour != null && (
+          <InfoBadge
+            flex
+            backgroundColor={palette.greenBadge}
+            icon={<Ionicons name='trending-up-outline' size={14} color={palette.white} />}
+            label={`+${incomePerHour} ₽/ч`}
+          />
+        )}
+      </View>
 
       <View style={styles.buttonsContainer}>
         {isOfferOrder && (
@@ -126,9 +158,12 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: 10,
   },
-  footerInfo: {
-    fontSize: 18,
-    textAlign: 'center',
+  badgesRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 6,
   },
   buttonsContainer: {
     flexDirection: 'row',

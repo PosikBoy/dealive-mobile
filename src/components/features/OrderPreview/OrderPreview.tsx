@@ -1,10 +1,12 @@
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { FC, memo, useCallback, useMemo } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInLeft } from 'react-native-reanimated';
 
+import { InfoBadge } from '@/components/ui/InfoBadge/InfoBadge';
 import { ThemedText } from '@/components/ui/ThemedText/ThemedText';
-import { colors } from '@/constants/colors';
+import { colors, palette } from '@/constants/colors';
 import { borderRadiuses, gaps, paddings } from '@/constants/styles';
 import { IAddress, IOrder } from '@/domain/orders/types';
 import { useTheme } from '@/hooks/useTheme';
@@ -78,8 +80,6 @@ const OrderPreview: FC<OrderPreviewProps> = memo(({ order, incomePerHour }) => {
     [addresses.length, id, incomePerHour],
   );
 
-  const orderInfo = useMemo(() => `${parcelType} · ${weight}`, [parcelType, weight]);
-
   const priceText = useMemo(() => `${price} ₽`, [price]);
 
   const createdAtText = useMemo(() => `Заказ создан ${createdAtString}`, [createdAtString]);
@@ -115,19 +115,38 @@ const OrderPreview: FC<OrderPreviewProps> = memo(({ order, incomePerHour }) => {
 
           {/* Footer */}
           <View style={styles.footer}>
-            <View style={styles.infoRow}>
-              <ThemedText weight='semiBold' type='mediumText'>
-                {orderInfo}
-              </ThemedText>
-              <View style={[styles.priceBadge, { backgroundColor: colors.purple }]}>
-                <ThemedText
-                  style={{ color: colors.textOnPrimary }}
-                  type='mediumText'
-                  weight='medium'
-                >
-                  {priceText}
-                </ThemedText>
-              </View>
+            <View style={styles.badgesRow}>
+              <InfoBadge
+                backgroundColor={palette.gold}
+                textColor={palette.black}
+                icon={<Ionicons name='cash-outline' size={13} color={palette.black} />}
+                label={priceText}
+              />
+              <InfoBadge
+                backgroundColor={palette.blue}
+                icon={
+                  <MaterialCommunityIcons name='weight-kilogram' size={13} color={palette.white} />
+                }
+                label={weight}
+              />
+              <InfoBadge
+                backgroundColor={colors.purple}
+                icon={
+                  <MaterialCommunityIcons
+                    name='package-variant-closed'
+                    size={13}
+                    color={palette.white}
+                  />
+                }
+                label={parcelType}
+              />
+              {incomePerHour != null && (
+                <InfoBadge
+                  backgroundColor={palette.greenBadge}
+                  icon={<Ionicons name='trending-up-outline' size={13} color={palette.white} />}
+                  label={`+${incomePerHour} ₽/ч`}
+                />
+              )}
             </View>
             <View style={styles.metaRow}>
               <ThemedText color='secondary' type='hint'>
@@ -183,15 +202,10 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: 5,
   },
-  infoRow: {
+  badgesRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  priceBadge: {
-    borderRadius: 20,
-    paddingVertical: 2,
-    paddingHorizontal: 10,
+    flexWrap: 'wrap',
+    gap: 5,
   },
   metaRow: {
     width: '100%',

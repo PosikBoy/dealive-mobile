@@ -8,6 +8,7 @@ import { Toggler } from '@/components/ui/HorizontalToggler/HorizontalToggler';
 import { orderStatuses } from '@/constants/orderStatuses';
 import { IOrder } from '@/domain/orders/types';
 import { useTypedDispatch, useTypedSelector } from '@/hooks/redux.hooks';
+import { useOrderIncomeEstimate } from '@/hooks/useOrderIncomeEstimate';
 import { useTheme } from '@/hooks/useTheme';
 import { routeService } from '@/services/route/route.service';
 import { clearOrderOffer } from '@/store/orderOffer/orderOffer.slice';
@@ -34,6 +35,9 @@ const Order: FC<IProps> = ({ order }) => {
 
   const isOfferOrder =
     order?.statusId === orderStatuses.offeringCourier && activeOffer?.orderId === order?.id;
+
+  const showIncomeEstimate = isOfferOrder || order?.statusId === orderStatuses.searchCourier;
+  const incomeEstimate = useOrderIncomeEstimate(showIncomeEstimate ? order : undefined);
 
   const showTakeOrderButton = order?.statusId === orderStatuses.searchCourier;
   const showCompleteActionButton = order?.statusId === orderStatuses.courierInTransit;
@@ -139,6 +143,7 @@ const Order: FC<IProps> = ({ order }) => {
         price={order.price}
         weight={order.weight}
         parcelType={order.parcelType}
+        incomePerHour={incomeEstimate?.incomePerHour}
         isOfferOrder={isOfferOrder}
         activeOffer={activeOffer}
         onOfferExpire={handleOfferExpire}

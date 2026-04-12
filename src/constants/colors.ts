@@ -9,8 +9,14 @@ export const palette = {
   redLight: '#D95A5A',
 
   green: '#D0FF84',
-
   greenDark: 'rgb(16, 197, 55)',
+  greenBadge: '#27AE60',
+
+  blue: '#4A90D9',
+  blueDark: '#2C6FAC',
+
+  gold: '#F5A623',
+  goldDark: '#C47D0E',
 
   gray: '#808080',
   grayLight: '#e9e9e9',

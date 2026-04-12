@@ -23,11 +23,11 @@ export const Orders = () => {
 
   const {
     availableTranslate,
-    activeTranslate,
-    routeTranslate: recommendedTranslate,
+    activeTranslate: recommendedTranslate,
+    routeTranslate: activeTranslate,
     availableOpacity,
-    activeOpacity,
-    routeOpacity: recommendedOpacity,
+    activeOpacity: recommendedOpacity,
+    routeOpacity: activeOpacity,
   } = useTabAnimation(activeTab, TABS);
 
   return (

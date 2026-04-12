@@ -4,8 +4,7 @@ import { useAvailableOrders } from '@/domain/orders/api';
 import { IOrder } from '@/domain/orders/types';
 import { useTypedSelector } from '@/hooks/redux.hooks';
 import { routeService } from '@/services/route/route.service';
-
-const AVERAGE_SPEED_KMH = 12;
+import { calculateOrderIncomeEstimate } from '@/utils/calculateOrderIncomeEstimate';
 
 interface IRecommendedOrders {
   order: IOrder;
@@ -35,17 +34,15 @@ export const useRecommendedOrders = () => {
 
     const calculatedOrders = orders.map(order => {
       const newRoute = routeService.getRouteWithNewOrder([...routeState.route], order, location);
-
-      const currentDistance = routeState.distance || 0;
-      const deltaDistance = newRoute.distance - currentDistance;
-      const safeDelta = Math.max(deltaDistance, 0.1);
-      const timeHours = safeDelta / AVERAGE_SPEED_KMH;
-      const safeTime = Math.max(timeHours, 0.167);
-      const incomePerHour = Number((order.price / safeTime).toFixed(2));
+      const { incomePerHour, deltaDistance, safeTime } = calculateOrderIncomeEstimate(
+        order.price,
+        newRoute.distance,
+        routeState.distance,
+      );
 
       return {
         order,
-        weight: order.price / safeDelta,
+        weight: order.price / Math.max(deltaDistance, 0.1),
         delta: deltaDistance,
         incomePerHour,
         time: safeTime,
